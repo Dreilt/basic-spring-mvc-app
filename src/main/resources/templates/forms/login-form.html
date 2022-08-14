@@ -10,31 +10,31 @@
 </head>
 <body>
 <div class="form-container">
-    <form class="custom-form" method="post" th:method="post" action="#" th:action="@{/login}">
+    <form id="loginForm" name="loginForm" class="custom-form" onsubmit="return validateLoginForm()" method="post" th:method="post" action="#" th:action="@{/login}">
         <div class="form-heading">
             <h2>Logowanie</h2>
             <span>Wprowadź swoje dane poniżej</span>
         </div>
-        <div class="form-group">
+        <div id="usernameFormGroup" class="form-group">
             <label for="username" class="form-label">E-MAIL</label>
             <input type="text"
                    id="username" name="username"
                    class="form-control"
-                   placeholder="E-mail"
-                   required>
+                   placeholder="E-mail">
         </div>
-        <div class="form-group">
+        <div id="passwordFormGroup" class="form-group">
             <label for="password" class="form-label">HASŁO</label>
             <input type="password"
                    id="password" name="password"
                    class="form-control"
-                   placeholder="Hasło"
-                   required>
+                   placeholder="Hasło">
         </div>
         <div class="d-grid gap-2 col-4 mx-auto" style="margin: 8px 0 8px 0;">
             <button class="btn form-button" type="submit">Zaloguj się</button>
         </div>
     </form>
 </div>
+
+<script type="text/javascript" src="../static/scripts/validation.js" th:src="@{/scripts/validation.js}"></script>
 </body>
 </html>
