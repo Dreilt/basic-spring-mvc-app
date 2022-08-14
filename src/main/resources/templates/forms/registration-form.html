@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pl"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Rejestracja</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link href="../static/styles/main.css" th:href="@{/styles/main.css}" rel="stylesheet"/>
+</head>
+<body>
+<nav th:replace="fragments :: navbar"></nav>
+<div class="form-container">
+    <form id="registrationForm" name="registrationForm" class="custom-form" method="post" th:method="post" action="#" th:action="@{/register}" th:object="${appUserRegistrationDto}">
+        <div class="form-heading">
+            <h2>Rejestracja</h2>
+            <span>Wprowadź swoje dane poniżej</span>
+        </div>
+        <div id="firstNameFormGroup" class="form-group">
+            <label for="firstName" class="form-label">IMIĘ</label>
+            <input type="text"
+                   id="firstName" name="firstName" th:field="*{firstName}"
+                   class="form-control"
+                   placeholder="Imię"
+                   required>
+        </div>
+        <div id="lastNameFormGroup" class="form-group">
+            <label for="lastName" class="form-label">NAZWISKO</label>
+            <input type="text"
+                   id="lastName" name="lastName" th:field="*{lastName}"
+                   class="form-control"
+                   placeholder="Nazwisko"
+                   required>
+        </div>
+        <div id="emailFormGroup" class="form-group">
+            <label for="email" class="form-label">E-MAIL</label>
+            <input type="text"
+                   id="email" name="email" th:field="*{email}"
+                   class="form-control"
+                   placeholder="E-mail"
+                   required>
+        </div>
+        <div id="passwordFormGroup" class="form-group">
+            <label for="password" class="form-label">HASŁO</label>
+            <input type="password"
+                   id="password" name="password" th:field="*{password}"
+                   class="form-control"
+                   placeholder="Hasło"
+                   required>
+        </div>
+        <div id="confirmPasswordFormGroup" class="form-group">
+            <label for="confirmPassword" class="form-label">POTWIERDŹ HASŁO</label>
+            <input type="password"
+                   id="confirmPassword" name="confirmPassword" th:field="*{confirmPassword}"
+                   class="form-control"
+                   placeholder="Potwierdź hasło"
+                   required>
+        </div>
+        <div class="d-grid gap-2 col-5 mx-auto" style="margin: 8px 0 8px 0;">
+            <button class="btn form-button" type="submit">Zarejestruj się</button>
+        </div>
+    </form>
+</div>
+
+<th:block th:replace="fragments :: scripts"></th:block>
+<script type="text/javascript" src="../static/scripts/validation.js" th:src="@{/scripts/validation.js}"></script>
+</body>
+</html>
