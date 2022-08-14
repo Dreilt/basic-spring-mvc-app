@@ -14,6 +14,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> requests
+                .antMatchers("/h2-console/**").permitAll()
                 .mvcMatchers("/").permitAll()
                 .anyRequest().authenticated());
         http.formLogin(login -> login.loginPage("/login").permitAll());
@@ -22,6 +23,7 @@ public class SecurityConfiguration {
                 .logoutSuccessUrl("/login?logout").permitAll()
         );
         http.csrf().disable();
+        http.headers().frameOptions().disable();
         return http.build();
     }
 
