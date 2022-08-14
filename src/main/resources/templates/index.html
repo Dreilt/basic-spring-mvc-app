@@ -14,6 +14,7 @@
     <h1>Strona główna</h1>
     <span sec:authorize="isAuthenticated()" th:text="'Witaj, ' + ${#authentication.name} + '!'">Witaj, Jan!</span>
 </div>
+
 <th:block th:replace="fragments :: scripts"></th:block>
 </body>
 </html>
