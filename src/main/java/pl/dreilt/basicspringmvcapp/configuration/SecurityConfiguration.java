@@ -15,6 +15,7 @@ public class SecurityConfiguration {
                 .mvcMatchers("/").permitAll()
                 .anyRequest().authenticated());
         http.formLogin(login -> login.loginPage("/login").permitAll());
+        http.csrf().disable();
         return http.build();
     }
 
