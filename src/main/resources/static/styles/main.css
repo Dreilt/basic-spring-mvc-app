@@ -40,6 +40,10 @@
     color: #dc3545;
 }
 
+.custom-checkbox {
+    accent-color: #f39c12;
+}
+
 .form-button {
     color: #ffffff;
     background-color: #f39c12;

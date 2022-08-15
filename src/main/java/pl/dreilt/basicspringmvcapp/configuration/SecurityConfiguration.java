@@ -8,10 +8,20 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class SecurityConfiguration {
+
+    private final DataSource dataSource;
+
+    public SecurityConfiguration(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -25,6 +35,7 @@ public class SecurityConfiguration {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout/**", HttpMethod.GET.name()))
                 .logoutSuccessUrl("/login?logout").permitAll()
         );
+        http.rememberMe().tokenRepository(persistentTokenRepository());
         http.csrf().disable();
         http.headers().frameOptions().disable();
         return http.build();
@@ -35,6 +46,13 @@ public class SecurityConfiguration {
         return web -> web.ignoring().mvcMatchers(
                 "/scripts/**", "/styles/**"
         );
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        return tokenRepository;
     }
 
     @Bean
