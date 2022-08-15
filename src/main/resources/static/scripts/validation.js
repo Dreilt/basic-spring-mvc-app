@@ -11,6 +11,25 @@ function validateLoginForm() {
     }
 }
 
+function validateRegistrationForm() {
+    let firstNameValue = document.registrationForm.firstName.value;
+    let isFirstNameError = checkIfNotEmpty('firstName', firstNameValue);
+    let lastNameValue = document.registrationForm.lastName.value;
+    let isLastNameError = checkIfNotEmpty('lastName', lastNameValue);
+    let emailValue = document.registrationForm.email.value;
+    let isEmailError = checkIfNotEmpty('email', emailValue);
+    let passwordValue = document.registrationForm.password.value;
+    let isPasswordError = checkIfNotEmpty('password', passwordValue);
+    let confirmPasswordValue = document.registrationForm.confirmPassword.value;
+    let isConfirmPasswordError = checkIfNotEmpty('confirmPassword', confirmPasswordValue);
+
+    if (!isFirstNameError || !isLastNameError || !isEmailError || !isPasswordError || !isConfirmPasswordError) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
 function checkIfNotEmpty(fieldName, fieldValue) {
     let isNotEmpty = true;
 
