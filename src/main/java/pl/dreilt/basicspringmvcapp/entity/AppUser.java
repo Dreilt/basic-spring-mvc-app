@@ -1,6 +1,9 @@
 package pl.dreilt.basicspringmvcapp.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,9 +12,17 @@ public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
+    @Size(min = 2, max = 50)
     private String firstName;
+    @NotNull
+    @Size(min = 2, max = 50)
     private String lastName;
+    @NotNull
+    @Email
     private String email;
+    @NotNull
+    @Size(min = 5, max = 100)
     private String password;
     private boolean enabled;
     private boolean accountNonLocked;

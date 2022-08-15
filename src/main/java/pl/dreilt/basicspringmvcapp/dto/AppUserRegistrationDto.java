@@ -1,10 +1,27 @@
 package pl.dreilt.basicspringmvcapp.dto;
 
+import pl.dreilt.basicspringmvcapp.annotation.PasswordsValueEquals;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+@PasswordsValueEquals
 public class AppUserRegistrationDto {
+    @NotNull
+    @Size(min = 2, max = 50)
     private String firstName;
+    @NotNull
+    @Size(min = 2, max = 50)
     private String lastName;
+    @NotNull
+    @Email
     private String email;
+    @NotNull
+    @Size(min = 5, max = 100)
     private String password;
+    @NotNull
+    @Size(min = 5, max = 100)
     private String confirmPassword;
 
     public String getFirstName() {

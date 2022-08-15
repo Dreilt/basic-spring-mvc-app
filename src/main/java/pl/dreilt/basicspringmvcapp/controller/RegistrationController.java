@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import pl.dreilt.basicspringmvcapp.dto.AppUserRegistrationDto;
 import pl.dreilt.basicspringmvcapp.service.AppUserService;
 
+import javax.validation.Valid;
+
 @Controller
 public class RegistrationController {
 
@@ -25,9 +27,14 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public String register(AppUserRegistrationDto appUserRegistrationDto) {
-        appUserService.register(appUserRegistrationDto);
-        return "redirect:/confirmation";
+    public String register(@Valid @ModelAttribute("appUserRegistrationDto") AppUserRegistrationDto appUserRegistrationDto,
+                           BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "forms/registration-form";
+        } else {
+            appUserService.register(appUserRegistrationDto);
+            return "redirect:/confirmation";
+        }
     }
 
     @GetMapping("/confirmation")

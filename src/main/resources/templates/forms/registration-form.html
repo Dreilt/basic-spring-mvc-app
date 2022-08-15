@@ -20,36 +20,41 @@
             <label for="firstName" class="form-label">IMIĘ</label>
             <input type="text"
                    id="firstName" name="firstName" th:field="*{firstName}"
-                   class="form-control"
+                   class="form-control" th:class="${#fields.hasErrors('firstName')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    placeholder="Imię">
+            <div class="error-message" th:errors="*{firstName}">Błędy związane z imieniem</div>
         </div>
         <div id="lastNameFormGroup" class="form-group">
             <label for="lastName" class="form-label">NAZWISKO</label>
             <input type="text"
                    id="lastName" name="lastName" th:field="*{lastName}"
-                   class="form-control"
+                   class="form-control" th:class="${#fields.hasErrors('lastName')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    placeholder="Nazwisko">
+            <div class="error-message" th:errors="*{lastName}">Błędy związane z nazwiskiem</div>
         </div>
         <div id="emailFormGroup" class="form-group">
             <label for="email" class="form-label">E-MAIL</label>
             <input type="text"
                    id="email" name="email" th:field="*{email}"
-                   class="form-control"
+                   class="form-control" th:class="${#fields.hasErrors('email')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    placeholder="E-mail">
+            <div class="error-message" th:errors="*{email}">Błędy związane z emailem</div>
         </div>
         <div id="passwordFormGroup" class="form-group">
             <label for="password" class="form-label">HASŁO</label>
             <input type="password"
                    id="password" name="password" th:field="*{password}"
-                   class="form-control"
+                   class="form-control" th:class="${#fields.hasErrors('password')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    placeholder="Hasło">
+            <div class="error-message" th:errors="*{password}">Błędy związane z hasłem</div>
         </div>
         <div id="confirmPasswordFormGroup" class="form-group">
             <label for="confirmPassword" class="form-label">POTWIERDŹ HASŁO</label>
             <input type="password"
                    id="confirmPassword" name="confirmPassword" th:field="*{confirmPassword}"
-                   class="form-control"
+                   class="form-control" th:class="${#fields.hasErrors('confirmPassword')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    placeholder="Potwierdź hasło">
+            <div class="error-message" th:errors="*{confirmPassword}">Błędy związane z hasłem</div>
         </div>
         <div class="d-grid gap-2 col-5 mx-auto" style="margin: 8px 0 8px 0;">
             <button class="btn form-button" type="submit">Zarejestruj się</button>
