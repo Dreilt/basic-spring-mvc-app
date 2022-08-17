@@ -1,7 +1,9 @@
 package pl.dreilt.basicspringmvcapp.configuration;
 
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -30,7 +32,10 @@ public class SecurityConfiguration {
                 .mvcMatchers("/").permitAll()
                 .mvcMatchers("/register", "/confirmation").permitAll()
                 .anyRequest().authenticated());
-        http.formLogin(login -> login.loginPage("/login").permitAll());
+        http.formLogin(login -> login
+                .loginPage("/login").permitAll()
+                .failureUrl("/login?error=true")
+        );
         http.logout(logout -> logout
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout/**", HttpMethod.GET.name()))
                 .logoutSuccessUrl("/login?logout").permitAll()
@@ -58,5 +63,13 @@ public class SecurityConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasename("classpath:messages/messages");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
     }
 }

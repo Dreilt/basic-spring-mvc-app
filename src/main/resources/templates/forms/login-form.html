@@ -16,6 +16,7 @@
             <h2>Logowanie</h2>
             <span>Wprowadź swoje dane poniżej</span>
         </div>
+        <div class="alert custom-alert-danger" role="alert" th:if="${param.error}" th:text="${errorMessage}">Błędy związane z logowaniem</div>
         <div id="usernameFormGroup" class="form-group">
             <label for="username" class="form-label">E-MAIL</label>
             <input type="text"
