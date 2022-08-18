@@ -71,3 +71,17 @@
 .table-heading {
     text-align: center;
 }
+
+.table-button {
+    padding: 0;
+    background-color: #ffffff;
+    border: none;
+}
+
+.icon-button {
+    color: #f39c12;
+}
+
+.icon-button:hover {
+    color: #d68910;
+}

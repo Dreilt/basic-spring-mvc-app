@@ -61,4 +61,8 @@ public class AppUserService {
     public List<AppUserAdminPanelDto> findAllAppUsers() {
         return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoList(appUserRepository.findAllAppUsers());
     }
+
+    public void deleteAppUser(Long id) {
+        appUserRepository.deleteById(id);
+    }
 }
