@@ -1,17 +1,17 @@
 package pl.dreilt.basicspringmvcapp.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.dreilt.basicspringmvcapp.dto.AppUserAdminPanelDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserBasicDataAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserCredentialsDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserRegistrationDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
 import pl.dreilt.basicspringmvcapp.exception.NoSuchRoleException;
 import pl.dreilt.basicspringmvcapp.mapper.AppUserAdminPanelDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.AppUserBasicDataAdminPanelDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.AppUserCredentialsDtoMapper;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRoleRepository;
@@ -60,6 +60,35 @@ public class AppUserService {
 
     public List<AppUserAdminPanelDto> findAllAppUsers() {
         return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoList(appUserRepository.findAllAppUsers());
+    }
+
+    public Optional<AppUserBasicDataAdminPanelDto> findAppUserById(Long id) {
+        return appUserRepository.findById(id)
+                .map(AppUserBasicDataAdminPanelDtoMapper::mapToAppUserBasicDataAdminPanelDto);
+    }
+
+    @Transactional
+    public Optional<AppUserBasicDataAdminPanelDto> updateAppUserBasicData(Long id, AppUserBasicDataAdminPanelDto appUserBasicDataAdminPanel) {
+        return appUserRepository.findById(id)
+                .map(target -> setAppUserData(appUserBasicDataAdminPanel, target))
+                .map(AppUserBasicDataAdminPanelDtoMapper::mapToAppUserBasicDataAdminPanelDto);
+    }
+
+    private AppUser setAppUserData(AppUserBasicDataAdminPanelDto source, AppUser target) {
+        if (source.getFirstName() != null && !source.getFirstName().equals(target.getFirstName())) {
+            target.setFirstName(source.getFirstName());
+        }
+        if (source.getLastName() != null && !source.getLastName().equals(target.getLastName())) {
+            target.setLastName(source.getLastName());
+        }
+        if (source.isEnabled() != target.isEnabled()) {
+            target.setEnabled(source.isEnabled());
+        }
+        if (source.isAccountNonLocked() != target.isAccountNonLocked()) {
+            target.setAccountNonLocked(source.isAccountNonLocked());
+        }
+        target.setRoles(source.getRoles());
+        return target;
     }
 
     public void deleteAppUser(Long id) {

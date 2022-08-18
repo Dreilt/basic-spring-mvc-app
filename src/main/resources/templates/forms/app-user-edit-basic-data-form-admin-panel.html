@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pl"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel administratora</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link href="../static/styles/main.css" th:href="@{/styles/main.css}" rel="stylesheet"/>
+</head>
+<body>
+<nav th:replace="fragments :: navbar"></nav>
+<div class="form-container">
+    <form class="custom-form" method="post" th:method="patch" action="#" th:action="@{'/admin_panel/users/' + ${appUserBasicDataAdminPanel.id}}" th:object="${appUserBasicDataAdminPanel}">
+        <div class="form-heading">
+            <h2>Edycja danych użytkownika</h2>
+            <span>Zaktualizuj dane użytkownika poniżej</span>
+        </div>
+        <div class="form-group">
+            <label for="firstName" class="form-label">IMIĘ</label>
+            <input type="text"
+                   id="firstName" name="firstName" th:field="*{firstName}"
+                   class="form-control"
+                   placeholder="Imię"
+                   required>
+        </div>
+        <div class="form-group">
+            <label for="lastName" class="form-label">NAZWISKO</label>
+            <input type="text"
+                   id="lastName" name="lastName" th:field="*{lastName}"
+                   class="form-control"
+                   placeholder="Nazwisko"
+                   required>
+        </div>
+        <div class="form-group">
+            <label for="enabled" class="form-label">WŁĄCZONY</label>
+            <select id="enabled" name="enabled" th:field="*{enabled}"
+                    class="form-control">
+                <option th:value="'true'" th:text="'Tak'">Tak</option>
+                <option th:value="'false'" th:text="'Nie'">Nie</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="accountNonLocked" class="form-label">ZABLOKOWANY</label>
+            <select id="accountNonLocked" name="accountNonLocked" th:field="*{accountNonLocked}"
+                    class="form-control">
+                <option th:value="'true'" th:text="'Nie'">Nie</option>
+                <option th:value="'false'" th:text="'Tak'">Tak</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="roles" class="form-label">ROLA</label>
+            <div id="roles">
+                <div th:each="role: ${appUserRoles}">
+                    <input type="checkbox" class="custom-checkbox" th:field="*{roles}" th:value="${role.id}">
+                    <label th:text="${role.visibleName}"></label>
+                </div>
+            </div>
+        </div>
+        <div class="d-grid gap-2 col-5 mx-auto" style="margin: 8px 0 8px 0;">
+            <button class="btn form-button" type="submit">Zaktualizuj dane</button>
+        </div>
+    </form>
+</div>
+
+<th:block th:replace="fragments :: scripts"></th:block>
+</body>
+</html>

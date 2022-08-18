@@ -27,6 +27,7 @@
             <th scope="col">Zablokowany</th>
             <th scope="col">Rola</th>
             <th scope="col"></th>
+            <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
@@ -39,6 +40,9 @@
             <td th:text="${user.accountNonLocked == true ? 'Nie' : 'Tak'}">Nie</td>
             <td>
                 <p th:each="role: ${user.roles}" th:text="${role.visibleName}">Użytkownik</p>
+            </td>
+            <td>
+                <a href="#" th:href="@{'/admin_panel/users/' + ${user.id}}"><i class="fa-solid fa-pen icon-button"></i></a>
             </td>
             <td>
                 <form method="post" th:method="delete" action="#" th:action="@{'/admin_panel/users/' + ${user.id}}">
