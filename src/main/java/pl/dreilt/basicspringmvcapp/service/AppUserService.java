@@ -1,17 +1,22 @@
 package pl.dreilt.basicspringmvcapp.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.dreilt.basicspringmvcapp.dto.AppUserAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserCredentialsDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserRegistrationDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
 import pl.dreilt.basicspringmvcapp.exception.NoSuchRoleException;
+import pl.dreilt.basicspringmvcapp.mapper.AppUserAdminPanelDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.AppUserCredentialsDtoMapper;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRoleRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -51,5 +56,9 @@ public class AppUserService {
                 }
         );
         appUserRepository.save(appUser);
+    }
+
+    public List<AppUserAdminPanelDto> findAllAppUsers() {
+        return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoList(appUserRepository.findAllAppUsers());
     }
 }

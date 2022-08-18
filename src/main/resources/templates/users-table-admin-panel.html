@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pl"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel administratora</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link href="../static/styles/main.css" th:href="@{/styles/main.css}" rel="stylesheet"/>
+</head>
+<body>
+<nav th:replace="fragments :: navbar"></nav>
+<div class="container">
+    <div class="table-heading">
+        <h2>Użytkownicy</h2>
+        <span th:text="'Liczba użytkowników: ' + ${users.size()}">Liczba użytkowników: 0</span>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Imię</th>
+            <th scope="col">Nazwisko</th>
+            <th scope="col">E-mail</th>
+            <th scope="col">Włączony</th>
+            <th scope="col">Zablokowany</th>
+            <th scope="col">Rola</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user, status: ${users}">
+            <th scope="row" th:text="${status.count}">1</th>
+            <td th:text="${user.firstName}">Jan</td>
+            <td th:text="${user.lastName}">Kowalski</td>
+            <td th:text="${user.email}">jankowalski@example.com</td>
+            <td th:text="${user.enabled == true ? 'Tak' : 'Nie'}">Tak</td>
+            <td th:text="${user.accountNonLocked == true ? 'Nie' : 'Tak'}">Nie</td>
+            <td>
+                <p th:each="role: ${user.roles}" th:text="${role.visibleName}">Użytkownik</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<th:block th:replace="fragments :: scripts"></th:block>
+</body>
+</html>
