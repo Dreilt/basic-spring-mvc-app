@@ -2,21 +2,12 @@ package pl.dreilt.basicspringmvcapp.dto;
 
 import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Set;
 
 public class AppUserAdminPanelDto {
     private Long id;
-    @NotNull
-    @Size(min = 2, max = 50)
     private String firstName;
-    @NotNull
-    @Size(min = 2, max = 50)
     private String lastName;
-    @NotNull
-    @Email
     private String email;
     private boolean enabled;
     private boolean accountNonLocked;
