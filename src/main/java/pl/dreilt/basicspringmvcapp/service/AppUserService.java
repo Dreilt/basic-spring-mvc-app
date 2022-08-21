@@ -16,6 +16,7 @@ import pl.dreilt.basicspringmvcapp.mapper.AppUserCredentialsDtoMapper;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRoleRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,5 +94,25 @@ public class AppUserService {
 
     public void deleteAppUser(Long id) {
         appUserRepository.deleteById(id);
+    }
+
+    public List<AppUserAdminPanelDto> findAppUsersBySearch(String searchQuery) {
+        if (searchQuery.equals("")) {
+            return new ArrayList<>();
+        } else {
+            searchQuery = searchQuery.toLowerCase();
+            String[] searchWords = searchQuery.split(" ");
+
+            if (searchWords.length == 1) {
+                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoList(
+                        appUserRepository.findAppUsersBySearch(searchQuery));
+            } else if (searchWords.length == 2) {
+                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoList(
+                        appUserRepository.findAppUsersBySearch(searchWords[0], searchWords[1]));
+            } else {
+                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoList(
+                        appUserRepository.findAppUsersBySearch(searchWords));
+            }
+        }
     }
 }

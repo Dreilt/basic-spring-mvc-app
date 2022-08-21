@@ -60,4 +60,15 @@ public class AdminController {
             return null;
         }
     }
+
+    @GetMapping("/admin_panel/users/results")
+    public String getAppUsersBySearch(@RequestParam(name = "search_query", required = false) String searchQuery, Model model) {
+        if (searchQuery != null) {
+            List<AppUserAdminPanelDto> users = appUserService.findAppUsersBySearch(searchQuery);
+            model.addAttribute("users", users);
+            return "users-table-admin-panel";
+        } else {
+            return "redirect:/admin_panel/users/results?search_query=";
+        }
+    }
 }

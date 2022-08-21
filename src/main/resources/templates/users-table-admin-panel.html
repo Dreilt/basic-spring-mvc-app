@@ -16,6 +16,19 @@
         <h2>Użytkownicy</h2>
         <span th:text="'Liczba użytkowników: ' + ${users.size()}">Liczba użytkowników: 0</span>
     </div>
+    <div class="search-container">
+        <form class="search-form" method="get" th:method="get" action="#" th:action="@{'/admin_panel/users/results'}">
+            <input type="search"
+                   id="search_query" name="search_query"
+                   class="search-form-input"
+                   placeholder="Szukaj"
+                   th:value="${#request.getParameter('search_query')}"
+                   required>
+            <button class="search-form-button" type="submit">
+                <i class="fa-solid fa-search icon-button"></i>
+            </button>
+        </form>
+    </div>
     <table class="table">
         <thead>
         <tr>
@@ -32,7 +45,7 @@
         </thead>
         <tbody>
         <tr th:each="user, status: ${users}">
-            <th scope="row" th:text="${status.count}">1</th>
+            <td th:text="${status.count}">1</td>
             <td th:text="${user.firstName}">Jan</td>
             <td th:text="${user.lastName}">Kowalski</td>
             <td th:text="${user.email}">jankowalski@example.com</td>
@@ -54,6 +67,9 @@
         </tr>
         </tbody>
     </table>
+    <div style="text-align: center" th:if="${users.size() == 0}">
+        <span>Nie znaleziono użytkowników</span>
+    </div>
 </div>
 
 <th:block th:replace="fragments :: scripts"></th:block>
