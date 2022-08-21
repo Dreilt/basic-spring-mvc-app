@@ -17,13 +17,12 @@
         <span th:text="'Liczba użytkowników: ' + ${users.size()}">Liczba użytkowników: 0</span>
     </div>
     <div class="search-container">
-        <form class="search-form" method="get" th:method="get" action="#" th:action="@{'/admin_panel/users/results'}">
+        <form id="searchForm" name="searchForm" class="search-form" onsubmit="return validateSearchForm()" method="get" th:method="get" action="#" th:action="@{'/admin_panel/users/results'}">
             <input type="search"
                    id="search_query" name="search_query"
                    class="search-form-input"
                    placeholder="Szukaj"
-                   th:value="${#request.getParameter('search_query')}"
-                   required>
+                   th:value="${#request.getParameter('search_query')}">
             <button class="search-form-button" type="submit">
                 <i class="fa-solid fa-search icon-button"></i>
             </button>
@@ -73,5 +72,6 @@
 </div>
 
 <th:block th:replace="fragments :: scripts"></th:block>
+<script type="text/javascript" src="../static/scripts/validation.js" th:src="@{/scripts/validation.js}"></script>
 </body>
 </html>

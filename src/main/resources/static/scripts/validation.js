@@ -37,3 +37,18 @@ function checkIfNotEmpty(fieldName, fieldValue) {
     }
     return true
 }
+
+function validateSearchForm() {
+    const searchQueryValue = document.searchForm.search_query.value;
+    if (!searchQueryValue) {
+        return false;
+    }
+
+    for (let i = 0; i < searchQueryValue.length; i++) {
+        if (searchQueryValue[i] !== ' ') {
+            return true;
+        }
+    }
+
+    return false;
+}
