@@ -124,3 +124,16 @@
 .icon-button:hover {
     color: #d68910;
 }
+
+.page-item.active .page-link {
+    background-color: #f39c12;
+    border-color: #f39c12;
+}
+
+.page-link {
+    color: #f39c12;
+}
+
+.page-link:hover {
+    color: #d68910;
+}

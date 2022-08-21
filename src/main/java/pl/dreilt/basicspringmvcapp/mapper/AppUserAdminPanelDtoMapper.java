@@ -1,17 +1,13 @@
 package pl.dreilt.basicspringmvcapp.mapper;
 
+import org.springframework.data.domain.Page;
 import pl.dreilt.basicspringmvcapp.dto.AppUserAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class AppUserAdminPanelDtoMapper {
 
-    public static List<AppUserAdminPanelDto> mapToAppUserAdminPanelDtoList(List<AppUser> appUsers) {
-        return appUsers.stream()
-                .map(appUser -> mapToAppUserAdminPanelDto(appUser))
-                .collect(Collectors.toList());
+    public static Page<AppUserAdminPanelDto> mapToAppUserAdminPanelDtoPage(Page<AppUser> appUsers) {
+        return appUsers.map(AppUserAdminPanelDtoMapper::mapToAppUserAdminPanelDto);
     }
 
     public static AppUserAdminPanelDto mapToAppUserAdminPanelDto(AppUser appUser) {

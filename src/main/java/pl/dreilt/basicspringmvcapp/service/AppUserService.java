@@ -1,5 +1,7 @@
 package pl.dreilt.basicspringmvcapp.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +18,6 @@ import pl.dreilt.basicspringmvcapp.mapper.AppUserCredentialsDtoMapper;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRoleRepository;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -59,8 +59,8 @@ public class AppUserService {
         appUserRepository.save(appUser);
     }
 
-    public List<AppUserAdminPanelDto> findAllAppUsers() {
-        return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoList(appUserRepository.findAllAppUsers());
+    public Page<AppUserAdminPanelDto> findAllAppUsers(Pageable pageable) {
+        return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoPage(appUserRepository.findAllAppUsers(pageable));
     }
 
     public Optional<AppUserBasicDataAdminPanelDto> findAppUserById(Long id) {
@@ -96,22 +96,22 @@ public class AppUserService {
         appUserRepository.deleteById(id);
     }
 
-    public List<AppUserAdminPanelDto> findAppUsersBySearch(String searchQuery) {
+    public Page<AppUserAdminPanelDto> findAppUsersBySearch(String searchQuery, Pageable pageable) {
         if (searchQuery.equals("")) {
-            return new ArrayList<>();
+            return Page.empty();
         } else {
             searchQuery = searchQuery.toLowerCase();
             String[] searchWords = searchQuery.split(" ");
 
             if (searchWords.length == 1) {
-                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoList(
-                        appUserRepository.findAppUsersBySearch(searchQuery));
+                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoPage(
+                        appUserRepository.findAppUsersBySearch(searchQuery, pageable));
             } else if (searchWords.length == 2) {
-                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoList(
-                        appUserRepository.findAppUsersBySearch(searchWords[0], searchWords[1]));
+                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoPage(
+                        appUserRepository.findAppUsersBySearch(searchWords[0], searchWords[1], pageable));
             } else {
-                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoList(
-                        appUserRepository.findAppUsersBySearch(searchWords));
+                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoPage(
+                        appUserRepository.findAppUsersBySearch(searchWords, pageable));
             }
         }
     }

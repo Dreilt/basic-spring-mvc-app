@@ -1,5 +1,7 @@
 package pl.dreilt.basicspringmvcapp.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +12,6 @@ import pl.dreilt.basicspringmvcapp.service.AppUserRoleService;
 import pl.dreilt.basicspringmvcapp.service.AppUserService;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -26,10 +27,21 @@ public class AdminController {
     }
 
     @GetMapping("/admin_panel/users")
-    public String getAllAppUsers(Model model) {
-        List<AppUserAdminPanelDto> users = appUserService.findAllAppUsers();
-        model.addAttribute("users", users);
-        return "users-table-admin-panel";
+    public String getAllAppUsers(@RequestParam(name = "page", required = false) Integer page, Model model) {
+        int pageNumber = page != null ? page : 1;
+        if (pageNumber > 0) {
+            PageRequest pageRequest = PageRequest.of(pageNumber - 1, 10);
+            Page<AppUserAdminPanelDto> users = appUserService.findAllAppUsers(pageRequest);
+            if (pageNumber <= users.getTotalPages()) {
+                model.addAttribute("users", users);
+                model.addAttribute("pageUrl", "/admin_panel/users?");
+                return "users-table-admin-panel";
+            } else {
+                return "redirect:/admin_panel/users?page=" + users.getTotalPages();
+            }
+        } else {
+            return "redirect:/admin_panel/users?page=1";
+        }
     }
 
     @DeleteMapping("/admin_panel/users/{id}")
@@ -62,11 +74,35 @@ public class AdminController {
     }
 
     @GetMapping("/admin_panel/users/results")
-    public String getAppUsersBySearch(@RequestParam(name = "search_query", required = false) String searchQuery, Model model) {
+    public String getAppUsersBySearch(@RequestParam(name = "search_query", required = false) String searchQuery,
+                                      @RequestParam(name = "page", required = false) Integer page,
+                                      Model model) {
         if (searchQuery != null) {
-            List<AppUserAdminPanelDto> users = appUserService.findAppUsersBySearch(searchQuery);
-            model.addAttribute("users", users);
-            return "users-table-admin-panel";
+            int pageNumber = page != null ? page : 1;
+            if (pageNumber > 0) {
+                PageRequest pageRequest = PageRequest.of(pageNumber - 1, 1);
+                Page<AppUserAdminPanelDto> users = appUserService.findAppUsersBySearch(searchQuery, pageRequest);
+                if (users.getNumberOfElements() == 0) {
+                    model.addAttribute("users", users);
+                    if (pageNumber > 1) {
+                        return "redirect:/admin_panel/users/results?search_query=" + searchQuery;
+                    } else {
+                        return "users-table-admin-panel";
+                    }
+                } else if (pageNumber <= users.getTotalPages()) {
+                    model.addAttribute("users", users);
+                    searchQuery = searchQuery.replace(" ", "+");
+                    model.addAttribute("searchQuery", searchQuery);
+                    model.addAttribute("pageUrl", "/admin_panel/users/results?search_query=" + searchQuery + "&");
+                    return "users-table-admin-panel";
+                } else {
+                    searchQuery = searchQuery.replace(" ", "+");
+                    return "redirect:/admin_panel/users/results?search_query=" + searchQuery + "&page=" + users.getTotalPages();
+                }
+            } else {
+                searchQuery = searchQuery.replace(" ", "+");
+                return "redirect:/admin_panel/users/results?search_query=" + searchQuery + "&page=1";
+            }
         } else {
             return "redirect:/admin_panel/users/results?search_query=";
         }
