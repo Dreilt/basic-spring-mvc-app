@@ -61,7 +61,7 @@ public class AppUserService {
         return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoPage(appUserRepository.findAllAppUsers(pageable));
     }
 
-    public Optional<AppUserBasicDataAdminPanelDto> findAppUserById(Long id) {
+    public Optional<AppUserBasicDataAdminPanelDto> findAppUserBasicDataToEdit(Long id) {
         return appUserRepository.findById(id)
                 .map(AppUserBasicDataAdminPanelDtoMapper::mapToAppUserBasicDataAdminPanelDto);
     }
@@ -69,11 +69,11 @@ public class AppUserService {
     @Transactional
     public Optional<AppUserBasicDataAdminPanelDto> updateAppUserBasicData(Long id, AppUserBasicDataAdminPanelDto appUserBasicDataAdminPanel) {
         return appUserRepository.findById(id)
-                .map(target -> setAppUserData(appUserBasicDataAdminPanel, target))
+                .map(target -> setAppUserBasicDataAdminPanel(appUserBasicDataAdminPanel, target))
                 .map(AppUserBasicDataAdminPanelDtoMapper::mapToAppUserBasicDataAdminPanelDto);
     }
 
-    private AppUser setAppUserData(AppUserBasicDataAdminPanelDto source, AppUser target) {
+    private AppUser setAppUserBasicDataAdminPanel(AppUserBasicDataAdminPanelDto source, AppUser target) {
         if (source.getFirstName() != null && !source.getFirstName().equals(target.getFirstName())) {
             target.setFirstName(source.getFirstName());
         }

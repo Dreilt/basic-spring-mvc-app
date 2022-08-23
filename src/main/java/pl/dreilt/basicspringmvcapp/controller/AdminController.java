@@ -52,7 +52,7 @@ public class AdminController {
 
     @GetMapping("/admin_panel/users/{id}")
     public String getAppUserBasicDataToEdit(@PathVariable Long id, Model model) {
-        Optional<AppUserBasicDataAdminPanelDto> appUserBasicDataAdminPanel = appUserService.findAppUserById(id);
+        Optional<AppUserBasicDataAdminPanelDto> appUserBasicDataAdminPanel = appUserService.findAppUserBasicDataToEdit(id);
         if (appUserBasicDataAdminPanel.isPresent()) {
             model.addAttribute("appUserBasicDataAdminPanel", appUserBasicDataAdminPanel.get());
             Set<AppUserRole> appUserRoles = appUserRoleService.findAllAppUserRole();
