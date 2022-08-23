@@ -142,3 +142,11 @@
     font-weight: bold;
     text-align: right;
 }
+
+.custom-a {
+    color: #f39c12;
+}
+
+.custom-a:hover {
+    color: #d68910;
+}

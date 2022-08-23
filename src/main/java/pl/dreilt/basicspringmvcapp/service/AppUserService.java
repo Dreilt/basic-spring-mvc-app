@@ -2,6 +2,8 @@ package pl.dreilt.basicspringmvcapp.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,10 +11,7 @@ import pl.dreilt.basicspringmvcapp.dto.*;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
 import pl.dreilt.basicspringmvcapp.exception.NoSuchRoleException;
-import pl.dreilt.basicspringmvcapp.mapper.AppUserAdminPanelDtoMapper;
-import pl.dreilt.basicspringmvcapp.mapper.AppUserBasicDataAdminPanelDtoMapper;
-import pl.dreilt.basicspringmvcapp.mapper.AppUserCredentialsDtoMapper;
-import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.*;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRoleRepository;
 
@@ -117,5 +116,28 @@ public class AppUserService {
     public Optional<AppUserProfileDto> findAppUserProfile(String email) {
         return appUserRepository.findByEmail(email)
                 .map(AppUserProfileDtoMapper::mapToAppUserProfileDto);
+    }
+
+    public Optional<AppUserEditProfileDto> findAppUserProfileToEdit(String email) {
+        return appUserRepository.findByEmail(email)
+                .map(AppUserEditProfileDtoMapper::mapToAppUserProfileDto);
+    }
+
+    @Transactional
+    public Optional<AppUserEditProfileDto> updateAppUserProfile(AppUserEditProfileDto appUserEditProfileDto) {
+        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+        return appUserRepository.findByEmail(currentUser.getName())
+                .map(target -> setAppUserBasicData(appUserEditProfileDto, target))
+                .map(AppUserEditProfileDtoMapper::mapToAppUserProfileDto);
+    }
+
+    private AppUser setAppUserBasicData(AppUserEditProfileDto source, AppUser target) {
+        if (source.getFirstName() != null && !source.getFirstName().equals(target.getFirstName())) {
+            target.setFirstName(source.getFirstName());
+        }
+        if (source.getLastName() != null && !source.getLastName().equals(target.getLastName())) {
+            target.setLastName(source.getLastName());
+        }
+        return target;
     }
 }
