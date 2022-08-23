@@ -137,3 +137,8 @@
 .page-link:hover {
     color: #d68910;
 }
+
+.app-label {
+    font-weight: bold;
+    text-align: right;
+}

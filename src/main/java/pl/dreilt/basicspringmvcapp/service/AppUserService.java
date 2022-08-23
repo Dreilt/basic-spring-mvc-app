@@ -5,16 +5,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.dreilt.basicspringmvcapp.dto.AppUserAdminPanelDto;
-import pl.dreilt.basicspringmvcapp.dto.AppUserBasicDataAdminPanelDto;
-import pl.dreilt.basicspringmvcapp.dto.AppUserCredentialsDto;
-import pl.dreilt.basicspringmvcapp.dto.AppUserRegistrationDto;
+import pl.dreilt.basicspringmvcapp.dto.*;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
 import pl.dreilt.basicspringmvcapp.exception.NoSuchRoleException;
 import pl.dreilt.basicspringmvcapp.mapper.AppUserAdminPanelDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.AppUserBasicDataAdminPanelDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.AppUserCredentialsDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileDtoMapper;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRoleRepository;
 
@@ -114,5 +112,10 @@ public class AppUserService {
                         appUserRepository.findAppUsersBySearch(searchWords, pageable));
             }
         }
+    }
+
+    public Optional<AppUserProfileDto> findAppUserProfile(String email) {
+        return appUserRepository.findByEmail(email)
+                .map(AppUserProfileDtoMapper::mapToAppUserProfileDto);
     }
 }
