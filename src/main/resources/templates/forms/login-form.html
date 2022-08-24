@@ -16,7 +16,10 @@
             <h2>Logowanie</h2>
             <span>Wprowadź swoje dane poniżej</span>
         </div>
-        <div class="alert custom-alert-danger" role="alert" th:if="${param.error}" th:text="${errorMessage}">Błędy związane z logowaniem</div>
+        <div class="alert custom-alert-danger" role="alert" th:if="${#httpServletRequest.getParameter('error') == 'badCredentials'}" th:text="#{login.loginForm.BadCredentialsException.message}"></div>
+        <div class="alert custom-alert-danger" role="alert" th:if="${#httpServletRequest.getParameter('error') == 'disabledAccount'}" th:text="#{login.loginForm.DisabledException.message}"></div>
+        <div class="alert custom-alert-danger" role="alert" th:if="${#httpServletRequest.getParameter('error') == 'lockedAccount'}" th:text="#{login.loginForm.LockedException.message}"></div>
+        <div class="alert custom-alert-danger" role="alert" th:if="${#httpServletRequest.getParameter('error') == 'unknownError'}" th:text="#{login.loginForm.unknownError.message}"></div>
         <div id="usernameFormGroup" class="form-group">
             <label for="username" class="form-label">E-MAIL</label>
             <input type="text"
