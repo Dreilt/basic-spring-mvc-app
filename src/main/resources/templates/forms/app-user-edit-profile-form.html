@@ -11,26 +11,24 @@
 <body>
 <nav th:replace="fragments :: navbar"></nav>
 <div class="form-container">
-    <form class="custom-form" method="post" th:method="patch" action="#" th:action="@{/settings/profile}" th:object="${appUserProfile}">
+    <form id="appUserEditProfileForm" name="appUserEditProfileForm" class="custom-form" onsubmit="return validateAppUserEditProfileForm()" method="post" th:method="patch" action="#" th:action="@{/settings/profile}" th:object="${appUserProfile}">
         <div class="form-heading">
             <h2>Edycja danych</h2>
             <span>Zaktualizuj swoje dane poniżej</span>
         </div>
-        <div class="form-group">
+        <div id="firstNameFormGroup" class="form-group">
             <label for="firstName" class="form-label">IMIĘ</label>
             <input type="text"
                    id="firstName" name="firstName" th:field="*{firstName}"
                    class="form-control"
-                   placeholder="Imię"
-                   required>
+                   placeholder="Imię">
         </div>
-        <div class="form-group">
+        <div id="lastNameFormGroup" class="form-group">
             <label for="lastName" class="form-label">NAZWISKO</label>
             <input type="text"
                    id="lastName" name="lastName" th:field="*{lastName}"
                    class="form-control"
-                   placeholder="Nazwisko"
-                   required>
+                   placeholder="Nazwisko">
         </div>
         <div class="d-grid gap-2 col-5 mx-auto" style="margin: 8px 0 8px 0;">
             <button class="btn form-button" type="submit">Zaktualizuj dane</button>
@@ -39,5 +37,6 @@
 </div>
 
 <th:block th:replace="fragments :: scripts"></th:block>
+<script type="text/javascript" src="../static/scripts/validation.js" th:src="@{/scripts/validation.js}"></script>
 </body>
 </html>

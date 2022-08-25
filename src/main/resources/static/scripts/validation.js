@@ -22,6 +22,15 @@ function validateRegistrationForm() {
     return isNotFirstNameError && isNotLastNameError && isNotEmailError && isNotPasswordError && isNotConfirmPasswordError;
 }
 
+function validateAppUserEditProfileForm() {
+    const firstNameValue = document.appUserEditProfileForm.firstName.value;
+    const isNotFirstNameError = checkIfNotEmpty('firstName', firstNameValue);
+    const lastNameValue = document.appUserEditProfileForm.lastName.value;
+    const isNotLastNameError = checkIfNotEmpty('lastName', lastNameValue);
+
+    return isNotFirstNameError && isNotLastNameError;
+}
+
 function validateAppUserEditBasicDataFormAdminPanel() {
     const firstNameValue = document.appUserEditBasicDataFormAdminPanel.firstName.value;
     const isNotFirstNameError = checkIfNotEmpty('firstName', firstNameValue);
