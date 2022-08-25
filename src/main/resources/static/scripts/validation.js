@@ -27,6 +27,7 @@ function checkIfNotEmpty(fieldName, fieldValue) {
         document.getElementById(fieldName).className='form-control is-invalid';
         if (!document.getElementById(`${fieldName}Error`)) {
             document.getElementById(`${fieldName}FormGroup`).innerHTML+=`<div id="${fieldName}Error" class="error-message">Wype\u0142nij to pole</div>`;
+            document.getElementById(fieldName).value = '';
         }
         return false
     }
