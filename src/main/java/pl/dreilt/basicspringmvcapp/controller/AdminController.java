@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.dreilt.basicspringmvcapp.dto.AppUserAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserBasicDataAdminPanelDto;
@@ -64,12 +65,16 @@ public class AdminController {
     }
 
     @PatchMapping("/admin_panel/users/{id}")
-    public String updateAppUserBasicData(@Valid @ModelAttribute AppUserBasicDataAdminPanelDto appUserBasicDataAdminPanel, @PathVariable Long id) {
-        Optional<AppUserBasicDataAdminPanelDto> appUserBasicDataAdminPanelUpdated = appUserService.updateAppUserBasicData(id, appUserBasicDataAdminPanel);
-        if (appUserBasicDataAdminPanelUpdated.isPresent()) {
-            return "redirect:/admin_panel/users/" + id;
+    public String updateAppUserBasicData(@Valid @ModelAttribute AppUserBasicDataAdminPanelDto appUserBasicDataAdminPanel, BindingResult bindingResult, @PathVariable Long id) {
+        if (bindingResult.hasErrors()) {
+            return "forms/app-user-edit-basic-data-form-admin-panel";
         } else {
-            return null;
+            Optional<AppUserBasicDataAdminPanelDto> appUserBasicDataAdminPanelUpdated = appUserService.updateAppUserBasicData(id, appUserBasicDataAdminPanel);
+            if (appUserBasicDataAdminPanelUpdated.isPresent()) {
+                return "redirect:/admin_panel/users/" + id;
+            } else {
+                return null;
+            }
         }
     }
 
