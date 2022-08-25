@@ -11,26 +11,24 @@
 <body>
 <nav th:replace="fragments :: navbar"></nav>
 <div class="form-container">
-    <form class="custom-form" method="post" th:method="patch" action="#" th:action="@{'/admin_panel/users/' + ${appUserBasicDataAdminPanel.id}}" th:object="${appUserBasicDataAdminPanel}">
+    <form id="appUserEditBasicDataFormAdminPanel" name="appUserEditBasicDataFormAdminPanel" class="custom-form" onsubmit="return validateAppUserEditBasicDataFormAdminPanel()" method="post" th:method="patch" action="#" th:action="@{'/admin_panel/users/' + ${appUserBasicDataAdminPanel.id}}" th:object="${appUserBasicDataAdminPanel}">
         <div class="form-heading">
             <h2>Edycja danych użytkownika</h2>
             <span>Zaktualizuj dane użytkownika poniżej</span>
         </div>
-        <div class="form-group">
+        <div id="firstNameFormGroup" class="form-group">
             <label for="firstName" class="form-label">IMIĘ</label>
             <input type="text"
                    id="firstName" name="firstName" th:field="*{firstName}"
                    class="form-control"
-                   placeholder="Imię"
-                   required>
+                   placeholder="Imię">
         </div>
-        <div class="form-group">
+        <div id="lastNameFormGroup" class="form-group">
             <label for="lastName" class="form-label">NAZWISKO</label>
             <input type="text"
                    id="lastName" name="lastName" th:field="*{lastName}"
                    class="form-control"
-                   placeholder="Nazwisko"
-                   required>
+                   placeholder="Nazwisko">
         </div>
         <div class="form-group">
             <label for="enabled" class="form-label">WŁĄCZONY</label>
