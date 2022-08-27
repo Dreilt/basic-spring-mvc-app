@@ -20,19 +20,21 @@
         <div class="alert custom-alert-danger" role="alert" th:if="${#httpServletRequest.getParameter('error') == 'disabledAccount'}" th:text="#{login.loginForm.DisabledException.message}"></div>
         <div class="alert custom-alert-danger" role="alert" th:if="${#httpServletRequest.getParameter('error') == 'lockedAccount'}" th:text="#{login.loginForm.LockedException.message}"></div>
         <div class="alert custom-alert-danger" role="alert" th:if="${#httpServletRequest.getParameter('error') == 'unknownError'}" th:text="#{login.loginForm.unknownError.message}"></div>
-        <div id="usernameFormGroup" class="form-group">
+        <div class="form-group">
             <label for="username" class="form-label">E-MAIL</label>
             <input type="text"
                    id="username" name="username"
                    class="form-control"
                    placeholder="E-mail">
+            <div id="usernameErrorMessage" class="error-message" style="display: none;" th:text="#{login.loginForm.username.fieldEmpty.message}">Błędy związane z nazwą użytkownika</div>
         </div>
-        <div id="passwordFormGroup" class="form-group">
+        <div class="form-group">
             <label for="password" class="form-label">HASŁO</label>
             <input type="password"
                    id="password" name="password"
                    class="form-control"
                    placeholder="Hasło">
+            <div id="passwordErrorMessage" class="error-message" style="display: none;" th:text="#{login.loginForm.password.fieldEmpty.message}">Błędy związane z hasłem</div>
         </div>
         <div class="form-group">
             <input type="checkbox"

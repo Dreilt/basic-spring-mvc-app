@@ -42,19 +42,21 @@ function validateAppUserEditBasicDataFormAdminPanel() {
 
 function checkIfNotEmpty(fieldName, fieldValue) {
     if (!fieldValue) {
-        document.getElementById(fieldName).className='form-control is-invalid';
-        if (!document.getElementById(`${fieldName}Error`)) {
-            document.getElementById(`${fieldName}FormGroup`).innerHTML+=`<div id="${fieldName}Error" class="error-message">Wype\u0142nij to pole</div>`;
-            document.getElementById(fieldName).value = '';
+        document.getElementById(`${fieldName}`).className='form-control is-invalid';
+        if (document.getElementById(`${fieldName}ErrorMessage`).style.display === 'none') {
+            document.getElementById(`${fieldName}ErrorMessage`).style.display = '';
+            document.getElementById(`${fieldName}`).value = '';
         }
-        return false
+
+        return false;
     }
 
-    document.getElementById(fieldName).className='form-control';
-    if (document.getElementById(`${fieldName}Error`) !== null) {
-        document.getElementById(`${fieldName}Error`).remove();
+    document.getElementById(`${fieldName}`).className='form-control';
+    if (document.getElementById(`${fieldName}ErrorMessage`).style.display === '') {
+        document.getElementById(`${fieldName}ErrorMessage`).style.display = 'none';
     }
-    return true
+
+    return true;
 }
 
 function validateSearchForm() {
