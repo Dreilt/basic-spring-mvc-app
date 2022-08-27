@@ -21,11 +21,14 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
     }
 
     private String getRedirectUrl(AuthenticationException exception) {
-        return switch (exception) {
-            case BadCredentialsException badCredentialsException -> "/login?error=badCredentials";
-            case DisabledException disabledException -> "/login?error=disabledAccount";
-            case LockedException lockedException -> "/login?error=lockedAccount";
-            default -> "/login?error=unknownError";
-        };
+        if (exception instanceof BadCredentialsException) {
+            return "/login?error=badCredentials";
+        } else if (exception instanceof DisabledException) {
+            return "/login?error=disabledAccount";
+        } else if (exception instanceof LockedException) {
+            return "/login?error=lockedAccount";
+        } else {
+            return "/login?error=unknownError";
+        }
     }
 }
