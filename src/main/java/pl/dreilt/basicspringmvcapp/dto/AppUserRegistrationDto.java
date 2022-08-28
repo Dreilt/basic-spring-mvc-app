@@ -1,12 +1,17 @@
 package pl.dreilt.basicspringmvcapp.dto;
 
-import pl.dreilt.basicspringmvcapp.annotation.PasswordsValueEquals;
+import pl.dreilt.basicspringmvcapp.annotation.PasswordValueEqual;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@PasswordsValueEquals
+@PasswordValueEqual.List({
+        @PasswordValueEqual(
+                field = "password",
+                fieldEquals = "confirmPassword"
+        )
+})
 public class AppUserRegistrationDto {
     @NotNull
     @Size(min = 2, max = 50)
