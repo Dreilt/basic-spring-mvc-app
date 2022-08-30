@@ -150,3 +150,22 @@
 .custom-a:hover {
     color: #d68910;
 }
+
+.side-nav-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #212529;
+    border-radius: 0.5rem;
+}
+
+.side-nav-link:hover {
+    color: #ffffff;
+    text-decoration: none;
+    background-color: rgb(243, 156, 18, .5);
+}
+
+.side-nav-link.active {
+    color: #ffffff;
+    font-weight: bold;
+    background-color: #f39c12;
+}

@@ -21,9 +21,11 @@ import javax.sql.DataSource;
 public class SecurityConfiguration {
 
     private final DataSource dataSource;
+    private final CustomAuthenticationProvider customAuthenticationProvider;
 
-    public SecurityConfiguration(DataSource dataSource) {
+    public SecurityConfiguration(DataSource dataSource, CustomAuthenticationProvider customAuthenticationProvider) {
         this.dataSource = dataSource;
+        this.customAuthenticationProvider = customAuthenticationProvider;
     }
 
     @Bean
@@ -36,6 +38,7 @@ public class SecurityConfiguration {
                 .mvcMatchers("/admin_panel/**").hasRole("ADMIN")
                 .mvcMatchers("/profile").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated());
+        http.authenticationProvider(customAuthenticationProvider);
         http.formLogin(login -> login
                 .loginPage("/login").permitAll()
                 .failureHandler(new CustomAuthenticationFailureHandler())

@@ -32,4 +32,7 @@ public interface AppUserRepository extends CrudRepository<AppUser, Long> {
 
     @Query(value = "SELECT * FROM app_user WHERE LOWER(first_name) IN :searchWords OR LOWER(last_name) IN :searchWords OR LOWER(email) IN :searchWords", nativeQuery = true)
     Page<AppUser> findAppUsersBySearch(@Param("searchWords") String[] searchWords, Pageable pageable);
+
+    @Query("SELECT a FROM AppUser a WHERE a.email = :username")
+    AppUser findAppUserByUsername(String username);
 }

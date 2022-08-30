@@ -140,4 +140,8 @@ public class AppUserService {
         }
         return target;
     }
+
+    public AppUser findAppUserByUsername(String username) {
+        return appUserRepository.findAppUserByUsername(username);
+    }
 }
