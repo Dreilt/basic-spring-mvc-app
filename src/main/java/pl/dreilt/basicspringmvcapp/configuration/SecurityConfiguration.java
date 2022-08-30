@@ -5,8 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,11 +24,9 @@ import javax.sql.DataSource;
 public class SecurityConfiguration {
 
     private final DataSource dataSource;
-    private final CustomAuthenticationProvider customAuthenticationProvider;
 
-    public SecurityConfiguration(DataSource dataSource, CustomAuthenticationProvider customAuthenticationProvider) {
+    public SecurityConfiguration(DataSource dataSource) {
         this.dataSource = dataSource;
-        this.customAuthenticationProvider = customAuthenticationProvider;
     }
 
     @Bean
@@ -38,7 +39,11 @@ public class SecurityConfiguration {
                 .mvcMatchers("/admin_panel/**").hasRole("ADMIN")
                 .mvcMatchers("/profile").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated());
-        http.authenticationProvider(customAuthenticationProvider);
+
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.getOrBuild();
+        http.userDetailsService(customUserDetailsService(authenticationManagerBuilder.getOrBuild()));
+
         http.formLogin(login -> login
                 .loginPage("/login").permitAll()
                 .failureHandler(new CustomAuthenticationFailureHandler())
@@ -78,5 +83,11 @@ public class SecurityConfiguration {
         messageSource.setBasename("classpath:messages/messages");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
+    }
+
+    @Bean
+    public UserDetailsService customUserDetailsService(AuthenticationManager authenticationManager) {
+        CustomUserDetailsService customUserDetailsService = new CustomUserDetailsService(authenticationManager);
+        return customUserDetailsService;
     }
 }

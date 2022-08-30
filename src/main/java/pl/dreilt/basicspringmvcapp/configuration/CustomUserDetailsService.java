@@ -2,6 +2,7 @@ package pl.dreilt.basicspringmvcapp.configuration;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,20 +11,32 @@ import org.springframework.stereotype.Component;
 import pl.dreilt.basicspringmvcapp.dto.AppUserCredentialsDto;
 import pl.dreilt.basicspringmvcapp.service.AppUserService;
 
-@Component
 public class CustomUserDetailsService implements UserDetailsService {
     protected final Log logger = LogFactory.getLog(this.getClass());
-    private final AppUserService appUserService;
+//    private final AppUserService appUserService;
+//    private final AuthenticationManager authenticationManager;
+//
+//    public CustomUserDetailsService(AppUserService appUserService, AuthenticationManager authenticationManager) {
+//        this.appUserService = appUserService;
+//        this.authenticationManager = authenticationManager;
+//    }
 
-    public CustomUserDetailsService(AppUserService appUserService) {
-        this.appUserService = appUserService;
+    private final AuthenticationManager authenticationManager;
+
+    public CustomUserDetailsService(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
     }
+
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        return appUserService.findAppUserCredentialsByEmail(username)
+//                .map(this::createUserDetails)
+//                .orElseThrow(() -> new UsernameNotFoundException(String.format("User with email %s not found", username)));
+//    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return appUserService.findAppUserCredentialsByEmail(username)
-                .map(this::createUserDetails)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("User with email %s not found", username)));
+        return null;
     }
 
     private UserDetails createUserDetails(AppUserCredentialsDto appUserCredentialsDto) {
