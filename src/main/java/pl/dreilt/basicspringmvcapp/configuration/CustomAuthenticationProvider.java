@@ -12,9 +12,10 @@ import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMap
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
-@Component
+import java.util.Locale;
+
 public class CustomAuthenticationProvider implements AuthenticationProvider {
     protected final Log logger = LogFactory.getLog(this.getClass());
     private final CustomUserDetailsService customUserDetailsService;
@@ -28,20 +29,16 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-//        final String username = (authentication.getPrincipal() == null) ? "NONE_PROVIDED" : authentication.getName();
         final String username = (authentication.getPrincipal() == null) ? "NONE_PROVIDED" : authentication.getName();
 
         UserDetails appUser = null;
         try {
-//            UserDetails loadedUser = this.getUserDetailsService().loadUserByUsername(username);
-
             appUser = customUserDetailsService.loadUserByUsername(username);
-
         } catch (UsernameNotFoundException exception) {
-            throw new BadCredentialsException("D.U.P.A.");
-//            throw new BadCredentialsException(messageSource.getMessage("login.loginForm.badCredentials", null, Locale.getDefault()));
+            this.logger.debug("Failed to find user '" + username + "'");
+            throw new BadCredentialsException(messageSource.getMessage("login.loginForm.badCredentials", null, Locale.getDefault()));
         }
-
+        Assert.notNull(appUser, "retrieveUser returned null - a violation of the interface contract");
         return createSuccessAuthentication(authentication, appUser);
     }
 
