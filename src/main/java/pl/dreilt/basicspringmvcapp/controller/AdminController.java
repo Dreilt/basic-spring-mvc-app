@@ -2,6 +2,7 @@ package pl.dreilt.basicspringmvcapp.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,19 +29,32 @@ public class AdminController {
     }
 
     @GetMapping("/admin_panel/users")
-    public String getAllAppUsers(@RequestParam(name = "page", required = false) Integer page, Model model) {
+    public String getAllAppUsers(@RequestParam(name = "page", required = false) Integer page,
+                                 @RequestParam(name = "sort_by", required = false) String sortProperty,
+                                 Model model) {
         int pageNumber = page != null ? page : 1;
+        String sortPropertyName = sortProperty != null ? sortProperty : "lastName";
         if (pageNumber > 0) {
-            PageRequest pageRequest = PageRequest.of(pageNumber - 1, 10);
+            PageRequest pageRequest = PageRequest.of(pageNumber - 1, 10, Sort.by(Sort.Direction.ASC, sortPropertyName));
             Page<AppUserAdminPanelDto> users = appUserService.findAllAppUsers(pageRequest);
             if (pageNumber <= users.getTotalPages()) {
                 model.addAttribute("users", users);
-                model.addAttribute("pageUrl", "/admin_panel/users?");
+                model.addAttribute("prefixSortUrl", "/admin_panel/users?");
+                model.addAttribute("prefixUrl", "/admin_panel/users?");
+                if (sortProperty != null) {
+                    model.addAttribute("sortParams", "sort_by=" + sortProperty);
+                }
                 return "users-table-admin-panel";
             } else {
+                if (sortProperty != null) {
+                    return "redirect:/admin_panel/users?page=" + users.getTotalPages() + "&sort_by=" + sortProperty;
+                }
                 return "redirect:/admin_panel/users?page=" + users.getTotalPages();
             }
         } else {
+            if (sortProperty != null) {
+                return "redirect:/admin_panel/users?page=1" + "&sort_by=" + sortProperty;
+            }
             return "redirect:/admin_panel/users?page=1";
         }
     }
@@ -81,31 +95,44 @@ public class AdminController {
     @GetMapping("/admin_panel/users/results")
     public String getAppUsersBySearch(@RequestParam(name = "search_query", required = false) String searchQuery,
                                       @RequestParam(name = "page", required = false) Integer page,
+                                      @RequestParam(name = "sort_by", required = false) String sortProperty,
                                       Model model) {
         if (searchQuery != null) {
             int pageNumber = page != null ? page : 1;
+            String sortPropertyName = sortProperty != null ? sortProperty : "lastName";
             if (pageNumber > 0) {
-                PageRequest pageRequest = PageRequest.of(pageNumber - 1, 1);
+                PageRequest pageRequest = PageRequest.of(pageNumber - 1, 1, Sort.by(Sort.Direction.ASC, sortPropertyName));
                 Page<AppUserAdminPanelDto> users = appUserService.findAppUsersBySearch(searchQuery, pageRequest);
                 if (users.getNumberOfElements() == 0) {
                     model.addAttribute("users", users);
                     if (pageNumber > 1) {
+                        if (sortProperty != null) {
+                            return "redirect:/admin_panel/users/results?search_query=" + searchQuery + "&sort_by=" + sortProperty;
+                        }
                         return "redirect:/admin_panel/users/results?search_query=" + searchQuery;
                     } else {
+                        model.addAttribute("prefixSortUrl", "/admin_panel/users/results?search_query=" + searchQuery + "&");
                         return "users-table-admin-panel";
                     }
                 } else if (pageNumber <= users.getTotalPages()) {
                     model.addAttribute("users", users);
                     searchQuery = searchQuery.replace(" ", "+");
                     model.addAttribute("searchQuery", searchQuery);
-                    model.addAttribute("pageUrl", "/admin_panel/users/results?search_query=" + searchQuery + "&");
+                    model.addAttribute("prefixUrl", "/admin_panel/users/results?search_query=" + searchQuery + "&");
+                    model.addAttribute("prefixSortUrl", "/admin_panel/users/results?search_query=" + searchQuery + "&");
                     return "users-table-admin-panel";
                 } else {
                     searchQuery = searchQuery.replace(" ", "+");
+                    if (sortProperty != null) {
+                        return "redirect:/admin_panel/users/results?search_query=" + searchQuery + "&page=" + users.getTotalPages() + "&sort_by=" + sortProperty;
+                    }
                     return "redirect:/admin_panel/users/results?search_query=" + searchQuery + "&page=" + users.getTotalPages();
                 }
             } else {
                 searchQuery = searchQuery.replace(" ", "+");
+                if (sortProperty != null) {
+                    return "redirect:/admin_panel/users/results?search_query=" + searchQuery + "&page=1" + "&sort_by=" + sortProperty;
+                }
                 return "redirect:/admin_panel/users/results?search_query=" + searchQuery + "&page=1";
             }
         } else {
