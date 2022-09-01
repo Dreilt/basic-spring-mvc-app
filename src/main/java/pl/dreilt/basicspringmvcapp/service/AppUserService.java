@@ -37,12 +37,12 @@ public class AppUserService {
     }
 
     @Transactional
-    public void register(AppUserRegistrationDto appUserRegistrationDto) {
+    public void register(AppUserRegistrationDto appUserRegistration) {
         AppUser appUser = new AppUser();
-        appUser.setFirstName(appUserRegistrationDto.getFirstName());
-        appUser.setLastName(appUserRegistrationDto.getLastName());
-        appUser.setEmail(appUserRegistrationDto.getEmail());
-        String passwordHash = passwordEncoder.encode(appUserRegistrationDto.getPassword());
+        appUser.setFirstName(appUserRegistration.getFirstName());
+        appUser.setLastName(appUserRegistration.getLastName());
+        appUser.setEmail(appUserRegistration.getEmail());
+        String passwordHash = passwordEncoder.encode(appUserRegistration.getPassword());
         appUser.setPassword(passwordHash);
         appUser.setEnabled(true);
         appUser.setAccountNonLocked(true);

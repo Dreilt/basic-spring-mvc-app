@@ -22,17 +22,17 @@ public class RegistrationController {
 
     @GetMapping("/register")
     public String getRegistrationForm(Model model) {
-        model.addAttribute("appUserRegistrationDto", new AppUserRegistrationDto());
+        model.addAttribute("appUserRegistration", new AppUserRegistrationDto());
         return "forms/registration-form";
     }
 
     @PostMapping("/register")
-    public String register(@Valid @ModelAttribute("appUserRegistrationDto") AppUserRegistrationDto appUserRegistrationDto,
+    public String register(@Valid @ModelAttribute("appUserRegistrationDto") AppUserRegistrationDto appUserRegistration,
                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "forms/registration-form";
         } else {
-            appUserService.register(appUserRegistrationDto);
+            appUserService.register(appUserRegistration);
             return "redirect:/confirmation";
         }
     }
