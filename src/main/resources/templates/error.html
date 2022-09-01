@@ -11,7 +11,7 @@
 <body>
 <nav th:replace="fragments :: navbar"></nav>
 <div class="container" style="text-align: center">
-    <h1 th:text="'Błąd ' + ${httpStatus}">Błąd 000</h1>
+    <h2 th:text="'Błąd ' + ${httpStatus}">Błąd 000</h2>
     <span th:text="${errorMessage}">Wystąpił jakiś błąd.</span>
 </div>
 

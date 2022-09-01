@@ -11,7 +11,7 @@
 <body>
 <nav th:replace="fragments :: navbar"></nav>
 <div class="container" style="text-align: center">
-    <h1>Strona główna</h1>
+    <h2>Strona główna</h2>
     <span sec:authorize="isAuthenticated()" th:text="'Witaj, ' + ${#authentication.name} + '!'">Witaj, Jan!</span>
 </div>
 
