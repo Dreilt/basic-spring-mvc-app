@@ -67,9 +67,9 @@ public class AdminController {
 
     @GetMapping("/admin_panel/users/{id}")
     public String getAppUserBasicDataToEdit(@PathVariable Long id, Model model) {
-        Optional<AppUserBasicDataAdminPanelDto> appUserBasicDataAdminPanel = appUserService.findAppUserBasicDataToEdit(id);
-        if (appUserBasicDataAdminPanel.isPresent()) {
-            model.addAttribute("appUserBasicDataAdminPanel", appUserBasicDataAdminPanel.get());
+        Optional<AppUserBasicDataAdminPanelDto> appUserBasicData = appUserService.findAppUserBasicDataToEdit(id);
+        if (appUserBasicData.isPresent()) {
+            model.addAttribute("appUserBasicData", appUserBasicData.get());
             Set<AppUserRole> appUserRoles = appUserRoleService.findAllAppUserRole();
             model.addAttribute("appUserRoles", appUserRoles);
             return "forms/app-user-edit-basic-data-form-admin-panel";
@@ -79,12 +79,12 @@ public class AdminController {
     }
 
     @PatchMapping("/admin_panel/users/{id}")
-    public String updateAppUserBasicData(@Valid @ModelAttribute AppUserBasicDataAdminPanelDto appUserBasicDataAdminPanel, BindingResult bindingResult, @PathVariable Long id) {
+    public String updateAppUserBasicData(@Valid @ModelAttribute AppUserBasicDataAdminPanelDto appUserBasicData, BindingResult bindingResult, @PathVariable Long id) {
         if (bindingResult.hasErrors()) {
             return "forms/app-user-edit-basic-data-form-admin-panel";
         } else {
-            Optional<AppUserBasicDataAdminPanelDto> appUserBasicDataAdminPanelUpdated = appUserService.updateAppUserBasicData(id, appUserBasicDataAdminPanel);
-            if (appUserBasicDataAdminPanelUpdated.isPresent()) {
+            Optional<AppUserBasicDataAdminPanelDto> appUserBasicDataUpdated = appUserService.updateAppUserBasicData(id, appUserBasicData);
+            if (appUserBasicDataUpdated.isPresent()) {
                 return "redirect:/admin_panel/users/" + id;
             } else {
                 return null;

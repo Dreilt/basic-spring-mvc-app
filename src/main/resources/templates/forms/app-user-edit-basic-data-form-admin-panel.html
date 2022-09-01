@@ -11,7 +11,7 @@
 <body>
 <nav th:replace="fragments :: navbar"></nav>
 <div class="form-container">
-    <form id="appUserEditBasicDataFormAdminPanel" name="appUserEditBasicDataFormAdminPanel" class="custom-form" onsubmit="return validateAppUserEditBasicDataFormAdminPanel()" method="post" th:method="patch" action="#" th:action="@{'/admin_panel/users/' + ${appUserBasicDataAdminPanel.id}}" th:object="${appUserBasicDataAdminPanel}">
+    <form id="appUserEditBasicDataFormAdminPanel" name="appUserEditBasicDataFormAdminPanel" class="custom-form" onsubmit="return validateAppUserEditBasicDataFormAdminPanel()" method="post" th:method="patch" action="#" th:action="@{'/admin_panel/users/' + ${appUserBasicData.id}}" th:object="${appUserBasicData}">
         <div class="form-heading">
             <h2>Edycja danych użytkownika</h2>
             <span>Zaktualizuj dane użytkownika poniżej</span>

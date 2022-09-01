@@ -68,11 +68,11 @@ public class AppUserService {
     @Transactional
     public Optional<AppUserBasicDataAdminPanelDto> updateAppUserBasicData(Long id, AppUserBasicDataAdminPanelDto appUserBasicDataAdminPanel) {
         return appUserRepository.findById(id)
-                .map(target -> setAppUserBasicDataAdminPanel(appUserBasicDataAdminPanel, target))
+                .map(target -> setAppUserBasicDataFields(appUserBasicDataAdminPanel, target))
                 .map(AppUserBasicDataAdminPanelDtoMapper::mapToAppUserBasicDataAdminPanelDto);
     }
 
-    private AppUser setAppUserBasicDataAdminPanel(AppUserBasicDataAdminPanelDto source, AppUser target) {
+    private AppUser setAppUserBasicDataFields(AppUserBasicDataAdminPanelDto source, AppUser target) {
         if (source.getFirstName() != null && !source.getFirstName().equals(target.getFirstName())) {
             target.setFirstName(source.getFirstName());
         }
