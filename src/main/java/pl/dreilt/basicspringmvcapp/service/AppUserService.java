@@ -57,7 +57,7 @@ public class AppUserService {
     }
 
     public Page<AppUserAdminPanelDto> findAllAppUsers(Pageable pageable) {
-        return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoPage(appUserRepository.findAllAppUsers(pageable));
+        return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtos(appUserRepository.findAllAppUsers(pageable));
     }
 
     public Optional<AppUserBasicDataAdminPanelDto> findAppUserBasicDataToEdit(Long id) {
@@ -101,13 +101,13 @@ public class AppUserService {
             String[] searchWords = searchQuery.split(" ");
 
             if (searchWords.length == 1) {
-                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoPage(
+                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtos(
                         appUserRepository.findAppUsersBySearch(searchQuery, pageable));
             } else if (searchWords.length == 2) {
-                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoPage(
+                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtos(
                         appUserRepository.findAppUsersBySearch(searchWords[0], searchWords[1], pageable));
             } else {
-                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtoPage(
+                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtos(
                         appUserRepository.findAppUsersBySearch(searchWords, pageable));
             }
         }

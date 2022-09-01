@@ -9,7 +9,7 @@ public class AppUserAdminPanelDtoMapper {
     private AppUserAdminPanelDtoMapper() {
     }
 
-    public static Page<AppUserAdminPanelDto> mapToAppUserAdminPanelDtoPage(Page<AppUser> appUsers) {
+    public static Page<AppUserAdminPanelDto> mapToAppUserAdminPanelDtos(Page<AppUser> appUsers) {
         return appUsers.map(appUser -> mapToAppUserAdminPanelDto(appUser));
     }
 
