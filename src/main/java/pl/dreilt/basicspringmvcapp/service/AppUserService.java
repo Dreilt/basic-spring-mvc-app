@@ -124,10 +124,10 @@ public class AppUserService {
     }
 
     @Transactional
-    public Optional<AppUserEditProfileDto> updateAppUserProfile(AppUserEditProfileDto appUserEditProfileDto) {
+    public Optional<AppUserEditProfileDto> updateAppUserProfile(AppUserEditProfileDto appUserProfile) {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         return appUserRepository.findByEmail(currentUser.getName())
-                .map(target -> setAppUserBasicData(appUserEditProfileDto, target))
+                .map(target -> setAppUserBasicData(appUserProfile, target))
                 .map(AppUserEditProfileDtoMapper::mapToAppUserProfileDto);
     }
 

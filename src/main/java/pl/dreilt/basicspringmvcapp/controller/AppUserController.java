@@ -52,11 +52,11 @@ public class AppUserController {
     }
 
     @PatchMapping("/settings/profile")
-    public String updateAppUserProfile(@Valid @ModelAttribute AppUserEditProfileDto appUserEditProfileDto, BindingResult bindingResult) {
+    public String updateAppUserProfile(@Valid @ModelAttribute AppUserEditProfileDto appUserProfile, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "forms/app-user-edit-profile-form";
         } else {
-            Optional<AppUserEditProfileDto> appUserProfileUpdated = appUserService.updateAppUserProfile(appUserEditProfileDto);
+            Optional<AppUserEditProfileDto> appUserProfileUpdated = appUserService.updateAppUserProfile(appUserProfile);
             if (appUserProfileUpdated.isPresent()) {
                 return "redirect:/settings/profile";
             } else {
