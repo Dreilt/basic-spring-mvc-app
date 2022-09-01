@@ -19,25 +19,28 @@
         <div class="form-group">
             <label for="firstName" class="form-label">IMIĘ</label>
             <input type="text"
-                   id="firstName" name="firstName" th:field="*{firstName}"
+                   id="firstName" name="firstName"
                    class="form-control" th:class="${#fields.hasErrors('firstName')} == FALSE ? 'form-control' : 'form-control is-invalid'"
-                   placeholder="Imię">
+                   placeholder="Imię"
+                   th:field="*{firstName}">
             <div id="firstNameErrorMessage" class="error-message" style="display: none;" th:text="#{edition.appUserEditBasicDataFormAdminPanel.firstName.fieldEmpty.message}">Błędy związane z imieniem</div>
             <div class="error-message" th:errors="*{firstName}">Błędy związane z imieniem</div>
         </div>
         <div class="form-group">
             <label for="lastName" class="form-label">NAZWISKO</label>
             <input type="text"
-                   id="lastName" name="lastName" th:field="*{lastName}"
+                   id="lastName" name="lastName"
                    class="form-control" th:class="${#fields.hasErrors('lastName')} == FALSE ? 'form-control' : 'form-control is-invalid'"
-                   placeholder="Nazwisko">
+                   placeholder="Nazwisko"
+                   th:field="*{lastName}">
             <div id="lastNameErrorMessage" class="error-message" style="display: none;" th:text="#{edition.appUserEditBasicDataFormAdminPanel.lastName.fieldEmpty.message}">Błędy związane z nazwiskiem</div>
             <div class="error-message" th:errors="*{lastName}">Błędy związane z nazwiskiem</div>
         </div>
         <div class="form-group">
             <label for="enabled" class="form-label">WŁĄCZONY</label>
-            <select id="enabled" name="enabled" th:field="*{enabled}"
-                    class="form-control">
+            <select id="enabled" name="enabled"
+                    class="form-control"
+                    th:field="*{enabled}">
                 <option th:value="'true'" th:text="'Tak'">Tak</option>
                 <option th:value="'false'" th:text="'Nie'">Nie</option>
             </select>
