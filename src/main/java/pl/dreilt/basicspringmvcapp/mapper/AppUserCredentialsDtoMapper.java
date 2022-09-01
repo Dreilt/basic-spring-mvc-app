@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 
 public class AppUserCredentialsDtoMapper {
 
+    private AppUserCredentialsDtoMapper() {
+    }
+
     public static AppUserCredentialsDto mapToAppUserCredentialsDto(AppUser appUser) {
         String email = appUser.getEmail();
         String password = appUser.getPassword();

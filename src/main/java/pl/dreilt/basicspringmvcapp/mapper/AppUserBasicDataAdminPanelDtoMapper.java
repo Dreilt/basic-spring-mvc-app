@@ -5,6 +5,9 @@ import pl.dreilt.basicspringmvcapp.entity.AppUser;
 
 public class AppUserBasicDataAdminPanelDtoMapper {
 
+    private AppUserBasicDataAdminPanelDtoMapper() {
+    }
+
     public static AppUserBasicDataAdminPanelDto mapToAppUserBasicDataAdminPanelDto(AppUser appUser) {
         // tutaj można zastosować wzorzec Builder w przyszłości
         AppUserBasicDataAdminPanelDto appUserBasicDataAdminPanelDto = new AppUserBasicDataAdminPanelDto();

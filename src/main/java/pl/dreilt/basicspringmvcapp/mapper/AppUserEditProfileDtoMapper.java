@@ -5,6 +5,9 @@ import pl.dreilt.basicspringmvcapp.entity.AppUser;
 
 public class AppUserEditProfileDtoMapper {
 
+    private AppUserEditProfileDtoMapper() {
+    }
+
     public static AppUserEditProfileDto mapToAppUserProfileDto(AppUser appUser) {
         // tutaj można zastosować wzorzec Builder w przyszłości
         AppUserEditProfileDto appUserEditProfileDto = new AppUserEditProfileDto();

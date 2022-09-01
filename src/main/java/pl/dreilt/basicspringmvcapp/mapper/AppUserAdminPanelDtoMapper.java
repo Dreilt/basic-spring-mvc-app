@@ -6,11 +6,14 @@ import pl.dreilt.basicspringmvcapp.entity.AppUser;
 
 public class AppUserAdminPanelDtoMapper {
 
-    public static Page<AppUserAdminPanelDto> mapToAppUserAdminPanelDtoPage(Page<AppUser> appUsers) {
-        return appUsers.map(AppUserAdminPanelDtoMapper::mapToAppUserAdminPanelDto);
+    private AppUserAdminPanelDtoMapper() {
     }
 
-    public static AppUserAdminPanelDto mapToAppUserAdminPanelDto(AppUser appUser) {
+    public static Page<AppUserAdminPanelDto> mapToAppUserAdminPanelDtoPage(Page<AppUser> appUsers) {
+        return appUsers.map(appUser -> mapToAppUserAdminPanelDto(appUser));
+    }
+
+    private static AppUserAdminPanelDto mapToAppUserAdminPanelDto(AppUser appUser) {
         // tutaj można zastosować wzorzec Builder w przyszłości
         AppUserAdminPanelDto appUserAdminPanelDto = new AppUserAdminPanelDto();
         appUserAdminPanelDto.setId(appUser.getId());
