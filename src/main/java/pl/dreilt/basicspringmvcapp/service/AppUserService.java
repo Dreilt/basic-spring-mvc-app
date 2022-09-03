@@ -144,4 +144,9 @@ public class AppUserService {
     public AppUser findAppUserByUsername(String username) {
         return appUserRepository.findAppUserByUsername(username);
     }
+
+    public LoggedAppUserBasicDataDto findLoggedAppUserBasicData(String username) {
+        AppUser appUser = appUserRepository.findAppUserByUsername(username);
+        return LoggedAppUserBasicDataDtoMapper.mapToLoggedAppUserBasicDataDto(appUser);
+    }
 }
