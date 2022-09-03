@@ -9,23 +9,21 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import pl.dreilt.basicspringmvcapp.handler.CustomAuthenticationFailureHandler;
 
-import javax.sql.DataSource;
-
 @Configuration
 public class SecurityConfiguration {
 
-    private final DataSource dataSource;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final PersistentTokenRepository persistentTokenRepository;
 
-    public SecurityConfiguration(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public SecurityConfiguration(CustomUserDetailsService customUserDetailsService, PersistentTokenRepository persistentTokenRepository) {
+        this.customUserDetailsService = customUserDetailsService;
+        this.persistentTokenRepository = persistentTokenRepository;
     }
 
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> requests
                 .antMatchers("/h2-console/**").permitAll()
@@ -36,8 +34,10 @@ public class SecurityConfiguration {
                 .mvcMatchers("/profile").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated());
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        customUserDetailsService().setAuthenticationManager(authenticationManagerBuilder.getOrBuild());
-        http.userDetailsService(customUserDetailsService());
+
+        customUserDetailsService.setAuthenticationManager(authenticationManagerBuilder.getOrBuild());
+        http.userDetailsService(customUserDetailsService);
+
         http.formLogin(login -> login
                 .loginPage("/login").permitAll()
                 .failureHandler(new CustomAuthenticationFailureHandler())
@@ -46,7 +46,7 @@ public class SecurityConfiguration {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout/**", HttpMethod.GET.name()))
                 .logoutSuccessUrl("/login?logout").permitAll()
         );
-        http.rememberMe().tokenRepository(persistentTokenRepository());
+        http.rememberMe().tokenRepository(persistentTokenRepository);
         http.csrf().disable();
         http.headers().frameOptions().disable();
         return http.build();
@@ -60,19 +60,8 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public PersistentTokenRepository persistentTokenRepository() {
-        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-        tokenRepository.setDataSource(dataSource);
-        return tokenRepository;
-    }
-
-    @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-    @Bean
-    CustomUserDetailsService customUserDetailsService() {
-        return new CustomUserDetailsService();
-    }
 }
