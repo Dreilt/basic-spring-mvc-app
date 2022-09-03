@@ -1,15 +1,11 @@
 package pl.dreilt.basicspringmvcapp.configuration;
 
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -39,11 +35,9 @@ public class SecurityConfiguration {
                 .mvcMatchers("/admin_panel/**").hasRole("ADMIN")
                 .mvcMatchers("/profile").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated());
-
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.getOrBuild();
-        http.userDetailsService(customUserDetailsService(authenticationManagerBuilder.getOrBuild()));
-
+        customUserDetailsService().setAuthenticationManager(authenticationManagerBuilder.getOrBuild());
+        http.userDetailsService(customUserDetailsService());
         http.formLogin(login -> login
                 .loginPage("/login").permitAll()
                 .failureHandler(new CustomAuthenticationFailureHandler())
@@ -78,16 +72,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages/messages");
-        messageSource.setDefaultEncoding("UTF-8");
-        return messageSource;
-    }
-
-    @Bean
-    public UserDetailsService customUserDetailsService(AuthenticationManager authenticationManager) {
-        CustomUserDetailsService customUserDetailsService = new CustomUserDetailsService(authenticationManager);
-        return customUserDetailsService;
+    CustomUserDetailsService customUserDetailsService() {
+        return new CustomUserDetailsService();
     }
 }
