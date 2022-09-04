@@ -94,12 +94,14 @@ public class AdminController {
 
     @GetMapping("/admin_panel/users/results")
     public String getAppUsersBySearch(@RequestParam(name = "search_query", required = false) String searchQuery,
-                                      @RequestParam(name = "page", required = false, defaultValue = "1") Integer pageNumber,
-                                      @RequestParam(name = "sort_by", required = false, defaultValue = "lastName") String sortProperty,
+                                      @RequestParam(name = "page", required = false) Integer page,
+                                      @RequestParam(name = "sort_by", required = false) String sortProperty,
                                       Model model) {
         if (searchQuery != null) {
+            int pageNumber = page != null ? page : 1;
+            String sortPropertyName = sortProperty != null ? sortProperty : "lastName";
             if (pageNumber > 0) {
-                PageRequest pageRequest = PageRequest.of(pageNumber - 1, 1, Sort.by(Sort.Direction.ASC, sortProperty));
+                PageRequest pageRequest = PageRequest.of(pageNumber - 1, 1, Sort.by(Sort.Direction.ASC, sortPropertyName));
                 Page<AppUserAdminPanelDto> users = appUserService.findAppUsersBySearch(searchQuery, pageRequest);
                 if (users.getNumberOfElements() == 0) {
                     model.addAttribute("users", users);
