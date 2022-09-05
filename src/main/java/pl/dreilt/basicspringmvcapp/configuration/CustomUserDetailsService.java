@@ -12,15 +12,18 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import pl.dreilt.basicspringmvcapp.dto.AppUserCredentialsDto;
 import pl.dreilt.basicspringmvcapp.service.AppUserService;
 
+@Component
 public class CustomUserDetailsService implements UserDetailsService {
     protected final Log logger = LogFactory.getLog(this.getClass());
-    private AppUserService appUserService;
-    private AuthenticationManager authenticationManager;
+    private final AppUserService appUserService;
+    private final AuthenticationManager authenticationManager;
 
-    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+    public CustomUserDetailsService(AppUserService appUserService, AuthenticationManager authenticationManager) {
+        this.appUserService = appUserService;
         this.authenticationManager = authenticationManager;
     }
 

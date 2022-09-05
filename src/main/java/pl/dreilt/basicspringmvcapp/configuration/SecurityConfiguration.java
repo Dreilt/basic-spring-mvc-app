@@ -3,7 +3,9 @@ package pl.dreilt.basicspringmvcapp.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -35,9 +37,6 @@ public class SecurityConfiguration {
                 .mvcMatchers("/admin_panel/**").hasRole("ADMIN")
                 .mvcMatchers("/profile").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated());
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        customUserDetailsService().setAuthenticationManager(authenticationManagerBuilder.getOrBuild());
-        http.userDetailsService(customUserDetailsService());
         http.formLogin(login -> login
                 .loginPage("/login").permitAll()
                 .failureHandler(new CustomAuthenticationFailureHandler())
@@ -72,7 +71,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public CustomUserDetailsService customUserDetailsService() {
-        return new CustomUserDetailsService();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
