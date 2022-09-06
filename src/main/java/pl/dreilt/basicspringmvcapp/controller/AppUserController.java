@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import pl.dreilt.basicspringmvcapp.configuration.CustomUserDetailsService;
 import pl.dreilt.basicspringmvcapp.dto.AppUserEditPasswordDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserEditProfileDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDto;
@@ -22,11 +21,9 @@ import java.util.Optional;
 public class AppUserController {
 
     private final AppUserService appUserService;
-    private final CustomUserDetailsService customUserDetailsService;
 
-    public AppUserController(AppUserService appUserService, CustomUserDetailsService customUserDetailsService) {
+    public AppUserController(AppUserService appUserService) {
         this.appUserService = appUserService;
-        this.customUserDetailsService = customUserDetailsService;
     }
 
     @GetMapping("/profile")
@@ -74,7 +71,7 @@ public class AppUserController {
     @PostMapping("/settings/edit_password")
     public String updateAppUserPassword(@Valid @ModelAttribute AppUserEditPasswordDto appUserEditPassword,
                                         Model model) {
-        customUserDetailsService.changePassword(appUserEditPassword.getCurrentPassword(), appUserEditPassword.getNewPassword());
+//        customUserDetailsService.changePassword(appUserEditPassword.getCurrentPassword(), appUserEditPassword.getNewPassword());
         return "forms/edit-app-user-password";
     }
 }
