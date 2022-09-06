@@ -25,6 +25,14 @@
         <span class="col-sm-4" style="text-align: left;" th:text="${appUserProfile.email}">jankowalski@example.com</span>
     </div>
     <div class="row justify-content-center">
+        <label class="col-sm-2 app-label">Biogram:</label>
+        <span class="col-sm-4" style="text-align: left;" th:text="${appUserProfile.bio}">Cześć! Nazywam się Jan Kowalski i jestem z Rzeszowa. Obecnie jestem na trzecim roku informatyki na Politechnice Rzeszowskiej.</span>
+    </div>
+    <div class="row justify-content-center">
+        <label class="col-sm-2 app-label">Miasto:</label>
+        <span class="col-sm-4" style="text-align: left;" th:text="${appUserProfile.city}">Rzeszów</span>
+    </div>
+    <div class="row justify-content-center">
         <a class="custom-a" th:href="@{/settings/profile}" th:text="'Edytuj profil'">Edytuj profil</a>
     </div>
 </div>

@@ -24,6 +24,10 @@ public class AppUser {
     @NotNull
     @Size(min = 5, max = 100)
     private String password;
+    @Size(max = 1000)
+    private String bio;
+    @Size(max = 50)
+    private String city;
     private boolean enabled;
     private boolean accountNonLocked;
     @ManyToMany(fetch = FetchType.EAGER)
@@ -72,6 +76,22 @@ public class AppUser {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public boolean isEnabled() {

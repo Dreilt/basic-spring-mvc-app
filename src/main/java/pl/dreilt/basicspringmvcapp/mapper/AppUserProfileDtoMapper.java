@@ -14,6 +14,8 @@ public class AppUserProfileDtoMapper {
         appUserProfileDto.setFirstName(appUser.getFirstName());
         appUserProfileDto.setLastName(appUser.getLastName());
         appUserProfileDto.setEmail(appUser.getEmail());
+        appUserProfileDto.setBio(appUser.getBio());
+        appUserProfileDto.setCity(appUser.getCity());
         return appUserProfileDto;
     }
 }

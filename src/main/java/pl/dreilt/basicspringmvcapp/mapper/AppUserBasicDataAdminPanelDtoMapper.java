@@ -14,6 +14,8 @@ public class AppUserBasicDataAdminPanelDtoMapper {
         appUserBasicDataAdminPanelDto.setId(appUser.getId());
         appUserBasicDataAdminPanelDto.setFirstName(appUser.getFirstName());
         appUserBasicDataAdminPanelDto.setLastName(appUser.getLastName());
+        appUserBasicDataAdminPanelDto.setBio(appUser.getBio());
+        appUserBasicDataAdminPanelDto.setCity(appUser.getCity());
         appUserBasicDataAdminPanelDto.setEnabled(appUser.isEnabled());
         appUserBasicDataAdminPanelDto.setAccountNonLocked(appUser.isAccountNonLocked());
         appUserBasicDataAdminPanelDto.setRoles(appUser.getRoles());

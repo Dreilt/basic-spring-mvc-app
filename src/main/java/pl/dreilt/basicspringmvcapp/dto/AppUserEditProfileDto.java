@@ -10,6 +10,10 @@ public class AppUserEditProfileDto {
     @NotNull
     @Size(min = 2, max = 50)
     private String lastName;
+    @Size(max = 1000)
+    private String bio;
+    @Size(max = 50)
+    private String city;
 
     public String getFirstName() {
         return firstName;
@@ -25,5 +29,21 @@ public class AppUserEditProfileDto {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

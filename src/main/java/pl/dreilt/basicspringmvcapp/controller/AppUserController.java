@@ -41,7 +41,7 @@ public class AppUserController {
     public String getAppUserProfileToEdit(Authentication authentication, Model model) {
         Optional<AppUserEditProfileDto> appUserProfile = appUserService.findAppUserProfileToEdit(authentication.getName());
         if (appUserProfile.isPresent()) {
-            model.addAttribute("appUserProfile", appUserProfile.get());
+            model.addAttribute("appUserEditProfileDto", appUserProfile.get());
             return "forms/app-user-edit-profile-form";
         } else {
             return null;
@@ -49,11 +49,11 @@ public class AppUserController {
     }
 
     @PatchMapping("/settings/profile")
-    public String updateAppUserProfile(@Valid @ModelAttribute AppUserEditProfileDto appUserProfile, BindingResult bindingResult) {
+    public String updateAppUserProfile(@Valid @ModelAttribute AppUserEditProfileDto appUserEditProfileDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "forms/app-user-edit-profile-form";
         } else {
-            Optional<AppUserEditProfileDto> appUserProfileUpdated = appUserService.updateAppUserProfile(appUserProfile);
+            Optional<AppUserEditProfileDto> appUserProfileUpdated = appUserService.updateAppUserProfile(appUserEditProfileDto);
             if (appUserProfileUpdated.isPresent()) {
                 return "redirect:/settings/profile";
             } else {

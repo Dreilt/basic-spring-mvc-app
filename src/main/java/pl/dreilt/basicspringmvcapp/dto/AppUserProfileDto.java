@@ -4,6 +4,8 @@ public class AppUserProfileDto {
     private String firstName;
     private String lastName;
     private String email;
+    private String bio;
+    private String city;
 
     public String getFirstName() {
         return firstName;
@@ -27,5 +29,21 @@ public class AppUserProfileDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

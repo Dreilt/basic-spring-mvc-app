@@ -79,6 +79,12 @@ public class AppUserService {
         if (source.getLastName() != null && !source.getLastName().equals(target.getLastName())) {
             target.setLastName(source.getLastName());
         }
+        if (source.getBio() != null && !source.getBio().equals(target.getBio())) {
+            target.setBio(source.getBio());
+        }
+        if (source.getCity() != null && !source.getCity().equals(target.getCity())) {
+            target.setCity(source.getCity());
+        }
         if (source.isEnabled() != target.isEnabled()) {
             target.setEnabled(source.isEnabled());
         }
@@ -137,6 +143,12 @@ public class AppUserService {
         }
         if (source.getLastName() != null && !source.getLastName().equals(target.getLastName())) {
             target.setLastName(source.getLastName());
+        }
+        if (source.getBio() != null && !source.getBio().equals(target.getBio())) {
+            target.setBio(source.getBio());
+        }
+        if (source.getCity() != null && !source.getCity().equals(target.getCity())) {
+            target.setCity(source.getCity());
         }
         return target;
     }

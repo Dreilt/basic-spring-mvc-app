@@ -13,6 +13,8 @@ public class AppUserEditProfileDtoMapper {
         AppUserEditProfileDto appUserEditProfileDto = new AppUserEditProfileDto();
         appUserEditProfileDto.setFirstName(appUser.getFirstName());
         appUserEditProfileDto.setLastName(appUser.getLastName());
+        appUserEditProfileDto.setBio(appUser.getBio());
+        appUserEditProfileDto.setCity(appUser.getCity());
         return appUserEditProfileDto;
     }
 }

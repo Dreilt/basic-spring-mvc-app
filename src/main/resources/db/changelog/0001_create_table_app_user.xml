@@ -14,6 +14,8 @@
             <column name="last_name" type="VARCHAR(50)"/>
             <column name="email" type="VARCHAR(100)"/>
             <column name="password" type="VARCHAR(100)"/>
+            <column name="bio" type="VARCHAR(1000)"/>
+            <column name="city" type="VARCHAR(50)"/>
             <column name="enabled" type="BOOLEAN"/>
             <column name="account_non_locked" type="BOOLEAN"/>
         </createTable>
