@@ -8,15 +8,23 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+import pl.dreilt.basicspringmvcapp.entity.AppUser;
+import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 
 @Service
 public class AppUserLoginDataService {
     protected final Log logger = LogFactory.getLog(this.getClass());
     private final AuthenticationManager authenticationManager;
+    private final AppUserRepository appUserRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public AppUserLoginDataService(AuthenticationManager authenticationManager) {
+    public AppUserLoginDataService(AuthenticationManager authenticationManager, AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
+        this.appUserRepository = appUserRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void changePassword(String oldPassword, String newPassword) {
@@ -28,8 +36,7 @@ public class AppUserLoginDataService {
         }
         String username = currentUser.getName();
         this.logger.debug(LogMessage.format("Changing password for user '%s'", username));
-        // If an authentication manager has been set, re-authenticate the user with the
-        // supplied password.
+        // If an authentication manager has been set, re-authenticate the user with the supplied password.
         if (this.authenticationManager != null) {
             this.logger.debug(LogMessage.format("Reauthenticating user '%s' for password change request.", username));
             this.authenticationManager
@@ -38,8 +45,10 @@ public class AppUserLoginDataService {
         else {
             this.logger.debug("No authentication manager set. Password won't be re-checked.");
         }
-//        MutableUserDetails user = this.users.get(username);
-//        Assert.state(user != null, "Current user doesn't exist in database.");
-//        user.setPassword(newPassword);
+
+        AppUser appUser = appUserRepository.findAppUserByUsername(username);
+        Assert.state(appUser != null, "Current user doesn't exist in database.");
+        String passwordHash = passwordEncoder.encode(newPassword);
+        appUser.setPassword(passwordHash);
     }
 }
