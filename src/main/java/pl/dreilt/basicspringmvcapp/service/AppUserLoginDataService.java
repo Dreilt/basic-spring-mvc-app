@@ -12,7 +12,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
+import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
+
+import java.util.Optional;
 
 @Service
 public class AppUserLoginDataService {
@@ -32,23 +35,26 @@ public class AppUserLoginDataService {
         if (currentUser == null) {
             // This would indicate bad coding somewhere
             throw new AccessDeniedException(
-                    "Can't change password as no Authentication object found in context " + "for current user.");
+                    "Can't change password as no Authentication object found in context for current user.");
         }
-        String username = currentUser.getName();
-        this.logger.debug(LogMessage.format("Changing password for user '%s'", username));
+        String email = currentUser.getName();
+        this.logger.debug(LogMessage.format("Changing password for user '%s'", email));
         // If an authentication manager has been set, re-authenticate the user with the supplied password.
         if (this.authenticationManager != null) {
-            this.logger.debug(LogMessage.format("Reauthenticating user '%s' for password change request.", username));
+            this.logger.debug(LogMessage.format("Reauthenticating user '%s' for password change request.", email));
             this.authenticationManager
-                    .authenticate(UsernamePasswordAuthenticationToken.unauthenticated(username, oldPassword));
+                    .authenticate(UsernamePasswordAuthenticationToken.unauthenticated(email, oldPassword));
         }
         else {
             this.logger.debug("No authentication manager set. Password won't be re-checked.");
         }
 
-        AppUser appUser = appUserRepository.findAppUserByUsername(username);
-        Assert.state(appUser != null, "Current user doesn't exist in database.");
-        String passwordHash = passwordEncoder.encode(newPassword);
-        appUser.setPassword(passwordHash);
+        Optional<AppUser> appUser = appUserRepository.findByEmail(email);
+        if (appUser.isPresent()) {
+            String passwordHash = passwordEncoder.encode(newPassword);
+            appUser.get().setPassword(passwordHash);
+        } else {
+            throw new AppUserNotFoundException("Current user doesn't exist in database.");
+        }
     }
 }
