@@ -14,7 +14,6 @@ import pl.dreilt.basicspringmvcapp.service.AppUserRoleService;
 import pl.dreilt.basicspringmvcapp.service.AppUserService;
 
 import javax.validation.Valid;
-import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -67,16 +66,12 @@ public class AdminController {
 
     @GetMapping("/admin_panel/users/{id}")
     public String getAppUserBasicDataToEdit(@PathVariable Long id, Model model) {
-        Optional<AppUserBasicDataAdminPanelDto> appUserBasicData = appUserService.findAppUserBasicDataToEdit(id);
-        if (appUserBasicData.isPresent()) {
-            model.addAttribute("appUserId", id);
-            model.addAttribute("appUserBasicDataAdminPanelDto", appUserBasicData.get());
-            Set<AppUserRole> appUserRoles = appUserRoleService.findAllAppUserRole();
-            model.addAttribute("appUserRoles", appUserRoles);
-            return "forms/app-user-edit-basic-data-form-admin-panel";
-        } else {
-            return null;
-        }
+        AppUserBasicDataAdminPanelDto appUserBasicDataAdminPanelDto = appUserService.findAppUserBasicDataToEdit(id);
+        model.addAttribute("appUserId", id);
+        model.addAttribute("appUserBasicDataAdminPanelDto", appUserBasicDataAdminPanelDto);
+        Set<AppUserRole> appUserRoles = appUserRoleService.findAllAppUserRole();
+        model.addAttribute("appUserRoles", appUserRoles);
+        return "forms/app-user-edit-basic-data-form-admin-panel";
     }
 
     @PatchMapping("/admin_panel/users/{id}")
@@ -85,12 +80,8 @@ public class AdminController {
             model.addAttribute("appUserId", id);
             return "forms/app-user-edit-basic-data-form-admin-panel";
         } else {
-            Optional<AppUserBasicDataAdminPanelDto> appUserBasicDataUpdated = appUserService.updateAppUserBasicData(id, appUserBasicDataAdminPanelDto);
-            if (appUserBasicDataUpdated.isPresent()) {
-                return "redirect:/admin_panel/users/" + id;
-            } else {
-                return null;
-            }
+            appUserService.updateAppUserBasicData(id, appUserBasicDataAdminPanelDto);
+            return "redirect:/admin_panel/users/" + id;
         }
     }
 

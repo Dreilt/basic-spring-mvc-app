@@ -2,6 +2,7 @@ package pl.dreilt.basicspringmvcapp.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.dreilt.basicspringmvcapp.dto.*;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
+import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.NoSuchRoleException;
 import pl.dreilt.basicspringmvcapp.mapper.*;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
@@ -60,16 +62,18 @@ public class AppUserService {
         return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtos(appUserRepository.findAllAppUsers(pageable));
     }
 
-    public Optional<AppUserBasicDataAdminPanelDto> findAppUserBasicDataToEdit(Long id) {
+    public AppUserBasicDataAdminPanelDto findAppUserBasicDataToEdit(Long id) {
         return appUserRepository.findById(id)
-                .map(AppUserBasicDataAdminPanelDtoMapper::mapToAppUserBasicDataAdminPanelDto);
+                .map(AppUserBasicDataAdminPanelDtoMapper::mapToAppUserBasicDataAdminPanelDto)
+                .orElseThrow(() -> new AppUserNotFoundException("User with ID " + id + " not found"));
     }
 
     @Transactional
-    public Optional<AppUserBasicDataAdminPanelDto> updateAppUserBasicData(Long id, AppUserBasicDataAdminPanelDto appUserBasicDataAdminPanel) {
-        return appUserRepository.findById(id)
-                .map(target -> setAppUserBasicDataFields(appUserBasicDataAdminPanel, target))
-                .map(AppUserBasicDataAdminPanelDtoMapper::mapToAppUserBasicDataAdminPanelDto);
+    public void updateAppUserBasicData(Long id, AppUserBasicDataAdminPanelDto appUserBasicDataAdminPanelDto) {
+        appUserRepository.findById(id)
+                .map(target -> setAppUserBasicDataFields(appUserBasicDataAdminPanelDto, target))
+                .map(AppUserBasicDataAdminPanelDtoMapper::mapToAppUserBasicDataAdminPanelDto)
+                .orElseThrow(() -> new AppUserNotFoundException("User with ID " + id + " not found"));
     }
 
     private AppUser setAppUserBasicDataFields(AppUserBasicDataAdminPanelDto source, AppUser target) {
@@ -119,22 +123,29 @@ public class AppUserService {
         }
     }
 
-    public Optional<AppUserProfileDto> findAppUserProfile(String email) {
+    public AppUserProfileDto findAppUserProfile(String email) {
         return appUserRepository.findByEmail(email)
-                .map(AppUserProfileDtoMapper::mapToAppUserProfileDto);
+                .map(AppUserProfileDtoMapper::mapToAppUserProfileDto)
+                .orElseThrow(() -> new AppUserNotFoundException("User with email " + email + " not found"));
     }
 
-    public Optional<AppUserEditProfileDto> findAppUserProfileToEdit(String email) {
+    public AppUserEditProfileDto findAppUserProfileToEdit(String email) {
         return appUserRepository.findByEmail(email)
-                .map(AppUserEditProfileDtoMapper::mapToAppUserProfileDto);
+                .map(AppUserEditProfileDtoMapper::mapToAppUserProfileDto)
+                .orElseThrow(() -> new AppUserNotFoundException("User with email " + email + " not found"));
     }
 
     @Transactional
-    public Optional<AppUserEditProfileDto> updateAppUserProfile(AppUserEditProfileDto appUserProfile) {
+    public AppUserEditProfileDto updateAppUserProfile(AppUserEditProfileDto appUserProfile) {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-        return appUserRepository.findByEmail(currentUser.getName())
+        if (currentUser == null) {
+            throw new AccessDeniedException("Odmowa dostępu");
+        }
+        String email = currentUser.getName();
+        return appUserRepository.findByEmail(email)
                 .map(target -> setAppUserBasicData(appUserProfile, target))
-                .map(AppUserEditProfileDtoMapper::mapToAppUserProfileDto);
+                .map(AppUserEditProfileDtoMapper::mapToAppUserProfileDto)
+                .orElseThrow(() -> new AppUserNotFoundException("User with email " + email + " not found"));
     }
 
     private AppUser setAppUserBasicData(AppUserEditProfileDto source, AppUser target) {
@@ -153,12 +164,12 @@ public class AppUserService {
         return target;
     }
 
-    public AppUser findAppUserByUsername(String username) {
-        return appUserRepository.findAppUserByUsername(username);
-    }
-
-    public LoggedAppUserBasicDataDto findLoggedAppUserBasicData(String username) {
-        AppUser appUser = appUserRepository.findAppUserByUsername(username);
-        return LoggedAppUserBasicDataDtoMapper.mapToLoggedAppUserBasicDataDto(appUser);
+    public LoggedAppUserBasicDataDto findLoggedAppUserBasicData(String email) {
+        Optional<AppUser> appUser = appUserRepository.findByEmail(email);
+        if (appUser.isPresent()) {
+            return LoggedAppUserBasicDataDtoMapper.mapToLoggedAppUserBasicDataDto(appUser.get());
+        } else {
+            throw new AppUserNotFoundException("User with email " + email + " not found");
+        }
     }
 }

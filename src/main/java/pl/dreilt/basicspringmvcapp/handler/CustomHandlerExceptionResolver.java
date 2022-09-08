@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
+import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.NoSuchRoleException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,9 @@ public class CustomHandlerExceptionResolver extends AbstractHandlerExceptionReso
             if (ex instanceof NoSuchRoleException) {
                 return handleNoSuchRole((NoSuchRoleException) ex, response, handler);
             }
+            if (ex instanceof AppUserNotFoundException) {
+                return handleAppUserNotFound((AppUserNotFoundException) ex, response, handler);
+            }
         } catch (Exception handlerException) {
             logger.warn("Handling of [" + ex.getClass().getName() + "] resulted in Exception", handlerException);
         }
@@ -40,6 +44,17 @@ public class CustomHandlerExceptionResolver extends AbstractHandlerExceptionReso
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("httpStatus", response.getStatus());
         String errorMessage = messageSource.getMessage("register.registrationForm.NoSuchRoleException.message", null, Locale.getDefault());
+        modelAndView.addObject("errorMessage", errorMessage);
+        modelAndView.setViewName("error");
+        return modelAndView;
+    }
+
+    private ModelAndView handleAppUserNotFound(AppUserNotFoundException ex, HttpServletResponse response, Object handler) {
+        logger.error(ex.getMessage());
+        response.setStatus(HttpStatus.NOT_FOUND.value());
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("httpStatus", response.getStatus());
+        String errorMessage = messageSource.getMessage("exception.AppUserNotFoundException.message", null, Locale.getDefault());
         modelAndView.addObject("errorMessage", errorMessage);
         modelAndView.setViewName("error");
         return modelAndView;

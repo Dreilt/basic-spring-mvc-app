@@ -1,7 +1,6 @@
 package pl.dreilt.basicspringmvcapp.controller;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,7 +15,6 @@ import pl.dreilt.basicspringmvcapp.service.AppUserLoginDataService;
 import pl.dreilt.basicspringmvcapp.service.AppUserService;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Controller
 public class AppUserController {
@@ -31,24 +29,16 @@ public class AppUserController {
 
     @GetMapping("/profile")
     public String getAppUserProfile(Authentication authentication, Model model) {
-        Optional<AppUserProfileDto> appUserProfile = appUserService.findAppUserProfile(authentication.getName());
-        if (appUserProfile.isPresent()) {
-            model.addAttribute("appUserProfile", appUserProfile.get());
-            return "app-user-profile";
-        } else {
-            throw new UsernameNotFoundException(String.format("User with email %s not found", authentication.getName()));
-        }
+        AppUserProfileDto appUserProfile = appUserService.findAppUserProfile(authentication.getName());
+        model.addAttribute("appUserProfile", appUserProfile);
+        return "app-user-profile";
     }
 
     @GetMapping("/settings/profile")
     public String getAppUserProfileToEdit(Authentication authentication, Model model) {
-        Optional<AppUserEditProfileDto> appUserProfile = appUserService.findAppUserProfileToEdit(authentication.getName());
-        if (appUserProfile.isPresent()) {
-            model.addAttribute("appUserEditProfileDto", appUserProfile.get());
-            return "forms/app-user-edit-profile-form";
-        } else {
-            return null;
-        }
+        AppUserEditProfileDto appUserProfile = appUserService.findAppUserProfileToEdit(authentication.getName());
+        model.addAttribute("appUserEditProfileDto", appUserProfile);
+        return "forms/app-user-edit-profile-form";
     }
 
     @PatchMapping("/settings/profile")
@@ -56,12 +46,8 @@ public class AppUserController {
         if (bindingResult.hasErrors()) {
             return "forms/app-user-edit-profile-form";
         } else {
-            Optional<AppUserEditProfileDto> appUserProfileUpdated = appUserService.updateAppUserProfile(appUserEditProfileDto);
-            if (appUserProfileUpdated.isPresent()) {
-                return "redirect:/settings/profile";
-            } else {
-                return null;
-            }
+            appUserService.updateAppUserProfile(appUserEditProfileDto);
+            return "redirect:/settings/profile";
         }
     }
 
@@ -72,8 +58,7 @@ public class AppUserController {
     }
 
     @PostMapping("/settings/edit_password")
-    public String updateAppUserPassword(@Valid @ModelAttribute AppUserEditPasswordDto appUserEditPasswordDto,
-                                        BindingResult bindingResult) {
+    public String updateAppUserPassword(@Valid @ModelAttribute AppUserEditPasswordDto appUserEditPasswordDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "forms/edit-app-user-password";
         } else {
