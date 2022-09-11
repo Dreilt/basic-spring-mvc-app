@@ -6,9 +6,9 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
+@Documented
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Documented
 @Constraint(validatedBy = PasswordValueMatchValidator.class)
 public @interface PasswordValueMatch {
 
