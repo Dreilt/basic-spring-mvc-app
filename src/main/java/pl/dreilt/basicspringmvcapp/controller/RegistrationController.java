@@ -22,7 +22,7 @@ public class RegistrationController {
 
     @GetMapping("/register")
     public String getRegistrationForm(Model model) {
-        model.addAttribute("appUserRegistration", new AppUserRegistrationDto());
+        model.addAttribute("appUserRegistrationDto", new AppUserRegistrationDto());
         return "forms/registration-form";
     }
 
