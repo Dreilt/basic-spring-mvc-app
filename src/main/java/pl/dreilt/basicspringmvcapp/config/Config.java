@@ -1,4 +1,4 @@
-package pl.dreilt.basicspringmvcapp.configuration;
+package pl.dreilt.basicspringmvcapp.config;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 @Configuration
-public class CustomConfiguration {
+public class Config {
 
     @Bean
     public MessageSource messageSource() {

@@ -1,4 +1,4 @@
-package pl.dreilt.basicspringmvcapp.configuration;
+package pl.dreilt.basicspringmvcapp.config;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

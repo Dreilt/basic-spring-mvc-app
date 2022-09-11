@@ -1,4 +1,4 @@
-package pl.dreilt.basicspringmvcapp.configuration;
+package pl.dreilt.basicspringmvcapp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,11 +18,11 @@ import pl.dreilt.basicspringmvcapp.handler.CustomAuthenticationFailureHandler;
 import javax.sql.DataSource;
 
 @Configuration
-public class SecurityConfiguration {
+public class SecurityConfig {
 
     private final DataSource dataSource;
 
-    public SecurityConfiguration(DataSource dataSource) {
+    public SecurityConfig(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
