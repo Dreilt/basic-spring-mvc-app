@@ -1,6 +1,6 @@
 package pl.dreilt.basicspringmvcapp.annotation;
 
-import pl.dreilt.basicspringmvcapp.validator.PasswordValueEqualValidator;
+import pl.dreilt.basicspringmvcapp.validator.PasswordValueMatchValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -9,9 +9,10 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = PasswordValueEqualValidator.class)
-public @interface PasswordValueEqual {
-    String message() default "{register.registrationForm.PasswordValueEqual.message}";
+@Constraint(validatedBy = PasswordValueMatchValidator.class)
+public @interface PasswordValueMatch {
+
+    String message() default "{basicspringmvcapp.annotation.PasswordValueMatch.message}";
 
     Class<?>[] groups() default {};
 
@@ -19,11 +20,11 @@ public @interface PasswordValueEqual {
 
     String field();
 
-    String fieldEquals();
+    String fieldMatch();
 
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     @interface List {
-        PasswordValueEqual[] value();
+        PasswordValueMatch[] value();
     }
 }

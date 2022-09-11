@@ -1,41 +1,38 @@
 package pl.dreilt.basicspringmvcapp.validator;
 
 import org.springframework.beans.BeanWrapperImpl;
-import pl.dreilt.basicspringmvcapp.annotation.PasswordValueEqual;
+import pl.dreilt.basicspringmvcapp.annotation.PasswordValueMatch;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class PasswordValueEqualValidator implements ConstraintValidator<PasswordValueEqual, Object> {
+public class PasswordValueMatchValidator implements ConstraintValidator<PasswordValueMatch, Object> {
 
     private String field;
-    private String fieldEquals;
+    private String fieldMatch;
     private String message;
 
     @Override
-    public void initialize(PasswordValueEqual constraintAnnotation) {
+    public void initialize(PasswordValueMatch constraintAnnotation) {
         this.field = constraintAnnotation.field();
-        this.fieldEquals = constraintAnnotation.fieldEquals();
+        this.fieldMatch = constraintAnnotation.fieldMatch();
         this.message = constraintAnnotation.message();
     }
 
     @Override
     public boolean isValid(Object obj, ConstraintValidatorContext constraintValidatorContext) {
         Object fieldValue = new BeanWrapperImpl(obj).getPropertyValue(field);
-        Object fieldEqualsValue = new BeanWrapperImpl(obj).getPropertyValue(fieldEquals);
+        Object fieldMatchValue = new BeanWrapperImpl(obj).getPropertyValue(fieldMatch);
 
         boolean isValid = false;
         if (fieldValue != null) {
-            isValid = fieldValue.equals(fieldEqualsValue);
+            isValid = fieldValue.equals(fieldMatchValue);
         }
 
         if (!isValid) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate(message)
-                    .addPropertyNode(field)
-                    .addConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate(message)
-                    .addPropertyNode(fieldEquals)
+                    .addPropertyNode(fieldMatch)
                     .addConstraintViolation();
         }
 

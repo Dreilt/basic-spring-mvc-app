@@ -1,14 +1,14 @@
 package pl.dreilt.basicspringmvcapp.dto;
 
-import pl.dreilt.basicspringmvcapp.annotation.PasswordValueEqual;
+import pl.dreilt.basicspringmvcapp.annotation.PasswordValueMatch;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@PasswordValueEqual.List({
-        @PasswordValueEqual(
+@PasswordValueMatch.List({
+        @PasswordValueMatch(
                 field = "newPassword",
-                fieldEquals = "confirmNewPassword"
+                fieldMatch = "confirmNewPassword"
         )
 })
 public class AppUserEditPasswordAdminPanelDto {
