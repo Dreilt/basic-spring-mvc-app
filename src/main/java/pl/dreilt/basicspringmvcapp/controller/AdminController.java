@@ -9,7 +9,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.dreilt.basicspringmvcapp.dto.AppUserAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserBasicDataAdminPanelDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserEditPasswordAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
+import pl.dreilt.basicspringmvcapp.service.AppUserLoginDataService;
 import pl.dreilt.basicspringmvcapp.service.AppUserRoleService;
 import pl.dreilt.basicspringmvcapp.service.AppUserService;
 
@@ -21,10 +23,12 @@ public class AdminController {
 
     private final AppUserService appUserService;
     private final AppUserRoleService appUserRoleService;
+    private final AppUserLoginDataService appUserLoginDataService;
 
-    public AdminController(AppUserService appUserService, AppUserRoleService appUserRoleService) {
+    public AdminController(AppUserService appUserService, AppUserRoleService appUserRoleService, AppUserLoginDataService appUserLoginDataService) {
         this.appUserService = appUserService;
         this.appUserRoleService = appUserRoleService;
+        this.appUserLoginDataService = appUserLoginDataService;
     }
 
     @GetMapping("/admin_panel/users")
@@ -130,6 +134,23 @@ public class AdminController {
             }
         } else {
             return "redirect:/admin_panel/users/results?search_query=";
+        }
+    }
+
+    @GetMapping("/admin_panel/users/{id}/edit_password")
+    public String getEditAppUserPasswordForm(@PathVariable Long id, Model model) {
+        model.addAttribute("appUserId", id);
+        model.addAttribute("appUserEditPasswordAdminPanelDto", new AppUserEditPasswordAdminPanelDto());
+        return "forms/app-user-edit-password-form-admin-panel";
+    }
+
+    @PostMapping("/admin_panel/users/{id}/edit_password")
+    public String updateAppUserPassword(@PathVariable Long id, @Valid @ModelAttribute AppUserEditPasswordAdminPanelDto appUserEditPasswordAdminPanelDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "forms/app-user-edit-password-form-admin-panel";
+        } else {
+            appUserLoginDataService.changePassword(id, appUserEditPasswordAdminPanelDto.getNewPassword());
+            return "forms/app-user-edit-password-form-admin-panel";
         }
     }
 }

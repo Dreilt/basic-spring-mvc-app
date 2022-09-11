@@ -10,80 +10,96 @@
 </head>
 <body>
 <nav th:replace="fragments :: navbar"></nav>
-<div class="form-container">
-    <form id="appUserEditBasicDataFormAdminPanel" name="appUserEditBasicDataFormAdminPanel" class="custom-form" onsubmit="return validateAppUserEditBasicDataFormAdminPanel()" method="post" th:method="patch" action="#" th:action="@{'/admin_panel/users/' + ${appUserId}}" th:object="${appUserBasicDataAdminPanelDto}">
-        <div class="form-heading">
-            <h2>Edycja danych użytkownika</h2>
-            <span>Zaktualizuj dane użytkownika poniżej</span>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a class="side-nav-link active"
+                       href="#" th:href="@{'/admin_panel/users/' + ${appUserId}}">Podstawowe dane</a>
+                </li>
+                <li class="nav-item">
+                    <a class="side-nav-link"
+                       href="#" th:href="@{'/admin_panel/users/' + ${appUserId} + '/edit_password'}">Hasło</a>
+                </li>
+            </ul>
         </div>
-        <div class="form-group">
-            <label for="firstName" class="form-label">IMIĘ</label>
-            <input type="text"
-                   id="firstName" name="firstName"
-                   class="form-control" th:class="${#fields.hasErrors('firstName')} == FALSE ? 'form-control' : 'form-control is-invalid'"
-                   placeholder="Imię"
-                   th:field="*{firstName}">
-            <div id="firstNameErrorMessage" class="error-message" style="display: none;" th:text="#{edition.appUserEditBasicDataFormAdminPanel.firstName.fieldEmpty.message}">Błędy związane z imieniem</div>
-            <div class="error-message" th:errors="*{firstName}">Błędy związane z imieniem</div>
-        </div>
-        <div class="form-group">
-            <label for="lastName" class="form-label">NAZWISKO</label>
-            <input type="text"
-                   id="lastName" name="lastName"
-                   class="form-control" th:class="${#fields.hasErrors('lastName')} == FALSE ? 'form-control' : 'form-control is-invalid'"
-                   placeholder="Nazwisko"
-                   th:field="*{lastName}">
-            <div id="lastNameErrorMessage" class="error-message" style="display: none;" th:text="#{edition.appUserEditBasicDataFormAdminPanel.lastName.fieldEmpty.message}">Błędy związane z nazwiskiem</div>
-            <div class="error-message" th:errors="*{lastName}">Błędy związane z nazwiskiem</div>
-        </div>
-        <div class="form-group">
-            <label for="bio" class="form-label">BIOGRAM</label>
-            <textarea id="bio" name="bio"
-                      class="form-control" th:class="${#fields.hasErrors('bio')} == FALSE ? 'form-control' : 'form-control is-invalid'"
-                      placeholder="Biogram"
-                      th:field="*{bio}">
-                    </textarea>
-            <div class="error-message" th:errors="*{bio}">Błędy związane z biogramem</div>
-        </div>
-        <div class="form-group">
-            <label for="city" class="form-label">Miasto</label>
-            <input type="text"
-                   id="city" name="city"
-                   class="form-control" th:class="${#fields.hasErrors('city')} == FALSE ? 'form-control' : 'form-control is-invalid'"
-                   placeholder="Miasto"
-                   th:field="*{city}">
-            <div class="error-message" th:errors="*{city}">Błędy związane z miastem</div>
-        </div>
-        <div class="form-group">
-            <label for="enabled" class="form-label">WŁĄCZONY</label>
-            <select id="enabled" name="enabled"
-                    class="form-control"
-                    th:field="*{enabled}">
-                <option th:value="'true'" th:text="'Tak'">Tak</option>
-                <option th:value="'false'" th:text="'Nie'">Nie</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="accountNonLocked" class="form-label">ZABLOKOWANY</label>
-            <select id="accountNonLocked" name="accountNonLocked" th:field="*{accountNonLocked}"
-                    class="form-control">
-                <option th:value="'true'" th:text="'Nie'">Nie</option>
-                <option th:value="'false'" th:text="'Tak'">Tak</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="roles" class="form-label">ROLA</label>
-            <div id="roles">
-                <div th:each="role: ${appUserRoles}">
-                    <input type="checkbox" class="custom-checkbox" th:field="*{roles}" th:value="${role.id}">
-                    <label th:text="${role.visibleName}"></label>
+        <div class="col-md-9">
+            <form id="appUserEditBasicDataFormAdminPanel" name="appUserEditBasicDataFormAdminPanel" class="custom-form" onsubmit="return validateAppUserEditBasicDataFormAdminPanel()" method="post" th:method="patch" action="#" th:action="@{'/admin_panel/users/' + ${appUserId}}" th:object="${appUserBasicDataAdminPanelDto}">
+                <div class="form-heading">
+                    <h2>Edycja danych użytkownika</h2>
+                    <span>Zaktualizuj dane użytkownika poniżej</span>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label for="firstName" class="form-label">IMIĘ</label>
+                    <input type="text"
+                           id="firstName" name="firstName"
+                           class="form-control" th:class="${#fields.hasErrors('firstName')} == FALSE ? 'form-control' : 'form-control is-invalid'"
+                           placeholder="Imię"
+                           th:field="*{firstName}">
+                    <div id="firstNameErrorMessage" class="error-message" style="display: none;" th:text="#{edition.appUserEditBasicDataFormAdminPanel.firstName.fieldEmpty.message}">Błędy związane z imieniem</div>
+                    <div class="error-message" th:errors="*{firstName}">Błędy związane z imieniem</div>
+                </div>
+                <div class="form-group">
+                    <label for="lastName" class="form-label">NAZWISKO</label>
+                    <input type="text"
+                           id="lastName" name="lastName"
+                           class="form-control" th:class="${#fields.hasErrors('lastName')} == FALSE ? 'form-control' : 'form-control is-invalid'"
+                           placeholder="Nazwisko"
+                           th:field="*{lastName}">
+                    <div id="lastNameErrorMessage" class="error-message" style="display: none;" th:text="#{edition.appUserEditBasicDataFormAdminPanel.lastName.fieldEmpty.message}">Błędy związane z nazwiskiem</div>
+                    <div class="error-message" th:errors="*{lastName}">Błędy związane z nazwiskiem</div>
+                </div>
+                <div class="form-group">
+                    <label for="bio" class="form-label">BIOGRAM</label>
+                    <textarea id="bio" name="bio"
+                              class="form-control" th:class="${#fields.hasErrors('bio')} == FALSE ? 'form-control' : 'form-control is-invalid'"
+                              placeholder="Biogram"
+                              th:field="*{bio}">
+                    </textarea>
+                    <div class="error-message" th:errors="*{bio}">Błędy związane z biogramem</div>
+                </div>
+                <div class="form-group">
+                    <label for="city" class="form-label">Miasto</label>
+                    <input type="text"
+                           id="city" name="city"
+                           class="form-control" th:class="${#fields.hasErrors('city')} == FALSE ? 'form-control' : 'form-control is-invalid'"
+                           placeholder="Miasto"
+                           th:field="*{city}">
+                    <div class="error-message" th:errors="*{city}">Błędy związane z miastem</div>
+                </div>
+                <div class="form-group">
+                    <label for="enabled" class="form-label">WŁĄCZONY</label>
+                    <select id="enabled" name="enabled"
+                            class="form-control"
+                            th:field="*{enabled}">
+                        <option th:value="'true'" th:text="'Tak'">Tak</option>
+                        <option th:value="'false'" th:text="'Nie'">Nie</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="accountNonLocked" class="form-label">ZABLOKOWANY</label>
+                    <select id="accountNonLocked" name="accountNonLocked" th:field="*{accountNonLocked}"
+                            class="form-control">
+                        <option th:value="'true'" th:text="'Nie'">Nie</option>
+                        <option th:value="'false'" th:text="'Tak'">Tak</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="roles" class="form-label">ROLA</label>
+                    <div id="roles">
+                        <div th:each="role: ${appUserRoles}">
+                            <input type="checkbox" class="custom-checkbox" th:field="*{roles}" th:value="${role.id}">
+                            <label th:text="${role.visibleName}"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-grid gap-2 col-5 mx-auto" style="margin: 8px 0 8px 0;">
+                    <button class="btn form-button" type="submit">Zaktualizuj dane</button>
+                </div>
+            </form>
         </div>
-        <div class="d-grid gap-2 col-5 mx-auto" style="margin: 8px 0 8px 0;">
-            <button class="btn form-button" type="submit">Zaktualizuj dane</button>
-        </div>
-    </form>
+    </div>
 </div>
 
 <th:block th:replace="fragments :: scripts"></th:block>

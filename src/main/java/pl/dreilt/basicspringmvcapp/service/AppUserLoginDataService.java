@@ -58,4 +58,20 @@ public class AppUserLoginDataService {
             throw new AppUserNotFoundException("Current user doesn't exist in database.");
         }
     }
+
+    @Transactional
+    public void changePassword(Long id, String newPassword) {
+        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+        if (currentUser != null && currentUser.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+            throw new AccessDeniedException("Can't change password as no admin role user found in context for current user.");
+        }
+
+        Optional<AppUser> appUser = appUserRepository.findById(id);
+        if (appUser.isPresent()) {
+            String passwordHash = passwordEncoder.encode(newPassword);
+            appUser.get().setPassword(passwordHash);
+        } else {
+            throw new AppUserNotFoundException(String.format("User with ID %s not found", id));
+        }
+    }
 }
