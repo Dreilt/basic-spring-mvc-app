@@ -11,11 +11,11 @@ import javax.validation.constraints.Size;
                 fieldMatch = "confirmNewPassword"
         )
 })
-public class AppUserEditPasswordAdminPanelDto {
-    @NotNull
+public class AppUserPasswordEditAdminPanelDto {
+    @NotNull(message = "{form.newPassword.fieldEmpty.message}")
     @Size(min = 5, max = 100)
     private String newPassword;
-    @NotNull
+    @NotNull(message = "{form.confirmNewPassword.fieldEmpty.message}")
     @Size(min = 5, max = 100)
     private String confirmNewPassword;
 

@@ -16,12 +16,12 @@ public class AppUserRoleService {
         this.appUserRoleRepository = appUserRoleRepository;
     }
 
-    public Set<AppUserRole> findAllAppUserRole() {
-        Iterable<AppUserRole> appUserRoles = appUserRoleRepository.findAll();
-        Set<AppUserRole> appUserRolesSet = new HashSet<>();
-        for (AppUserRole appUserRole : appUserRoles) {
-            appUserRolesSet.add(appUserRole);
+    public Set<AppUserRole> findAllUserRoles() {
+        Iterable<AppUserRole> userRoles = appUserRoleRepository.findAll();
+        Set<AppUserRole> userRoleSet = new HashSet<>();
+        for (AppUserRole userRole : userRoles) {
+            userRoleSet.add(userRole);
         }
-        return appUserRolesSet;
+        return userRoleSet;
     }
 }

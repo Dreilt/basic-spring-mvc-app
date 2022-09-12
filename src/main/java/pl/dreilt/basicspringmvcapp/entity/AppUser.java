@@ -12,16 +12,16 @@ public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
+    @NotNull(message = "{form.firstName.fieldEmpty.message}")
     @Size(min = 2, max = 50)
     private String firstName;
-    @NotNull
+    @NotNull(message = "{form.lastName.fieldEmpty.message}")
     @Size(min = 2, max = 50)
     private String lastName;
     @NotNull
     @Email
     private String email;
-    @NotNull
+    @NotNull(message = "{form.password.fieldEmpty.message}")
     @Size(min = 5, max = 100)
     private String password;
     @Size(max = 1000)

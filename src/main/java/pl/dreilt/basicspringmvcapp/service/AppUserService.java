@@ -1,7 +1,5 @@
 package pl.dreilt.basicspringmvcapp.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +11,10 @@ import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.NoSuchRoleException;
-import pl.dreilt.basicspringmvcapp.mapper.*;
+import pl.dreilt.basicspringmvcapp.mapper.AppUserCredentialsDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.AppUserEditProfileDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.LoggedAppUserBasicDataDtoMapper;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRoleRepository;
 
@@ -56,71 +57,6 @@ public class AppUserService {
                 }
         );
         appUserRepository.save(appUser);
-    }
-
-    public Page<AppUserAdminPanelDto> findAllAppUsers(Pageable pageable) {
-        return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtos(appUserRepository.findAllAppUsers(pageable));
-    }
-
-    public AppUserBasicDataAdminPanelDto findAppUserBasicDataToEdit(Long id) {
-        return appUserRepository.findById(id)
-                .map(AppUserBasicDataAdminPanelDtoMapper::mapToAppUserBasicDataAdminPanelDto)
-                .orElseThrow(() -> new AppUserNotFoundException("User with ID " + id + " not found"));
-    }
-
-    @Transactional
-    public void updateAppUserBasicData(Long id, AppUserBasicDataAdminPanelDto appUserBasicDataAdminPanelDto) {
-        appUserRepository.findById(id)
-                .map(target -> setAppUserBasicDataFields(appUserBasicDataAdminPanelDto, target))
-                .map(AppUserBasicDataAdminPanelDtoMapper::mapToAppUserBasicDataAdminPanelDto)
-                .orElseThrow(() -> new AppUserNotFoundException("User with ID " + id + " not found"));
-    }
-
-    private AppUser setAppUserBasicDataFields(AppUserBasicDataAdminPanelDto source, AppUser target) {
-        if (source.getFirstName() != null && !source.getFirstName().equals(target.getFirstName())) {
-            target.setFirstName(source.getFirstName());
-        }
-        if (source.getLastName() != null && !source.getLastName().equals(target.getLastName())) {
-            target.setLastName(source.getLastName());
-        }
-        if (source.getBio() != null && !source.getBio().equals(target.getBio())) {
-            target.setBio(source.getBio());
-        }
-        if (source.getCity() != null && !source.getCity().equals(target.getCity())) {
-            target.setCity(source.getCity());
-        }
-        if (source.isEnabled() != target.isEnabled()) {
-            target.setEnabled(source.isEnabled());
-        }
-        if (source.isAccountNonLocked() != target.isAccountNonLocked()) {
-            target.setAccountNonLocked(source.isAccountNonLocked());
-        }
-        target.setRoles(source.getRoles());
-        return target;
-    }
-
-    public void deleteAppUser(Long id) {
-        appUserRepository.deleteById(id);
-    }
-
-    public Page<AppUserAdminPanelDto> findAppUsersBySearch(String searchQuery, Pageable pageable) {
-        if (searchQuery.equals("")) {
-            return Page.empty();
-        } else {
-            searchQuery = searchQuery.toLowerCase();
-            String[] searchWords = searchQuery.split(" ");
-
-            if (searchWords.length == 1) {
-                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtos(
-                        appUserRepository.findAppUsersBySearch(searchQuery, pageable));
-            } else if (searchWords.length == 2) {
-                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtos(
-                        appUserRepository.findAppUsersBySearch(searchWords[0], searchWords[1], pageable));
-            } else {
-                return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtos(
-                        appUserRepository.findAppUsersBySearch(searchWords, pageable));
-            }
-        }
     }
 
     public AppUserProfileDto findAppUserProfile(String email) {

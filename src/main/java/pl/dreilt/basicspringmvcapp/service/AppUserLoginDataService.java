@@ -66,10 +66,10 @@ public class AppUserLoginDataService {
             throw new AccessDeniedException("Can't change password as no admin role user found in context for current user.");
         }
 
-        Optional<AppUser> appUser = appUserRepository.findById(id);
-        if (appUser.isPresent()) {
+        Optional<AppUser> user = appUserRepository.findById(id);
+        if (user.isPresent()) {
             String passwordHash = passwordEncoder.encode(newPassword);
-            appUser.get().setPassword(passwordHash);
+            user.get().setPassword(passwordHash);
         } else {
             throw new AppUserNotFoundException(String.format("User with ID %s not found", id));
         }

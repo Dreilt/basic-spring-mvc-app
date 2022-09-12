@@ -15,20 +15,24 @@
         <div class="col-md-3">
             <ul class="nav nav-pills flex-column">
                 <li class="nav-item">
+                    <a class="side-nav-link"
+                       href="#" th:href="@{'/admin_panel/users/' + ${userId}}">Konto</a>
+                </li>
+                <li class="nav-item">
                     <a class="side-nav-link active"
-                       href="#" th:href="@{'/admin_panel/users/' + ${appUserId}}">Podstawowe dane</a>
+                       href="#" th:href="@{'/admin_panel/users/' + ${userId} + '/edit_profile'}">Profil</a>
                 </li>
                 <li class="nav-item">
                     <a class="side-nav-link"
-                       href="#" th:href="@{'/admin_panel/users/' + ${appUserId} + '/edit_password'}">Hasło</a>
+                       href="#" th:href="@{'/admin_panel/users/' + ${userId} + '/edit_password'}">Hasło</a>
                 </li>
             </ul>
         </div>
         <div class="col-md-9">
-            <form id="appUserEditBasicDataFormAdminPanel" name="appUserEditBasicDataFormAdminPanel" class="custom-form" onsubmit="return validateAppUserEditBasicDataFormAdminPanel()" method="post" th:method="patch" action="#" th:action="@{'/admin_panel/users/' + ${appUserId}}" th:object="${appUserBasicDataAdminPanelDto}">
+            <form id="userProfileEditFormAdminPanel" name="userProfileEditFormAdminPanel" class="custom-form" onsubmit="return validateUserProfileEditFormAdminPanel();" method="post" th:method="patch" action="#" th:action="@{'/admin_panel/users/' + ${userId} + '/edit_profile'}" th:object="${userProfileEditAdminPanelDto}">
                 <div class="form-heading">
-                    <h2>Edycja danych użytkownika</h2>
-                    <span>Zaktualizuj dane użytkownika poniżej</span>
+                    <h2>Edycja profilu użytkownika</h2>
+                    <span>Zaktualizuj profil użytkownika poniżej</span>
                 </div>
                 <div class="form-group">
                     <label for="firstName" class="form-label">IMIĘ</label>
@@ -68,34 +72,8 @@
                            th:field="*{city}">
                     <div class="error-message" th:errors="*{city}">Błędy związane z miastem</div>
                 </div>
-                <div class="form-group">
-                    <label for="enabled" class="form-label">WŁĄCZONY</label>
-                    <select id="enabled" name="enabled"
-                            class="form-control"
-                            th:field="*{enabled}">
-                        <option th:value="'true'" th:text="'Tak'">Tak</option>
-                        <option th:value="'false'" th:text="'Nie'">Nie</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="accountNonLocked" class="form-label">ZABLOKOWANY</label>
-                    <select id="accountNonLocked" name="accountNonLocked" th:field="*{accountNonLocked}"
-                            class="form-control">
-                        <option th:value="'true'" th:text="'Nie'">Nie</option>
-                        <option th:value="'false'" th:text="'Tak'">Tak</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="roles" class="form-label">ROLA</label>
-                    <div id="roles">
-                        <div th:each="role: ${appUserRoles}">
-                            <input type="checkbox" class="custom-checkbox" th:field="*{roles}" th:value="${role.id}">
-                            <label th:text="${role.visibleName}"></label>
-                        </div>
-                    </div>
-                </div>
                 <div class="d-grid gap-2 col-5 mx-auto" style="margin: 8px 0 8px 0;">
-                    <button class="btn form-button" type="submit">Zaktualizuj dane</button>
+                    <button class="btn form-button" type="submit">Zaktualizuj profil</button>
                 </div>
             </form>
         </div>
