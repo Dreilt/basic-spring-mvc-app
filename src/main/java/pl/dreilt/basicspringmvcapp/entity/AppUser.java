@@ -2,6 +2,7 @@ package pl.dreilt.basicspringmvcapp.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
@@ -12,21 +13,22 @@ public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull(message = "{form.firstName.fieldEmpty.message}")
-    @Size(min = 2, max = 50)
+    @NotNull(message = "{form.field.firstName.error.notNull.message}")
+    @Size(min = 2, max = 50, message = "{form.field.firstName.error.size.message}")
     private String firstName;
-    @NotNull(message = "{form.lastName.fieldEmpty.message}")
-    @Size(min = 2, max = 50)
+    @NotNull(message = "{form.field.lastName.error.notNull.message}")
+    @Size(min = 2, max = 50, message = "{form.field.lastName.error.size.message}")
     private String lastName;
-    @NotNull
+    @NotNull(message = "{form.field.email.error.notNull.message}")
+    @NotEmpty(message = "{form.field.email.error.notEmpty.message}")
     @Email
     private String email;
-    @NotNull(message = "{form.password.fieldEmpty.message}")
-    @Size(min = 5, max = 100)
+    @NotNull(message = "{form.field.password.error.notNull.message}")
+    @Size(min = 5, max = 100, message = "{form.field.password.error.size.message}")
     private String password;
-    @Size(max = 1000)
+    @Size(max = 1000, message = "{form.field.bio.error.size.message}")
     private String bio;
-    @Size(max = 50)
+    @Size(max = 50, message = "{form.field.city.error.size.message}")
     private String city;
     private boolean enabled;
     private boolean accountNonLocked;

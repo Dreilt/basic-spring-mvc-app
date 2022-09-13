@@ -12,11 +12,11 @@ import javax.validation.constraints.Size;
         )
 })
 public class AppUserPasswordEditAdminPanelDto {
-    @NotNull(message = "{form.newPassword.fieldEmpty.message}")
-    @Size(min = 5, max = 100)
+    @NotNull(message = "{form.field.newPassword.error.notNull.message}")
+    @Size(min = 5, max = 100, message = "{form.field.newPassword.error.size.message}")
     private String newPassword;
-    @NotNull(message = "{form.confirmNewPassword.fieldEmpty.message}")
-    @Size(min = 5, max = 100)
+    @NotNull(message = "{form.field.confirmNewPassword.error.notNull.message}")
+    @Size(min = 5, max = 100, message = "{form.field.confirmNewPassword.error.size.message}")
     private String confirmNewPassword;
 
     public String getNewPassword() {

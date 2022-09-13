@@ -3,6 +3,7 @@ package pl.dreilt.basicspringmvcapp.dto;
 import pl.dreilt.basicspringmvcapp.annotation.PasswordValueMatch;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -13,20 +14,21 @@ import javax.validation.constraints.Size;
         )
 })
 public class AppUserRegistrationDto {
-    @NotNull
-    @Size(min = 2, max = 50)
+    @NotNull(message = "{form.field.firstName.error.notNull.message}")
+    @Size(min = 2, max = 50, message = "{form.field.firstName.error.size.message}")
     private String firstName;
-    @NotNull
-    @Size(min = 2, max = 50)
+    @NotNull(message = "{form.field.lastName.error.notNull.message}")
+    @Size(min = 2, max = 50, message = "{form.field.lastName.error.size.message}")
     private String lastName;
-    @NotNull
+    @NotNull(message = "{form.field.email.error.notNull.message}")
+    @NotEmpty(message = "{form.field.email.error.notEmpty.message}")
     @Email
     private String email;
-    @NotNull
-    @Size(min = 5, max = 100)
+    @NotNull(message = "{form.field.password.error.notNull.message}")
+    @Size(min = 5, max = 100, message = "{form.field.password.error.size.message}")
     private String password;
-    @NotNull
-    @Size(min = 5, max = 100)
+    @NotNull(message = "{form.field.confirmPassword.error.notNull.message}")
+    @Size(min = 5, max = 100, message = "{form.field.confirmPassword.error.size.message}")
     private String confirmPassword;
 
     public String getFirstName() {

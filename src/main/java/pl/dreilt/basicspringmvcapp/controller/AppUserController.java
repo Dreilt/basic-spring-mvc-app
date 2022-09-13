@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import pl.dreilt.basicspringmvcapp.dto.AppUserEditPasswordDto;
-import pl.dreilt.basicspringmvcapp.dto.AppUserEditProfileDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserPasswordEditDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDto;
 import pl.dreilt.basicspringmvcapp.service.AppUserLoginDataService;
 import pl.dreilt.basicspringmvcapp.service.AppUserService;
@@ -28,42 +28,44 @@ public class AppUserController {
     }
 
     @GetMapping("/profile")
-    public String getAppUserProfile(Authentication authentication, Model model) {
+    public String getUserProfile(Authentication authentication, Model model) {
         AppUserProfileDto appUserProfile = appUserService.findAppUserProfile(authentication.getName());
         model.addAttribute("appUserProfile", appUserProfile);
         return "app-user-profile";
     }
 
     @GetMapping("/settings/profile")
-    public String getAppUserProfileToEdit(Authentication authentication, Model model) {
-        AppUserEditProfileDto appUserProfile = appUserService.findAppUserProfileToEdit(authentication.getName());
-        model.addAttribute("appUserEditProfileDto", appUserProfile);
-        return "forms/app-user-edit-profile-form";
+    public String getUserProfileEditForm(Authentication authentication, Model model) {
+        AppUserProfileEditDto userProfileEditDto = appUserService.findUserProfileToEdit(authentication.getName());
+        model.addAttribute("userProfileEditDto", userProfileEditDto);
+        return "forms/app-user-profile-edit-form";
     }
 
     @PatchMapping("/settings/profile")
-    public String updateAppUserProfile(@Valid @ModelAttribute AppUserEditProfileDto appUserEditProfileDto, BindingResult bindingResult) {
+    public String updateUserProfile(@Valid @ModelAttribute(name = "userProfileEditDto") AppUserProfileEditDto userProfileEditDto,
+                                    BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "forms/app-user-edit-profile-form";
+            return "forms/app-user-profile-edit-form";
         } else {
-            appUserService.updateAppUserProfile(appUserEditProfileDto);
+            appUserService.updateUserProfile(userProfileEditDto);
             return "redirect:/settings/profile";
         }
     }
 
     @GetMapping("/settings/edit_password")
-    public String getEditAppUserPasswordForm(Model model) {
-        model.addAttribute("appUserEditPasswordDto", new AppUserEditPasswordDto());
-        return "forms/edit-app-user-password";
+    public String getUserPasswordEditForm(Model model) {
+        model.addAttribute("userPasswordEditDto", new AppUserPasswordEditDto());
+        return "forms/app-user-password-edit-form";
     }
 
     @PostMapping("/settings/edit_password")
-    public String updateAppUserPassword(@Valid @ModelAttribute AppUserEditPasswordDto appUserEditPasswordDto, BindingResult bindingResult) {
+    public String updateUserPassword(@Valid @ModelAttribute(name = "userPasswordEditDto") AppUserPasswordEditDto userPasswordEditDto,
+                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "forms/edit-app-user-password";
+            return "forms/app-user-password-edit-form";
         } else {
-            appUserLoginDataService.changePassword(appUserEditPasswordDto.getCurrentPassword(), appUserEditPasswordDto.getNewPassword());
-            return "forms/edit-app-user-password";
+            appUserLoginDataService.changePassword(userPasswordEditDto.getCurrentPassword(), userPasswordEditDto.getNewPassword());
+            return "redirect:/settings/edit_password";
         }
     }
 }

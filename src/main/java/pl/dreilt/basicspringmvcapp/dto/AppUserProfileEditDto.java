@@ -3,16 +3,16 @@ package pl.dreilt.basicspringmvcapp.dto;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class AppUserEditProfileDto {
-    @NotNull
-    @Size(min = 2, max = 50)
+public class AppUserProfileEditDto {
+    @NotNull(message = "{form.field.firstName.error.notNull.message}")
+    @Size(min = 2, max = 50, message = "{form.field.firstName.error.size.message}")
     private String firstName;
-    @NotNull
-    @Size(min = 2, max = 50)
+    @NotNull(message = "{form.field.lastName.error.notNull.message}")
+    @Size(min = 2, max = 50, message = "{form.field.lastName.error.size.message}")
     private String lastName;
-    @Size(max = 1000)
+    @Size(max = 1000, message = "{form.field.bio.error.size.message}")
     private String bio;
-    @Size(max = 50)
+    @Size(max = 50, message = "{form.field.city.error.size.message}")
     private String city;
 
     public String getFirstName() {

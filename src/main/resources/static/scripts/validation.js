@@ -40,31 +40,24 @@ function validateAppUserEditPasswordFormAdminPanel() {
         return isNotNewPasswordError && isNotConfirmNewPasswordError;
 }
 
-
-
-
-
-
-
-
-
-
-function validateAppUserEditProfileForm() {
-    const firstNameValue = document.appUserEditProfileForm.firstName.value;
+function validateUserProfileEditForm() {
+    const firstNameValue = document.userProfileEditForm.firstName.value;
     const isNotFirstNameError = checkIfNotEmpty('firstName', firstNameValue);
-    const lastNameValue = document.appUserEditProfileForm.lastName.value;
+    const lastNameValue = document.userProfileEditForm.lastName.value;
     const isNotLastNameError = checkIfNotEmpty('lastName', lastNameValue);
 
     return isNotFirstNameError && isNotLastNameError;
 }
 
-function validateAppUserEditBasicDataFormAdminPanel() {
-    const firstNameValue = document.appUserEditBasicDataFormAdminPanel.firstName.value;
-    const isNotFirstNameError = checkIfNotEmpty('firstName', firstNameValue);
-    const lastNameValue = document.appUserEditBasicDataFormAdminPanel.lastName.value;
-    const isNotLastNameError = checkIfNotEmpty('lastName', lastNameValue);
+function validateUserPasswordEditForm() {
+    const currentPasswordValue = document.userPasswordEditForm.currentPassword.value;
+    const isNotCurrentPasswordError = checkIfNotEmpty('currentPassword', currentPasswordValue);
+    const newPasswordValue = document.userPasswordEditForm.newPassword.value;
+    const isNotNewPasswordError = checkIfNotEmpty('newPassword', newPasswordValue);
+    const confirmNewPasswordValue = document.userPasswordEditForm.confirmNewPassword.value;
+    const isNotConfirmNewPasswordError = checkIfNotEmpty('confirmNewPassword', confirmNewPasswordValue);
 
-    return isNotFirstNameError && isNotLastNameError;
+    return isNotCurrentPasswordError && isNotNewPasswordError && isNotConfirmNewPasswordError;
 }
 
 function checkIfNotEmpty(fieldName, fieldValue) {

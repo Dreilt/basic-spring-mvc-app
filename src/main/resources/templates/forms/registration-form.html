@@ -11,7 +11,7 @@
 <body>
 <nav th:replace="fragments :: navbar"></nav>
 <div class="form-container">
-    <form id="registrationForm" name="registrationForm" class="custom-form" onsubmit="return validateRegistrationForm()" method="post" th:method="post" action="#" th:action="@{/register}" th:object="${appUserRegistrationDto}">
+    <form id="registrationForm" name="registrationForm" class="custom-form" onsubmit="return validateRegistrationForm();" method="post" th:method="post" action="#" th:action="@{/register}" th:object="${userRegistrationDto}">
         <div class="form-heading">
             <h2>Rejestracja</h2>
             <span>Wprowadź swoje dane poniżej</span>
@@ -23,7 +23,7 @@
                    class="form-control" th:class="${#fields.hasErrors('firstName')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    placeholder="Imię"
                    th:field="*{firstName}">
-            <div id="firstNameErrorMessage" class="error-message" style="display: none;" th:text="#{registration.registrationForm.firstName.fieldEmpty.message}">Błędy związane z imieniem</div>
+            <div id="firstNameErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.firstName.error.notNull.message}">Błędy związane z imieniem</div>
             <div class="error-message" th:errors="*{firstName}">Błędy związane z imieniem</div>
         </div>
         <div class="form-group">
@@ -33,7 +33,7 @@
                    class="form-control" th:class="${#fields.hasErrors('lastName')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    placeholder="Nazwisko"
                    th:field="*{lastName}">
-            <div id="lastNameErrorMessage" class="error-message" style="display: none;" th:text="#{registration.registrationForm.lastName.fieldEmpty.message}">Błędy związane z nazwiskiem</div>
+            <div id="lastNameErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.lastName.error.notNull.message}">Błędy związane z nazwiskiem</div>
             <div class="error-message" th:errors="*{lastName}">Błędy związane z nazwiskiem</div>
         </div>
         <div class="form-group">
@@ -43,7 +43,7 @@
                    class="form-control" th:class="${#fields.hasErrors('email')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    placeholder="E-mail"
                    th:field="*{email}">
-            <div id="emailErrorMessage" class="error-message" style="display: none;" th:text="#{registration.registrationForm.email.fieldEmpty.message}">Błędy związane z emailem</div>
+            <div id="emailErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.email.error.notNull.message}">Błędy związane z emailem</div>
             <div class="error-message" th:errors="*{email}">Błędy związane z emailem</div>
         </div>
         <div class="form-group">
@@ -53,7 +53,7 @@
                    class="form-control" th:class="${#fields.hasErrors('password')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    placeholder="Hasło"
                    th:field="*{password}">
-            <div id="passwordErrorMessage" class="error-message" style="display: none;" th:text="#{registration.registrationForm.password.fieldEmpty.message}">Błędy związane z hasłem</div>
+            <div id="passwordErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.password.error.notNull.message}">Błędy związane z hasłem</div>
             <div class="error-message" th:errors="*{password}">Błędy związane z hasłem</div>
         </div>
         <div class="form-group">
@@ -63,7 +63,7 @@
                    class="form-control" th:class="${#fields.hasErrors('confirmPassword')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    placeholder="Potwierdź hasło"
                    th:field="*{confirmPassword}">
-            <div id="confirmPasswordErrorMessage" class="error-message" style="display: none;" th:text="#{registration.registrationForm.confirmPassword.fieldEmpty.message}">Błędy związane z hasłem</div>
+            <div id="confirmPasswordErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.confirmPassword.error.notNull.message}">Błędy związane z hasłem</div>
             <div class="error-message" th:errors="*{confirmPassword}">Błędy związane z hasłem</div>
         </div>
         <div class="d-grid gap-2 col-5 mx-auto" style="margin: 8px 0 8px 0;">

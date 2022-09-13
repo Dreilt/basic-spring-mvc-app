@@ -11,15 +11,15 @@ import javax.validation.constraints.Size;
                 fieldMatch = "confirmNewPassword"
         )
 })
-public class AppUserEditPasswordDto {
-    @NotNull
-    @Size(min = 5, max = 100)
+public class AppUserPasswordEditDto {
+    @NotNull(message = "{form.field.currentPassword.error.notNull.message}")
+    @Size(min = 5, max = 100, message = "{form.field.currentPassword.error.size.message}")
     private String currentPassword;
-    @NotNull
-    @Size(min = 5, max = 100)
+    @NotNull(message = "{form.field.newPassword.error.notNull.message}")
+    @Size(min = 5, max = 100, message = "{form.field.newPassword.error.size.message}")
     private String newPassword;
-    @NotNull
-    @Size(min = 5, max = 100)
+    @NotNull(message = "{form.field.confirmNewPassword.error.notNull.message}")
+    @Size(min = 5, max = 100, message = "{form.field.confirmNewPassword.error.size.message}")
     private String confirmNewPassword;
 
     public String getCurrentPassword() {
