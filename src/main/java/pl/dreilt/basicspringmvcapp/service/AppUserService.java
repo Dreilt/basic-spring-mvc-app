@@ -34,6 +34,14 @@ public class AppUserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public boolean checkIfAppUserExists(String email) {
+        Optional<AppUser> user = appUserRepository.findByEmail(email);
+        if (user.isPresent()) {
+            return true;
+        }
+        return false;
+    }
+
     public Optional<AppUserCredentialsDto> findAppUserCredentialsByEmail(String email) {
         return appUserRepository.findByEmail(email)
                 .map(AppUserCredentialsDtoMapper::mapToAppUserCredentialsDto);

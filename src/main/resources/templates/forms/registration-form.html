@@ -11,7 +11,7 @@
 <body>
 <nav th:replace="fragments :: navbar"></nav>
 <div class="form-container">
-    <form id="registrationForm" name="registrationForm" class="custom-form" onsubmit="return validateRegistrationForm();" method="post" th:method="post" action="#" th:action="@{/register}" th:object="${userRegistrationDto}">
+    <form id="registrationForm" name="registrationForm" class="custom-form" onsubmit="#" method="post" th:method="post" action="#" th:action="@{/register}" th:object="${userRegistrationDto}">
         <div class="form-heading">
             <h2>Rejestracja</h2>
             <span>Wprowadź swoje dane poniżej</span>
