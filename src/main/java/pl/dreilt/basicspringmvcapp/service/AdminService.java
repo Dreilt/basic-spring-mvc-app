@@ -54,8 +54,8 @@ public class AdminService {
     }
 
     @Transactional
-    public void updateUserAccountData(Long id, AppUserAccountDataEditAdminPanelDto userAccountDataEditAdminPanelDto) {
-        adminRepository.findById(id)
+    public AppUserAccountDataEditAdminPanelDto updateUserAccountData(Long id, AppUserAccountDataEditAdminPanelDto userAccountDataEditAdminPanelDto) {
+        return adminRepository.findById(id)
                 .map(target -> setUserAccountDataFields(userAccountDataEditAdminPanelDto, target))
                 .map(AppUserAccountDataEditAdminPanelDtoMapper::mapToAppUserAccountDataEditAdminPanelDto)
                 .orElseThrow(() -> new AppUserNotFoundException("User with ID " + id + " not found"));
@@ -79,8 +79,8 @@ public class AdminService {
     }
 
     @Transactional
-    public void updateUserProfile(Long id, AppUserProfileEditAdminPanelDto userProfileEditAdminPanelDto) {
-        adminRepository.findById(id)
+    public AppUserProfileEditAdminPanelDto updateUserProfile(Long id, AppUserProfileEditAdminPanelDto userProfileEditAdminPanelDto) {
+        return adminRepository.findById(id)
                 .map(target -> setUserProfileFields(userProfileEditAdminPanelDto, target))
                 .map(AppUserProfileEditAdminPanelDtoMapper::mapToAppUserProfileEditAdminPanelDto)
                 .orElseThrow(() -> new AppUserNotFoundException("User with ID " + id + " not found"));
