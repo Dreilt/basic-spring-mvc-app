@@ -1,7 +1,6 @@
 package pl.dreilt.basicspringmvcapp.dto;
 
 import pl.dreilt.basicspringmvcapp.annotation.PasswordValueMatch;
-import pl.dreilt.basicspringmvcapp.annotation.UniqueEmail;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -24,7 +23,6 @@ public class AppUserRegistrationDto {
     @NotNull(message = "{form.field.email.error.notNull.message}")
     @NotEmpty(message = "{form.field.email.error.notEmpty.message}")
     @Email
-    @UniqueEmail
     private String email;
     @NotNull(message = "{form.field.password.error.notNull.message}")
     @Size(min = 5, max = 100, message = "{form.field.password.error.size.message}")
