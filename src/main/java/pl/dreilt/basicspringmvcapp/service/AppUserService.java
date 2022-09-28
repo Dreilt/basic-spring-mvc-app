@@ -1,23 +1,28 @@
 package pl.dreilt.basicspringmvcapp.service;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import pl.dreilt.basicspringmvcapp.dto.*;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
+import pl.dreilt.basicspringmvcapp.entity.AppUserProfileImage;
 import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
+import pl.dreilt.basicspringmvcapp.exception.DefaultProfileImageNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.NoSuchRoleException;
-import pl.dreilt.basicspringmvcapp.mapper.AppUserCredentialsDtoMapper;
-import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileEditDtoMapper;
-import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileDtoMapper;
-import pl.dreilt.basicspringmvcapp.mapper.LoggedAppUserBasicDataDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.*;
+import pl.dreilt.basicspringmvcapp.repository.AppUserAvatarRepository;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRoleRepository;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 
 @Service
@@ -27,11 +32,13 @@ public class AppUserService {
     private final AppUserRepository appUserRepository;
     private final AppUserRoleRepository appUserRoleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AppUserAvatarRepository appUserAvatarRepository;
 
-    public AppUserService(AppUserRepository appUserRepository, AppUserRoleRepository appUserRoleRepository, PasswordEncoder passwordEncoder) {
+    public AppUserService(AppUserRepository appUserRepository, AppUserRoleRepository appUserRoleRepository, PasswordEncoder passwordEncoder, AppUserAvatarRepository appUserAvatarRepository) {
         this.appUserRepository = appUserRepository;
         this.appUserRoleRepository = appUserRoleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.appUserAvatarRepository = appUserAvatarRepository;
     }
 
     public boolean checkIfAppUserExists(String email) {
@@ -55,6 +62,7 @@ public class AppUserService {
         appUser.setEmail(appUserRegistration.getEmail());
         String passwordHash = passwordEncoder.encode(appUserRegistration.getPassword());
         appUser.setPassword(passwordHash);
+        setDefaultProfileImage(appUser);
         appUser.setEnabled(true);
         appUser.setAccountNonLocked(true);
         Optional<AppUserRole> userRole = appUserRoleRepository.findByName(USER_ROLE);
@@ -65,6 +73,20 @@ public class AppUserService {
                 }
         );
         appUserRepository.save(appUser);
+    }
+
+    private void setDefaultProfileImage(AppUser appUser) {
+        Resource resource = new ClassPathResource("static/images/default_profile_image.png");
+        try (InputStream defaultProfileImage = resource.getInputStream()) {
+            AppUserProfileImage profileImage = new AppUserProfileImage();
+            profileImage.setFileName(resource.getFilename());
+            profileImage.setFileType("image/png");
+            profileImage.setFileData(defaultProfileImage.readAllBytes());
+            appUserAvatarRepository.save(profileImage);
+            appUser.setProfileImage(profileImage);
+        } catch (IOException e) {
+            throw new DefaultProfileImageNotFoundException("File " + ((ClassPathResource) resource).getPath() + " not found");
+        }
     }
 
     public AppUserProfileDto findAppUserProfile(String email) {
@@ -99,6 +121,9 @@ public class AppUserService {
         if (source.getLastName() != null && !source.getLastName().equals(target.getLastName())) {
             target.setLastName(source.getLastName());
         }
+        if (!source.getProfileImage().isEmpty()) {
+            setNewProfileImage(source.getProfileImage(), target);
+        }
         if (source.getBio() != null && !source.getBio().equals(target.getBio())) {
             target.setBio(source.getBio());
         }
@@ -108,7 +133,21 @@ public class AppUserService {
         return target;
     }
 
-    public LoggedAppUserBasicDataDto findLoggedAppUserBasicData(String email) {
+    private void setNewProfileImage(MultipartFile profileImage, AppUser appUser) {
+        AppUserProfileImage currentProfileImage = appUser.getProfileImage();
+        try (InputStream newProfileImage = profileImage.getInputStream()) {
+            if (newProfileImage.readAllBytes() != currentProfileImage.getFileData()) {
+                currentProfileImage.setFileName(profileImage.getName());
+                currentProfileImage.setFileType(profileImage.getContentType());
+                currentProfileImage.setFileData(newProfileImage.readAllBytes());
+                appUser.setProfileImage(currentProfileImage);
+            }
+        } catch (IOException e) {
+            throw new DefaultProfileImageNotFoundException("File not found");
+        }
+    }
+
+    public LoggedAppUserBasicDataDto findLoggedUserBasicDataByUsername(String email) {
         Optional<AppUser> appUser = appUserRepository.findByEmail(email);
         if (appUser.isPresent()) {
             return LoggedAppUserBasicDataDtoMapper.mapToLoggedAppUserBasicDataDto(appUser.get());

@@ -15,22 +15,23 @@ public class LoggedAppUserBasicDataController {
         this.appUserService = appUserService;
     }
 
-    @ModelAttribute(name = "loggedAppUserFirstNameAndLastName")
-    public String getLoggedAppUserFirstNameAndLastName() {
-        String loggedAppUserFirstNameAndLastName = "anonymousUser";
+    @ModelAttribute(name = "loggedUserBasicData")
+    public LoggedAppUserBasicDataDto getLoggedUserBasicData() {
+        LoggedAppUserBasicDataDto loggedUserBasicData = null;
         if (isAppUserLogged()) {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            LoggedAppUserBasicDataDto loggedAppUserBasicData = appUserService.findLoggedAppUserBasicData(username);
-            loggedAppUserFirstNameAndLastName = loggedAppUserBasicData.getFirstName() + " " + loggedAppUserBasicData.getLastName();
+            loggedUserBasicData = appUserService.findLoggedUserBasicDataByUsername(username);
         }
-        return loggedAppUserFirstNameAndLastName;
+
+        return loggedUserBasicData;
     }
 
     public static boolean isAppUserLogged() {
-        try {
-            return !SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser");
-        } catch (Exception e) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (username.equals("anonymousUser")) {
             return false;
         }
+
+        return true;
     }
 }

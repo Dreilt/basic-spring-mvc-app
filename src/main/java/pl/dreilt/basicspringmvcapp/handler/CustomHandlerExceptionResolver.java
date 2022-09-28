@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
+import pl.dreilt.basicspringmvcapp.exception.DefaultProfileImageNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.NoSuchRoleException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,9 @@ public class CustomHandlerExceptionResolver extends AbstractHandlerExceptionReso
             if (ex instanceof AppUserNotFoundException) {
                 return handleAppUserNotFound((AppUserNotFoundException) ex, response, handler);
             }
+            if (ex instanceof DefaultProfileImageNotFoundException) {
+                return handleDefaultProfileImageNotFound((DefaultProfileImageNotFoundException) ex, response, handler);
+            }
         } catch (Exception handlerException) {
             logger.warn("Handling of [" + ex.getClass().getName() + "] resulted in Exception", handlerException);
         }
@@ -55,6 +59,17 @@ public class CustomHandlerExceptionResolver extends AbstractHandlerExceptionReso
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("httpStatus", response.getStatus());
         String errorMessage = messageSource.getMessage("exception.AppUserNotFoundException.message", null, Locale.getDefault());
+        modelAndView.addObject("errorMessage", errorMessage);
+        modelAndView.setViewName("error");
+        return modelAndView;
+    }
+
+    private ModelAndView handleDefaultProfileImageNotFound(DefaultProfileImageNotFoundException ex, HttpServletResponse response, Object handler) {
+        logger.error(ex.getMessage());
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("httpStatus", response.getStatus());
+        String errorMessage = messageSource.getMessage("registrationForm.DefaultProfileImageNotFoundException.message", null, Locale.getDefault());
         modelAndView.addObject("errorMessage", errorMessage);
         modelAndView.setViewName("error");
         return modelAndView;

@@ -29,6 +29,13 @@ public class AppUser {
     @NotNull(message = "{form.field.password.error.notNull.message}")
     @Size(min = 5, max = 100, message = "{form.field.password.error.size.message}")
     private String password;
+    @OneToOne
+    @JoinTable(
+            name = "user_profile_image",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "profile_image_id", referencedColumnName = "id")
+    )
+    private AppUserProfileImage profileImage;
     @Size(max = 1000, message = "{form.field.bio.error.size.message}")
     private String bio;
     @Size(max = 50, message = "{form.field.city.error.size.message}")
@@ -83,6 +90,14 @@ public class AppUser {
         this.password = password;
     }
 
+    public AppUserProfileImage getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(AppUserProfileImage profileImage) {
+        this.profileImage = profileImage;
+    }
+
     public String getBio() {
         return bio;
     }
@@ -131,6 +146,9 @@ public class AppUser {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", profileImage=" + profileImage +
+                ", bio='" + bio + '\'' +
+                ", city='" + city + '\'' +
                 ", enabled=" + enabled +
                 ", accountNonLocked=" + accountNonLocked +
                 ", roles=" + roles +

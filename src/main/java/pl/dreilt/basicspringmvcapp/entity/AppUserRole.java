@@ -45,4 +45,14 @@ public class AppUserRole {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "AppUserRole{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", visibleName='" + visibleName + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

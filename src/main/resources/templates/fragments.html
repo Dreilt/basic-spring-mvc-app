@@ -28,15 +28,17 @@
             </li>
             <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                 <a class="nav-link dropdown-toggle"
+                   style="padding: 0;"
                    href="#"
                    id="navbarDropdownMenuAppUserLink"
                    data-toggle="dropdown"
                    aria-haspopup="true"
-                   aria-expanded="false"
-                   th:text="${loggedAppUserFirstNameAndLastName}">
-                    Jan Kowalski
+                   aria-expanded="false">
+                    <img style="border-radius: 50%;" th:src="'data:' + ${loggedUserBasicData.getAvatarType()} + ';base64,' + ${loggedUserBasicData.getAvatar()}" width="40" height="40">
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuAppUserLink">
+                    <a class="dropdown-item" th:href="@{/profile}" th:text="${loggedUserBasicData.getFirstName() + ' ' + loggedUserBasicData.getLastName()}">Jan Kowalski</a>
+                    <div class="dropdown-divider"></div>
                     <a class="dropdown-item" th:href="@{/profile}" th:text="'Profil'">Profil</a>
                     <a class="dropdown-item" th:href="@{/settings/profile}" th:text="'Ustawienia'">Ustawienia</a>
                     <a class="dropdown-item" th:href="@{/logout}" th:text="'Wyloguj się'">Wyloguj się</a>
