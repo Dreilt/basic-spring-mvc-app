@@ -33,30 +33,37 @@ public class AdminController {
     }
 
     @GetMapping("/admin_panel/users")
-    public String getAllUsers(@RequestParam(name = "page", required = false) Integer page,
-                              @RequestParam(name = "sort_by", required = false) String sortProperty, Model model) {
-        int pageNumber = page != null ? page : 1;
-        String sortPropertyName = sortProperty != null ? sortProperty : "lastName";
-        if (pageNumber > 0) {
-            PageRequest pageRequest = PageRequest.of(pageNumber - 1, 10, Sort.by(Sort.Direction.ASC, sortPropertyName));
+    public String getAllUsers(@RequestParam(name = "page", required = false) Integer pageNumber,
+                              @RequestParam(name = "sort_by", required = false) String sortProperty,
+                              @RequestParam(name = "order_by", required = false) String sortDirection,
+                              Model model) {
+        int page = pageNumber != null ? pageNumber : 1;
+        String property = sortProperty != null && !"".equals(sortProperty) ? sortProperty : "lastName";
+        String direction = sortDirection != null && !"".equals(sortDirection) ? sortDirection : "asc";
+
+        if (page > 0) {
+            PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.fromString(direction), property));
             Page<AppUserAdminPanelDto> users = adminService.findAllUsers(pageRequest);
-            if (pageNumber <= users.getTotalPages()) {
+
+            if (page <= users.getTotalPages()) {
                 model.addAttribute("users", users);
                 model.addAttribute("prefixSortUrl", "/admin_panel/users?");
                 model.addAttribute("prefixUrl", "/admin_panel/users?");
+
                 if (sortProperty != null) {
-                    model.addAttribute("sortParams", "sort_by=" + sortProperty);
+                    String sortParams = "sort_by=" + sortProperty + "&order_by=" + sortDirection;
+                    model.addAttribute("sortParams", sortParams);
                 }
                 return "users-table-admin-panel";
             } else {
-                if (sortProperty != null) {
-                    return "redirect:/admin_panel/users?page=" + users.getTotalPages() + "&sort_by=" + sortProperty;
+                if (sortProperty != null && !"".equals(sortProperty) && (sortDirection != null && !"".equals(sortDirection))) {
+                    return "redirect:/admin_panel/users?page=" + users.getTotalPages() + "&sort_by=" + sortProperty + "&order_by=" + sortDirection;
                 }
                 return "redirect:/admin_panel/users?page=" + users.getTotalPages();
             }
         } else {
-            if (sortProperty != null) {
-                return "redirect:/admin_panel/users?page=1" + "&sort_by=" + sortProperty;
+            if (sortProperty != null && !"".equals(sortProperty) && (sortDirection != null && !"".equals(sortDirection))) {
+                return "redirect:/admin_panel/users?page=1" + "&sort_by=" + sortProperty + "&order_by=" + sortDirection;
             }
             return "redirect:/admin_panel/users?page=1";
         }
@@ -64,18 +71,23 @@ public class AdminController {
 
     @GetMapping("/admin_panel/users/results")
     public String getAppUsersBySearch(@RequestParam(name = "search_query", required = false) String searchQuery,
-                                      @RequestParam(name = "page", required = false) Integer page,
+                                      @RequestParam(name = "page", required = false) Integer pageNumber,
                                       @RequestParam(name = "sort_by", required = false) String sortProperty,
+                                      @RequestParam(name = "order_by", required = false) String sortDirection,
                                       Model model) {
         if (searchQuery != null) {
-            int pageNumber = page != null ? page : 1;
-            String sortPropertyName = sortProperty != null ? sortProperty : "lastName";
-            if (pageNumber > 0) {
-                PageRequest pageRequest = PageRequest.of(pageNumber - 1, 1, Sort.by(Sort.Direction.ASC, sortPropertyName));
+
+            int page = pageNumber != null ? pageNumber : 1;
+            String property = sortProperty != null && !"".equals(sortProperty) ? sortProperty : "lastName";
+            String direction = sortDirection != null && !"".equals(sortDirection) ? sortDirection : "asc";
+
+            if (page > 0) {
+                PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.fromString(direction), property));
                 Page<AppUserAdminPanelDto> users = adminService.findUsersBySearch(searchQuery, pageRequest);
+
                 if (users.getNumberOfElements() == 0) {
                     model.addAttribute("users", users);
-                    if (pageNumber > 1) {
+                    if (page > 1) {
                         if (sortProperty != null) {
                             return "redirect:/admin_panel/users/results?search_query=" + searchQuery + "&sort_by=" + sortProperty;
                         }
@@ -84,7 +96,7 @@ public class AdminController {
                         model.addAttribute("prefixSortUrl", "/admin_panel/users/results?search_query=" + searchQuery + "&");
                         return "users-table-admin-panel";
                     }
-                } else if (pageNumber <= users.getTotalPages()) {
+                } else if (page <= users.getTotalPages()) {
                     model.addAttribute("users", users);
                     searchQuery = searchQuery.replace(" ", "+");
                     model.addAttribute("searchQuery", searchQuery);

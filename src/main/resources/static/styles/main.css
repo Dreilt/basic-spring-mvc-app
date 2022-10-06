@@ -1,3 +1,21 @@
+.sort-options-menu {
+    padding: 0.375rem 0.75rem;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+.sort-options-menu:hover {
+    text-decoration: none;
+    color: #495057;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
 .custom-navbar {
     background-color: #f39c12;
     box-shadow: 0 0 9px 0;
@@ -6,7 +24,7 @@
 .container {
     margin: 100px auto auto auto;
     padding: 50px 75px;
-    max-width: 1200px;
+    max-width: 80%;
 }
 
 .form-container {
