@@ -73,11 +73,30 @@
                 <a href="#" th:href="@{'/admin_panel/users/' + ${user.id}}"><i class="fa-solid fa-pen icon-button"></i></a>
             </td>
             <td>
-                <form method="post" th:method="delete" action="#" th:action="@{'/admin_panel/users/' + ${user.id}}">
-                    <button type="submit" class="table-button" onclick="return confirm('Czy jesteś pewien, że chcesz usunąć tego użytkownika?')">
-                        <i class="fa-solid fa-trash-can icon-button"></i>
-                    </button>
-                </form>
+                <button type="button" class="table-button" data-toggle="modal" th:attr="data-target='#deleteUserModal' + ${user.id}">
+                    <i class="fa-solid fa-trash-can icon-button"></i>
+                </button>
+                <div class="modal fade" th:id="*{'deleteUserModal' + {user.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteUserModalLabel">Potwierdzenie usunięcia</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Czy jesteś pewien, że chcesz usunąć tego użytkownika?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                                <form method="post" th:method="delete" action="#" th:action="@{'/admin_panel/users/' + ${user.id}}">
+                                    <button type="submit" class="btn form-button">Usuń</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </td>
         </tr>
         <th:block th:if="${users.getNumberOfElements() < 10}" th:each="i, status: ${#numbers.sequence((1 + (users.getNumber() * 10) + users.getNumberOfElements()), (users.getNumber() + 1) * 10)}">
