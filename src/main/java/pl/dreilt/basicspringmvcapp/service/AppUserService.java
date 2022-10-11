@@ -146,13 +146,4 @@ public class AppUserService {
             throw new DefaultProfileImageNotFoundException("File not found");
         }
     }
-
-    public LoggedAppUserBasicDataDto findLoggedUserBasicDataByUsername(String email) {
-        Optional<AppUser> appUser = appUserRepository.findByEmail(email);
-        if (appUser.isPresent()) {
-            return LoggedAppUserBasicDataDtoMapper.mapToLoggedAppUserBasicDataDto(appUser.get());
-        } else {
-            throw new AppUserNotFoundException("User with email " + email + " not found");
-        }
-    }
 }

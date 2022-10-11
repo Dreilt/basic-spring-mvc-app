@@ -12,7 +12,7 @@
 <nav th:replace="fragments :: navbar"></nav>
 <div class="container" style="text-align: center">
     <h2>Strona główna</h2>
-    <span sec:authorize="isAuthenticated()" th:text="'Witaj, ' + ${loggedUserBasicData.getFirstName() + ' ' + loggedUserBasicData.getLastName()} + '!'">Witaj, Jan Kowalski!</span>
+    <span sec:authorize="isAuthenticated()" th:text="${'Witaj, ' + #authentication.principal.firstName + ' ' + #authentication.principal.lastName + '!'}">Witaj, Jan Kowalski!</span>
     <span sec:authorize="!isAuthenticated()" th:text="'Witaj, Gość!'">Witaj, Gość!</span>
 </div>
 

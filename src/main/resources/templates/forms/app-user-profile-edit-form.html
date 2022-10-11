@@ -53,7 +53,7 @@
                 <div class="form-group">
                     <label for="profileImage" class="form-label">ZDJĘCIE PROFILOWE</label>
                     <div style="margin: 8px 0 8px 0;">
-                        <img style="border-radius: 50%;" th:src="'data:' + ${loggedUserBasicData.getAvatarType()} + ';base64,' + ${loggedUserBasicData.getAvatar()}" width="120" height="120">
+                        <img style="border-radius: 50%;" th:src="${'data:' + #authentication.principal.avatarType + ';base64,' + #authentication.principal.avatar}" width="120" height="120">
                     </div>
                     <input type="file"
                            id="profileImage" name="profileImage"
