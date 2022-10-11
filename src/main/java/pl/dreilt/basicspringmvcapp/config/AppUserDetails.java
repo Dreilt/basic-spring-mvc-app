@@ -15,17 +15,13 @@ public class AppUserDetails extends User {
     private final String lastName;
     private final String avatarType;
     private final String avatar;
-    private final boolean disabled;
-    private final boolean accountLocked;
 
     public AppUserDetails(AppUserBuilder appUserBuilder) {
-        super(appUserBuilder.username, appUserBuilder.password, appUserBuilder.authorities);
+        super(appUserBuilder.username, appUserBuilder.password, appUserBuilder.enabled, true, true, appUserBuilder.accountNonLocked, appUserBuilder.authorities);
         this.firstName = appUserBuilder.firstName;
         this.lastName = appUserBuilder.lastName;
         this.avatarType = appUserBuilder.avatarType;
         this.avatar = appUserBuilder.avatar;
-        this.disabled = appUserBuilder.disabled;
-        this.accountLocked = appUserBuilder.accountLocked;
     }
 
     public String getFirstName() {
@@ -44,14 +40,6 @@ public class AppUserDetails extends User {
         return avatar;
     }
 
-    public boolean isDisabled() {
-        return disabled;
-    }
-
-    public boolean isAccountLocked() {
-        return accountLocked;
-    }
-
     public static final class AppUserBuilder {
         private String firstName;
         private String lastName;
@@ -59,8 +47,8 @@ public class AppUserDetails extends User {
         private String password;
         private String avatarType;
         private String avatar;
-        private boolean disabled;
-        private boolean accountLocked;
+        private boolean enabled;
+        private boolean accountNonLocked;
         private List<GrantedAuthority> authorities;
 
         public AppUserBuilder firstName(String firstName) {
@@ -99,13 +87,13 @@ public class AppUserDetails extends User {
             return this;
         }
 
-        public AppUserBuilder disabled(boolean disabled) {
-            this.disabled = disabled;
+        public AppUserBuilder enabled(boolean enabled) {
+            this.enabled = enabled;
             return this;
         }
 
-        public AppUserBuilder accountLocked(boolean accountLocked) {
-            this.accountLocked = accountLocked;
+        public AppUserBuilder accountNonLocked(boolean accountNonLocked) {
+            this.accountNonLocked = accountNonLocked;
             return this;
         }
 

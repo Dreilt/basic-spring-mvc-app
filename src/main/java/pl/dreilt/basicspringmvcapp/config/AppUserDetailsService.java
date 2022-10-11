@@ -1,6 +1,5 @@
 package pl.dreilt.basicspringmvcapp.config;
 
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,8 +31,8 @@ public class AppUserDetailsService implements UserDetailsService {
                 .password(appUserCredentialsDto.getPassword())
                 .avatarType(appUserCredentialsDto.getAvatarType())
                 .avatar(appUserCredentialsDto.getAvatar())
-                .disabled(!appUserCredentialsDto.isEnabled())
-                .accountLocked(!appUserCredentialsDto.isAccountNonLocked())
+                .enabled(appUserCredentialsDto.isEnabled())
+                .accountNonLocked(appUserCredentialsDto.isAccountNonLocked())
                 .roles(appUserCredentialsDto.getRoles().toArray(String[]::new))
                 .build();
     }
