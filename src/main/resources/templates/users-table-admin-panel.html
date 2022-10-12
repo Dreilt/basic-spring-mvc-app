@@ -17,14 +17,15 @@
     </div>
     <div class="search-container">
         <form id="searchForm" name="searchForm" class="search-form" onsubmit="return validateSearchForm()" method="get" th:method="get" action="#" th:action="@{'/admin_panel/users/results'}">
+            <div style="padding: 0.5rem 0.75rem;">
+                <i class="fa-solid fa-search search-icon"></i>
+            </div>
             <input type="search"
                    id="search_query" name="search_query"
                    class="search-form-input"
                    placeholder="Szukaj"
                    th:value="${#request.getParameter('search_query')}">
-            <button class="search-form-button" type="submit">
-                <i class="fa-solid fa-search icon-button"></i>
-            </button>
+            <button class="btn form-button" type="submit">Szukaj</button>
         </form>
     </div>
     <div class="row" style="margin: 0; padding: 5px; background-color: #ffffff; display: flex; justify-content: center; align-items: center;">

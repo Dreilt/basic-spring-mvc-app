@@ -87,7 +87,7 @@
 }
 
 .search-container {
-    padding: 3px;
+    padding: 1px;
     background-color: #d3d3d3;
 }
 
@@ -135,12 +135,8 @@
     border: none;
 }
 
-.icon-button {
+.search-icon {
     color: #f39c12;
-}
-
-.icon-button:hover {
-    color: #d68910;
 }
 
 .page-item.active .page-link {
