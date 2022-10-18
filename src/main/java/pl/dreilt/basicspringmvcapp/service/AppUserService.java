@@ -3,12 +3,14 @@ package pl.dreilt.basicspringmvcapp.service;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import pl.dreilt.basicspringmvcapp.config.AppUserDetails;
 import pl.dreilt.basicspringmvcapp.dto.*;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.AppUserProfileImage;
@@ -23,6 +25,7 @@ import pl.dreilt.basicspringmvcapp.repository.AppUserRoleRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -108,21 +111,29 @@ public class AppUserService {
             throw new AccessDeniedException("Odmowa dostępu");
         }
         String email = currentUser.getName();
+
         return appUserRepository.findByEmail(email)
-                .map(target -> setUserProfileFields(appUserProfile, target))
+                .map(target -> setUserProfileFields(currentUser, appUserProfile, target))
                 .map(AppUserProfileEditDtoMapper::mapToAppUserProfileEditDto)
                 .orElseThrow(() -> new AppUserNotFoundException("User with email " + email + " not found"));
     }
 
-    private AppUser setUserProfileFields(AppUserProfileEditDto source, AppUser target) {
+    private AppUser setUserProfileFields(Authentication currentUser, AppUserProfileEditDto source, AppUser target) {
+        AppUserDetails appUserDetails = (AppUserDetails) currentUser.getPrincipal();
+        boolean isAppUserDetailsEdited = false;
+
         if (source.getFirstName() != null && !source.getFirstName().equals(target.getFirstName())) {
             target.setFirstName(source.getFirstName());
+            appUserDetails.setFirstName(source.getFirstName());
+            isAppUserDetailsEdited = true;
         }
         if (source.getLastName() != null && !source.getLastName().equals(target.getLastName())) {
             target.setLastName(source.getLastName());
+            appUserDetails.setLastName(source.getLastName());
+            isAppUserDetailsEdited = true;
         }
         if (!source.getProfileImage().isEmpty()) {
-            setNewProfileImage(source.getProfileImage(), target);
+            setNewProfileImage(appUserDetails, source.getProfileImage(), target);
         }
         if (source.getBio() != null && !source.getBio().equals(target.getBio())) {
             target.setBio(source.getBio());
@@ -130,17 +141,25 @@ public class AppUserService {
         if (source.getCity() != null && !source.getCity().equals(target.getCity())) {
             target.setCity(source.getCity());
         }
+
+        if (isAppUserDetailsEdited) {
+            Authentication newAuthenticationToken = new UsernamePasswordAuthenticationToken(appUserDetails, currentUser.getCredentials(), currentUser.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(newAuthenticationToken);
+        }
+
         return target;
     }
 
-    private void setNewProfileImage(MultipartFile profileImage, AppUser appUser) {
+    private void setNewProfileImage(AppUserDetails appUserDetails, MultipartFile profileImage, AppUser appUser) {
         AppUserProfileImage currentProfileImage = appUser.getProfileImage();
-        try (InputStream newProfileImage = profileImage.getInputStream()) {
-            if (newProfileImage.readAllBytes() != currentProfileImage.getFileData()) {
-                currentProfileImage.setFileName(profileImage.getName());
+        try (InputStream is = profileImage.getInputStream()) {
+            if (currentProfileImage.getFileData() != is.readAllBytes()) {
+                currentProfileImage.setFileName(profileImage.getOriginalFilename());
                 currentProfileImage.setFileType(profileImage.getContentType());
-                currentProfileImage.setFileData(newProfileImage.readAllBytes());
+                currentProfileImage.setFileData(is.readAllBytes());
                 appUser.setProfileImage(currentProfileImage);
+                appUserDetails.setAvatarType(profileImage.getContentType());
+                appUserDetails.setAvatarData(Base64.getEncoder().encodeToString(profileImage.getBytes()));
             }
         } catch (IOException e) {
             throw new DefaultProfileImageNotFoundException("File not found");

@@ -34,7 +34,7 @@
                    data-toggle="dropdown"
                    aria-haspopup="true"
                    aria-expanded="false">
-                    <img style="border-radius: 50%;" th:src="${'data:' + #authentication.principal.avatarType + ';base64,' + #authentication.principal.avatar}" width="40" height="40">
+                    <img style="border-radius: 50%;" th:src="${'data:' + #authentication.principal.avatarType + ';base64,' + #authentication.principal.avatarData}" width="40" height="40">
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuAppUserLink">
                     <a class="dropdown-item" th:href="@{/profile}" th:text="${#authentication.principal.firstName + ' ' + #authentication.principal.lastName}">Jan Kowalski</a>

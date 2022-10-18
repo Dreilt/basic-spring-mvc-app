@@ -11,33 +11,49 @@ import java.util.List;
 
 public class AppUserDetails extends User {
 
-    private final String firstName;
-    private final String lastName;
-    private final String avatarType;
-    private final String avatar;
+    private String firstName;
+    private String lastName;
+    private String avatarType;
+    private String avatarData;
 
     public AppUserDetails(AppUserBuilder appUserBuilder) {
         super(appUserBuilder.username, appUserBuilder.password, appUserBuilder.enabled, true, true, appUserBuilder.accountNonLocked, appUserBuilder.authorities);
         this.firstName = appUserBuilder.firstName;
         this.lastName = appUserBuilder.lastName;
         this.avatarType = appUserBuilder.avatarType;
-        this.avatar = appUserBuilder.avatar;
+        this.avatarData = appUserBuilder.avatarData;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
     public String getLastName() {
         return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getAvatarType() {
         return avatarType;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public void setAvatarType(String avatarType) {
+        this.avatarType = avatarType;
+    }
+
+    public String getAvatarData() {
+        return avatarData;
+    }
+
+    public void setAvatarData(String avatarData) {
+        this.avatarData = avatarData;
     }
 
     public static final class AppUserBuilder {
@@ -46,7 +62,7 @@ public class AppUserDetails extends User {
         private String username;
         private String password;
         private String avatarType;
-        private String avatar;
+        private String avatarData;
         private boolean enabled;
         private boolean accountNonLocked;
         private List<GrantedAuthority> authorities;
@@ -81,9 +97,9 @@ public class AppUserDetails extends User {
             return this;
         }
 
-        public AppUserBuilder avatar(String avatar) {
-            Assert.notNull(avatar, "avatar cannot be null");
-            this.avatar = avatar;
+        public AppUserBuilder avatarData(String avatarData) {
+            Assert.notNull(avatarData, "avatarData cannot be null");
+            this.avatarData = avatarData;
             return this;
         }
 
