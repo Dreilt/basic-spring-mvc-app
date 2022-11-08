@@ -64,9 +64,9 @@ class AppUserLoginDataServiceTest {
     @Test
     @WithMockUser(username = "user@example.com", password = "user", roles = { "USER" })
     void shouldThrowExceptionIfUserDoesNotExistInDatabase() {
-        // when
         // given
         Mockito.when(appUserRepository.findByEmail("user@example.com")).thenReturn(Optional.empty());
+        // then
         assertThatThrownBy(() -> appUserLoginDataService.changePassword("user", "password123"))
                 .isInstanceOf(AppUserNotFoundException.class)
                 .hasMessage("Current user doesn't exist in database.");
