@@ -1,7 +1,7 @@
 INSERT INTO `app_user` (`first_name`, `last_name`, `email`, `password`, `bio`, `city`, `enabled`, `account_non_locked`)
 VALUES
     -- admin@example.com / admin
-    ('Admin', 'Admin', 'admin@example.com', '{bcrypt}$2a$10$1rXMx0b4caUy/SN3Xg4j4u43gDqVJO/R.zXGCGWc/wr7bsmmSEk2C', '', '', 1, 1),
+    ('Admin', 'Admin', 'admin@example.com', '{bcrypt}$2a$10$1rXMx0b4caUy/SN3Xg4j4u43gDqVJO/R.zXGCGWc/wr7bsmmSEk2C', 'Cześć! Jestem administratorem tego serwisu.', 'Serwerownia', 1, 1),
     -- jankowalski@example.com / user
     ('Jan', 'Kowalski', 'jankowalski@example.com', '{bcrypt}$2a$10$HdTWfiLZkzlT9JXh/q3OhuPMsp972q0rp9oHba0wgaI0P.zRsLfb6', 'Cześć! Nazywam się Jan Kowalski i jestem z Rzeszowa. Obecnie jestem na trzecim roku informatyki na Politechnice Rzeszowskiej.', 'Rzeszów', 1, 1),
     -- patrykkowalski@example.com / user

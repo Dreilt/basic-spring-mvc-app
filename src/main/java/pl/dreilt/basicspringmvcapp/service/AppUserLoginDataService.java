@@ -34,19 +34,14 @@ public class AppUserLoginDataService {
     public void changePassword(String oldPassword, String newPassword) {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         if (currentUser == null) {
-            // This would indicate bad coding somewhere
-            throw new AccessDeniedException(
-                    "Can't change password as no Authentication object found in context for current user.");
+            throw new AccessDeniedException("Can't change password as no Authentication object found in context for current user.");
         }
         String email = currentUser.getName();
         this.logger.debug(LogMessage.format("Changing password for user '%s'", email));
-        // If an authentication manager has been set, re-authenticate the user with the supplied password.
         if (this.authenticationManager != null) {
             this.logger.debug(LogMessage.format("Reauthenticating user '%s' for password change request.", email));
-            this.authenticationManager
-                    .authenticate(UsernamePasswordAuthenticationToken.unauthenticated(email, oldPassword));
-        }
-        else {
+            this.authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(email, oldPassword));
+        } else {
             this.logger.debug("No authentication manager set. Password won't be re-checked.");
         }
 
@@ -62,7 +57,7 @@ public class AppUserLoginDataService {
     @Transactional
     public void changePassword(Long id, String newPassword) {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-        if (currentUser != null && currentUser.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+        if (currentUser != null && !currentUser.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
             throw new AccessDeniedException("Can't change password as no admin role user found in context for current user.");
         }
 

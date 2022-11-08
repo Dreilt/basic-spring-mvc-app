@@ -47,6 +47,34 @@ public class AppUser {
     )
     private Set<AppUserRole> roles = new HashSet<>();
 
+    public AppUser() {
+    }
+
+    public AppUser(Long id, String firstName, String lastName, String email, String password, String bio, String city, boolean enabled, boolean accountNonLocked) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.bio = bio;
+        this.city = city;
+        this.enabled = enabled;
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public AppUser(Long id, String firstName, String lastName, String email, String password, String bio, String city, boolean enabled, boolean accountNonLocked, Set<AppUserRole> roles) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.bio = bio;
+        this.city = city;
+        this.enabled = enabled;
+        this.accountNonLocked = accountNonLocked;
+        this.roles = roles;
+    }
+
     public Long getId() {
         return id;
     }
