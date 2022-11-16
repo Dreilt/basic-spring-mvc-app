@@ -1,18 +1,22 @@
 package pl.dreilt.basicspringmvcapp.service;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.dreilt.basicspringmvcapp.dto.AppUserAccountDataEditAdminPanelDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserAccountEditAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
-import pl.dreilt.basicspringmvcapp.mapper.AppUserAccountDataEditAdminPanelDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.AppUserAccountEditAdminPanelDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.AppUserAdminPanelDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileEditAdminPanelDtoMapper;
 import pl.dreilt.basicspringmvcapp.repository.AdminRepository;
+
+import java.util.Optional;
 
 @Service
 public class AdminService {
@@ -41,27 +45,35 @@ public class AdminService {
                 return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtos(
                         adminRepository.findUsersBySearch(searchWords[0], searchWords[1], pageable));
             } else {
+                Optional<Sort.Order> order = pageable.getSort().stream().findFirst();
+                Sort.Direction direction = order.get().getDirection();
+                PageRequest newPageRequest = PageRequest
+                        .of(pageable.getPageNumber(),
+                            pageable.getPageSize(),
+                            Sort.by(direction, "last_name"));
                 return AppUserAdminPanelDtoMapper.mapToAppUserAdminPanelDtos(
-                        adminRepository.findUsersBySearch(searchWords, pageable));
+                        adminRepository.findUsersBySearch(searchWords, newPageRequest));
             }
         }
     }
 
-    public AppUserAccountDataEditAdminPanelDto findUserAccountDataToEdit(Long id) {
+
+
+    public AppUserAccountEditAdminPanelDto findUserAccountToEdit(Long id) {
         return adminRepository.findById(id)
-                .map(AppUserAccountDataEditAdminPanelDtoMapper::mapToAppUserAccountDataEditAdminPanelDto)
+                .map(AppUserAccountEditAdminPanelDtoMapper::mapToAppUserAccountEditAdminPanelDto)
                 .orElseThrow(() -> new AppUserNotFoundException("User with ID " + id + " not found"));
     }
 
     @Transactional
-    public AppUserAccountDataEditAdminPanelDto updateUserAccountData(Long id, AppUserAccountDataEditAdminPanelDto userAccountDataEditAdminPanelDto) {
+    public AppUserAccountEditAdminPanelDto updateUserAccount(Long id, AppUserAccountEditAdminPanelDto userAccountEditAdminPanelDto) {
         return adminRepository.findById(id)
-                .map(target -> setUserAccountDataFields(userAccountDataEditAdminPanelDto, target))
-                .map(AppUserAccountDataEditAdminPanelDtoMapper::mapToAppUserAccountDataEditAdminPanelDto)
+                .map(target -> setUserAccountFields(userAccountEditAdminPanelDto, target))
+                .map(AppUserAccountEditAdminPanelDtoMapper::mapToAppUserAccountEditAdminPanelDto)
                 .orElseThrow(() -> new AppUserNotFoundException("User with ID " + id + " not found"));
     }
 
-    private AppUser setUserAccountDataFields(AppUserAccountDataEditAdminPanelDto source, AppUser target) {
+    private AppUser setUserAccountFields(AppUserAccountEditAdminPanelDto source, AppUser target) {
         if (source.isEnabled() != target.isEnabled()) {
             target.setEnabled(source.isEnabled());
         }
@@ -71,6 +83,8 @@ public class AdminService {
         target.setRoles(source.getRoles());
         return target;
     }
+
+
 
     public AppUserProfileEditAdminPanelDto findUserProfileToEdit(Long id) {
         return adminRepository.findById(id)

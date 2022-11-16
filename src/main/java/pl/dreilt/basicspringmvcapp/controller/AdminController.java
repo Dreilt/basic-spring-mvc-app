@@ -7,17 +7,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import pl.dreilt.basicspringmvcapp.dto.AppUserAccountDataEditAdminPanelDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserAccountEditAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserPasswordEditAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditAdminPanelDto;
-import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
 import pl.dreilt.basicspringmvcapp.service.AdminService;
 import pl.dreilt.basicspringmvcapp.service.AppUserLoginDataService;
 import pl.dreilt.basicspringmvcapp.service.AppUserRoleService;
 
 import javax.validation.Valid;
-import java.util.Set;
 
 @Controller
 public class AdminController {
@@ -54,15 +52,15 @@ public class AdminController {
                     String sortParams = "sort_by=" + sortProperty + "&order_by=" + sortDirection;
                     model.addAttribute("sortParams", sortParams);
                 }
-                return "users-table-admin-panel";
+                return "admin/user-table";
             } else {
-                if (sortProperty != null && !"".equals(sortProperty) && (sortDirection != null && !"".equals(sortDirection))) {
+                if ((sortProperty != null && !"".equals(sortProperty)) && (sortDirection != null && !"".equals(sortDirection))) {
                     return "redirect:/admin_panel/users?page=" + users.getTotalPages() + "&sort_by=" + sortProperty + "&order_by=" + sortDirection;
                 }
                 return "redirect:/admin_panel/users?page=" + users.getTotalPages();
             }
         } else {
-            if (sortProperty != null && !"".equals(sortProperty) && (sortDirection != null && !"".equals(sortDirection))) {
+            if ((sortProperty != null && !"".equals(sortProperty)) && (sortDirection != null && !"".equals(sortDirection))) {
                 return "redirect:/admin_panel/users?page=1" + "&sort_by=" + sortProperty + "&order_by=" + sortDirection;
             }
             return "redirect:/admin_panel/users?page=1";
@@ -76,7 +74,6 @@ public class AdminController {
                                       @RequestParam(name = "order_by", required = false) String sortDirection,
                                       Model model) {
         if (searchQuery != null) {
-
             int page = pageNumber != null ? pageNumber : 1;
             String property = sortProperty != null && !"".equals(sortProperty) ? sortProperty : "lastName";
             String direction = sortDirection != null && !"".equals(sortDirection) ? sortDirection : "asc";
@@ -94,7 +91,7 @@ public class AdminController {
                         return "redirect:/admin_panel/users/results?search_query=" + searchQuery;
                     } else {
                         model.addAttribute("prefixSortUrl", "/admin_panel/users/results?search_query=" + searchQuery + "&");
-                        return "users-table-admin-panel";
+                        return "admin/user-table";
                     }
                 } else if (page <= users.getTotalPages()) {
                     model.addAttribute("users", users);
@@ -122,80 +119,90 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/admin_panel/users/{id}")
-    public String getUserAccountDataEditForm(@PathVariable Long id, Model model) {
-        AppUserAccountDataEditAdminPanelDto userAccountDataEditAdminPanelDto = adminService.findUserAccountDataToEdit(id);
+
+
+    @GetMapping("/admin_panel/users/{id}/settings/account")
+    public String getUserAccountEditForm(@PathVariable Long id, Model model) {
+        model.addAttribute("accountUpdated", false);
         model.addAttribute("userId", id);
-        model.addAttribute("userAccountDataEditAdminPanelDto", userAccountDataEditAdminPanelDto);
-        Set<AppUserRole> userRoles = appUserRoleService.findAllUserRoles();
-        model.addAttribute("userRoles", userRoles);
-        return "forms/app-user-account-data-edit-form-admin-panel";
+        model.addAttribute("userAccountEditAdminPanelDto", adminService.findUserAccountToEdit(id));
+        model.addAttribute("userRoles", appUserRoleService.findAllUserRoles());
+        return "admin/forms/app-user-account-edit-form";
     }
 
-    @PatchMapping("/admin_panel/users/{id}")
-    public String updateUserAccountData(@PathVariable Long id,
-                                        @Valid @ModelAttribute(name = "userAccountDataEditAdminPanelDto") AppUserAccountDataEditAdminPanelDto userAccountDataEditAdminPanelDto,
-                                        BindingResult bindingResult,
-                                        Model model) {
+    @PatchMapping("/admin_panel/users/{id}/settings/account")
+    public String updateUserAccount(@PathVariable Long id,
+                                    @Valid @ModelAttribute(name = "userAccountEditAdminPanelDto") AppUserAccountEditAdminPanelDto userAccountEditAdminPanelDto,
+                                    BindingResult bindingResult,
+                                    Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("accountUpdated", false);
             model.addAttribute("userId", id);
             model.addAttribute("userRoles", appUserRoleService.findAllUserRoles());
-            return "forms/app-user-account-data-edit-form-admin-panel";
+            return "admin/forms/app-user-account-edit-form";
         } else {
+            model.addAttribute("accountUpdated", true);
             model.addAttribute("userId", id);
-            AppUserAccountDataEditAdminPanelDto userAccountDataUpdated = adminService.updateUserAccountData(id, userAccountDataEditAdminPanelDto);
-            model.addAttribute("userAccountDataEditAdminPanelDto", userAccountDataUpdated);
+            model.addAttribute("userAccountEditAdminPanelDto", adminService.updateUserAccount(id, userAccountEditAdminPanelDto));
             model.addAttribute("userRoles", appUserRoleService.findAllUserRoles());
-            return "forms/app-user-account-data-edit-form-admin-panel";
+            return "admin/forms/app-user-account-edit-form";
         }
     }
 
-    @GetMapping("/admin_panel/users/{id}/edit_profile")
+    @GetMapping("/admin_panel/users/{id}/settings/edit_profile")
     public String getUserProfileEditForm(@PathVariable Long id, Model model) {
-        AppUserProfileEditAdminPanelDto userProfileEditAdminPanelDto = adminService.findUserProfileToEdit(id);
+        model.addAttribute("profileUpdated", false);
         model.addAttribute("userId", id);
-        model.addAttribute("userProfileEditAdminPanelDto", userProfileEditAdminPanelDto);
-        return "forms/app-user-profile-edit-form-admin-panel";
+        model.addAttribute("userProfileEditAdminPanelDto", adminService.findUserProfileToEdit(id));
+        return "admin/forms/app-user-profile-edit-form";
     }
 
-    @PatchMapping("/admin_panel/users/{id}/edit_profile")
+    @PatchMapping("/admin_panel/users/{id}/settings/edit_profile")
     public String updateUserProfile(@PathVariable Long id,
                                     @Valid @ModelAttribute(name = "userProfileEditAdminPanelDto") AppUserProfileEditAdminPanelDto userProfileEditAdminPanelDto,
                                     BindingResult bindingResult,
                                     Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("profileUpdated", false);
             model.addAttribute("userId", id);
-            return "forms/app-user-profile-edit-form-admin-panel";
+            return "admin/forms/app-user-profile-edit-form";
         } else {
+            model.addAttribute("profileUpdated", true);
             model.addAttribute("userId", id);
-            AppUserProfileEditAdminPanelDto userProfileUpdated = adminService.updateUserProfile(id, userProfileEditAdminPanelDto);
-            model.addAttribute("userProfileEditAdminPanelDto", userProfileUpdated);
-            return "forms/app-user-profile-edit-form-admin-panel";
+            model.addAttribute("userProfileEditAdminPanelDto", adminService.updateUserProfile(id, userProfileEditAdminPanelDto));
+            return "admin/forms/app-user-profile-edit-form";
         }
     }
 
-    @GetMapping("/admin_panel/users/{id}/edit_password")
+
+
+    @GetMapping("/admin_panel/users/{id}/settings/edit_password")
     public String getUserPasswordEditForm(@PathVariable Long id, Model model) {
+        model.addAttribute("passwordUpdated", false);
         model.addAttribute("userId", id);
         model.addAttribute("userPasswordEditAdminPanelDto", new AppUserPasswordEditAdminPanelDto());
-        return "forms/app-user-password-edit-form-admin-panel";
+        return "admin/forms/app-user-password-edit-form";
     }
 
-    @PatchMapping("/admin_panel/users/{id}/edit_password")
+    @PatchMapping("/admin_panel/users/{id}/settings/edit_password")
     public String updateUserPassword(@PathVariable Long id,
                                      @Valid @ModelAttribute(name = "userPasswordEditAdminPanelDto") AppUserPasswordEditAdminPanelDto userPasswordEditAdminPanelDto,
                                      BindingResult bindingResult,
                                      Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("passwordUpdated", false);
             model.addAttribute("userId", id);
-            return "forms/app-user-password-edit-form-admin-panel";
+            return "admin/forms/app-user-password-edit-form";
         } else {
+            model.addAttribute("passwordUpdated", true);
             appUserLoginDataService.changePassword(id, userPasswordEditAdminPanelDto.getNewPassword());
             model.addAttribute("userId", id);
             model.addAttribute("userPasswordEditAdminPanelDto", new AppUserPasswordEditAdminPanelDto());
-            return "forms/app-user-password-edit-form-admin-panel";
+            return "admin/forms/app-user-password-edit-form";
         }
     }
+
+
 
     @DeleteMapping("/admin_panel/users/{id}")
     public String deleteUser(@PathVariable Long id) {

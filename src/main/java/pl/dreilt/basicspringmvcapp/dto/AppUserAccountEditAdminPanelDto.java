@@ -4,7 +4,7 @@ import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
 
 import java.util.Set;
 
-public class AppUserAccountDataEditAdminPanelDto {
+public class AppUserAccountEditAdminPanelDto {
     private boolean enabled;
     private boolean accountNonLocked;
     private Set<AppUserRole> roles;

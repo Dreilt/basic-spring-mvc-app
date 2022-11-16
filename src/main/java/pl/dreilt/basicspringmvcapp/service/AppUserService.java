@@ -30,7 +30,6 @@ import java.util.Optional;
 
 @Service
 public class AppUserService {
-
     private static final String USER_ROLE = "USER";
     private final AppUserRepository appUserRepository;
     private final AppUserRoleRepository appUserRoleRepository;
@@ -68,7 +67,7 @@ public class AppUserService {
         setDefaultProfileImage(appUser);
         appUser.setEnabled(true);
         appUser.setAccountNonLocked(true);
-        Optional<AppUserRole> userRole = appUserRoleRepository.findByName(USER_ROLE);
+        Optional<AppUserRole> userRole = appUserRoleRepository.findRoleByName(USER_ROLE);
         userRole.ifPresentOrElse(
                 role -> appUser.getRoles().add(role),
                 () -> {
@@ -92,7 +91,7 @@ public class AppUserService {
         }
     }
 
-    public AppUserProfileDto findAppUserProfile(String email) {
+    public AppUserProfileDto findUserProfile(String email) {
         return appUserRepository.findByEmail(email)
                 .map(AppUserProfileDtoMapper::mapToAppUserProfileDto)
                 .orElseThrow(() -> new AppUserNotFoundException("User with email " + email + " not found"));
@@ -111,7 +110,6 @@ public class AppUserService {
             throw new AccessDeniedException("Odmowa dostępu");
         }
         String email = currentUser.getName();
-
         return appUserRepository.findByEmail(email)
                 .map(target -> setUserProfileFields(currentUser, appUserProfile, target))
                 .map(AppUserProfileEditDtoMapper::mapToAppUserProfileEditDto)

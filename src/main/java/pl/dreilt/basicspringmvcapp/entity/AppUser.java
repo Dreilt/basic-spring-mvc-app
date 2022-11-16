@@ -50,31 +50,6 @@ public class AppUser {
     public AppUser() {
     }
 
-    public AppUser(Long id, String firstName, String lastName, String email, String password, String bio, String city, boolean enabled, boolean accountNonLocked) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.bio = bio;
-        this.city = city;
-        this.enabled = enabled;
-        this.accountNonLocked = accountNonLocked;
-    }
-
-    public AppUser(Long id, String firstName, String lastName, String email, String password, String bio, String city, boolean enabled, boolean accountNonLocked, Set<AppUserRole> roles) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.bio = bio;
-        this.city = city;
-        this.enabled = enabled;
-        this.accountNonLocked = accountNonLocked;
-        this.roles = roles;
-    }
-
     public Long getId() {
         return id;
     }
@@ -171,12 +146,10 @@ public class AppUser {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", profileImage=" + profileImage +
                 ", bio='" + bio + '\'' +
                 ", city='" + city + '\'' +
                 ", enabled=" + enabled +
                 ", accountNonLocked=" + accountNonLocked +
-                ", roles=" + roles +
                 '}';
     }
 }

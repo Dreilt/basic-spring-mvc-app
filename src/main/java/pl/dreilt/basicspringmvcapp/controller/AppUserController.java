@@ -28,7 +28,7 @@ public class AppUserController {
 
     @GetMapping("/profile")
     public String getUserProfile(Authentication authentication, Model model) {
-        AppUserProfileDto appUserProfile = appUserService.findAppUserProfile(authentication.getName());
+        AppUserProfileDto appUserProfile = appUserService.findUserProfile(authentication.getName());
         model.addAttribute("appUserProfile", appUserProfile);
         return "app-user-profile";
     }

@@ -6,9 +6,8 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
-@Documented
-@Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
 @Constraint(validatedBy = ProfileImageValidator.class)
 public @interface ProfileImage {
 

@@ -31,10 +31,10 @@ function validateUserProfileEditFormAdminPanel() {
     return isNotFirstNameError && isNotLastNameError;
 }
 
-function validateAppUserEditPasswordFormAdminPanel() {
-        const newPasswordValue = document.appUserEditPasswordFormAdminPanel.newPassword.value;
+function validateAppUserPasswordEditFormAdminPanel() {
+        const newPasswordValue = document.appUserPasswordEditFormAdminPanel.newPassword.value;
         const isNotNewPasswordError = checkIfNotEmpty('newPassword', newPasswordValue);
-        const confirmNewPasswordValue = document.appUserEditPasswordFormAdminPanel.confirmNewPassword.value;
+        const confirmNewPasswordValue = document.appUserPasswordEditFormAdminPanel.confirmNewPassword.value;
         const isNotConfirmNewPasswordError = checkIfNotEmpty('confirmNewPassword', confirmNewPasswordValue);
 
         return isNotNewPasswordError && isNotConfirmNewPasswordError;

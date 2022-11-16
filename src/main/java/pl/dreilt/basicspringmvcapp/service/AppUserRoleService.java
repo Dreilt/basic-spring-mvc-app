@@ -18,10 +18,10 @@ public class AppUserRoleService {
 
     public Set<AppUserRole> findAllUserRoles() {
         Iterable<AppUserRole> userRoles = appUserRoleRepository.findAll();
-        Set<AppUserRole> userRoleSet = new HashSet<>();
+        Set<AppUserRole> userRolesSet = new HashSet<>();
         for (AppUserRole userRole : userRoles) {
-            userRoleSet.add(userRole);
+            userRolesSet.add(userRole);
         }
-        return userRoleSet;
+        return userRolesSet;
     }
 }

@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Service
 public class AppUserLoginDataService {
-    protected final Log logger = LogFactory.getLog(this.getClass());
+    private final Log log = LogFactory.getLog(this.getClass());
     private final AuthenticationManager authenticationManager;
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
@@ -37,21 +37,20 @@ public class AppUserLoginDataService {
             throw new AccessDeniedException("Can't change password as no Authentication object found in context for current user.");
         }
         String email = currentUser.getName();
-        this.logger.debug(LogMessage.format("Changing password for user '%s'", email));
-        if (this.authenticationManager != null) {
-            this.logger.debug(LogMessage.format("Reauthenticating user '%s' for password change request.", email));
-            this.authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(email, oldPassword));
+        log.debug(LogMessage.format("Changing password for user '%s'", email));
+        if (authenticationManager != null) {
+            log.debug(LogMessage.format("Reauthenticating user '%s' for password change request.", email));
+            authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(email, oldPassword));
         } else {
-            this.logger.debug("No authentication manager set. Password won't be re-checked.");
+            log.debug("No authentication manager set. Password won't be re-checked.");
         }
 
         Optional<AppUser> appUser = appUserRepository.findByEmail(email);
-        if (appUser.isPresent()) {
-            String passwordHash = passwordEncoder.encode(newPassword);
-            appUser.get().setPassword(passwordHash);
-        } else {
+        if (appUser.isEmpty()) {
             throw new AppUserNotFoundException("Current user doesn't exist in database.");
         }
+        String passwordHash = passwordEncoder.encode(newPassword);
+        appUser.get().setPassword(passwordHash);
     }
 
     @Transactional
@@ -62,11 +61,10 @@ public class AppUserLoginDataService {
         }
 
         Optional<AppUser> user = appUserRepository.findById(id);
-        if (user.isPresent()) {
-            String passwordHash = passwordEncoder.encode(newPassword);
-            user.get().setPassword(passwordHash);
-        } else {
+        if (user.isEmpty()) {
             throw new AppUserNotFoundException(String.format("User with ID %s not found", id));
         }
+        String passwordHash = passwordEncoder.encode(newPassword);
+        user.get().setPassword(passwordHash);
     }
 }

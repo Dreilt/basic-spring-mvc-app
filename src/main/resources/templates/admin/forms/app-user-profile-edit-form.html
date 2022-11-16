@@ -16,24 +16,25 @@
             <ul class="nav nav-pills flex-column">
                 <li class="nav-item">
                     <a class="side-nav-link"
-                       href="#" th:href="@{'/admin_panel/users/' + ${userId}}">Konto</a>
+                       href="#" th:href="@{'/admin_panel/users/' + ${userId} + '/settings/account'}">Konto</a>
                 </li>
                 <li class="nav-item">
                     <a class="side-nav-link active"
-                       href="#" th:href="@{'/admin_panel/users/' + ${userId} + '/edit_profile'}">Profil</a>
+                       href="#" th:href="@{'/admin_panel/users/' + ${userId} + '/settings/edit_profile'}">Profil</a>
                 </li>
                 <li class="nav-item">
                     <a class="side-nav-link"
-                       href="#" th:href="@{'/admin_panel/users/' + ${userId} + '/edit_password'}">Hasło</a>
+                       href="#" th:href="@{'/admin_panel/users/' + ${userId} + '/settings/edit_password'}">Hasło</a>
                 </li>
             </ul>
         </div>
         <div class="col-md-9">
-            <form id="userProfileEditFormAdminPanel" name="userProfileEditFormAdminPanel" class="custom-form" onsubmit="return validateUserProfileEditFormAdminPanel();" method="post" th:method="patch" action="#" th:action="@{'/admin_panel/users/' + ${userId} + '/edit_profile'}" th:object="${userProfileEditAdminPanelDto}">
+            <form id="userProfileEditFormAdminPanel" name="userProfileEditFormAdminPanel" class="custom-form" onsubmit="return validateUserProfileEditFormAdminPanel();" method="post" th:method="patch" action="#" th:action="@{'/admin_panel/users/' + ${userId} + '/settings/edit_profile'}" th:object="${userProfileEditAdminPanelDto}">
                 <div class="form-heading">
                     <h2>Edycja profilu użytkownika</h2>
                     <span>Zaktualizuj profil użytkownika poniżej</span>
                 </div>
+                <div class="alert custom-alert-success" role="alert" th:if="${profileUpdated == true}" th:text="#{admin.userProfileEditFormAdminPanel.profileUpdated.message}"></div>
                 <div class="form-group">
                     <label for="firstName" class="form-label">IMIĘ</label>
                     <input type="text"

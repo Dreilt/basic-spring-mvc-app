@@ -44,6 +44,12 @@
     margin-bottom: 24px;
 }
 
+.custom-alert-success {
+    color: #28a745;
+    background-color: #d4edda;
+    border-color: #28a745;
+}
+
 .custom-alert-danger {
     color: #dc3545;
     background-color: #f8d7da;
@@ -137,6 +143,14 @@
 
 .search-icon {
     color: #f39c12;
+}
+
+.icon-button {
+    color: #f39c12;
+}
+
+.icon-button:hover {
+    color: #d68910;
 }
 
 .page-item.active .page-link {

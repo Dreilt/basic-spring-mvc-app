@@ -17,13 +17,6 @@ public class AppUserRole {
     public AppUserRole() {
     }
 
-    public AppUserRole(Long id, String name, String visibleName, String description) {
-        this.id = id;
-        this.name = name;
-        this.visibleName = visibleName;
-        this.description = description;
-    }
-
     public Long getId() {
         return id;
     }
