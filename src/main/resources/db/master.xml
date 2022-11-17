@@ -11,10 +11,12 @@
     <include file="changelog/0004_create_table_persistent_logins.xml" relativeToChangelogFile="true"/>
     <include file="changelog/0005_create_table_app_user_profile_image.xml" relativeToChangelogFile="true"/>
     <include file="changelog/0006_create_table_user_profile_image.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/0007_create_table_event.xml" relativeToChangelogFile="true"/>
     <include file="testdata/app_users.sql" relativeToChangelogFile="true"/>
     <include file="testdata/roles.sql" relativeToChangelogFile="true"/>
     <include file="testdata/user_roles.sql" relativeToChangelogFile="true"/>
     <include file="testdata/profile_images.sql" relativeToChangelogFile="true"/>
     <include file="testdata/user_profile_image.sql" relativeToChangelogFile="true"/>
+    <include file="testdata/events.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

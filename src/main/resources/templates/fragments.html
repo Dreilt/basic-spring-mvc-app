@@ -13,6 +13,11 @@
     <a class="navbar-brand" href="#" th:href="@{/}">Basic Spring MVC App</a>
     <div class="collapse navbar-collapse">
         <ul class="navbar-nav ml-auto">
+
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/events/create_event}" th:text="'Utwórz wydarzenie'">Utwórz wydarzenie</a>
+            </li>
+
             <li class="nav-item dropdown" sec:authorize="isAuthenticated() && hasRole('ADMIN')">
                 <a class="nav-link dropdown-toggle"
                    href="#"

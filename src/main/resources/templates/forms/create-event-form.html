@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pl"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Utwórz wydarzenie</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link href="../static/styles/main.css" th:href="@{/styles/main.css}" rel="stylesheet"/>
+</head>
+<body>
+<nav th:replace="fragments :: navbar"></nav>
+<div class="form-container">
+    <form id="createEventForm" name="createEventForm" class="custom-form" onsubmit="return validateCreateEventForm();" method="post" th:method="post" action="#" th:action="@{/events}" th:object="${createEventDto}">
+
+        <div class="form-heading">
+            <h2>Utwórz wydarzenie</h2>
+            <span>Wprowadź informacje o wydarzeniu poniżej</span>
+        </div>
+
+        <div class="form-group">
+            <label for="typeOfEvent" class="form-label">TYP WYDARZENIA</label>
+            <input type="text"
+                   id="typeOfEvent" name="typeOfEvent"
+                   class="form-control" th:class="${#fields.hasErrors('typeOfEvent')} == FALSE ? 'form-control' : 'form-control is-invalid'"
+                   placeholder="Typ wydarzenia"
+                   th:field="*{typeOfEvent}">
+
+            <!--            <div id="lastNameErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.lastName.error.notNull.message}">Błędy związane z nazwiskiem</div>-->
+            <!--            <div class="error-message" th:errors="*{lastName}">Błędy związane z nazwiskiem</div>-->
+
+        </div>
+
+        <div class="form-group">
+            <label for="name" class="form-label">NAZWA</label>
+            <input type="text"
+                   id="name" name="name"
+                   class="form-control" th:class="${#fields.hasErrors('name')} == FALSE ? 'form-control' : 'form-control is-invalid'"
+                   placeholder="Nazwa"
+                   th:field="*{name}">
+
+<!--            <div id="firstNameErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.firstName.error.notNull.message}">Błędy związane z imieniem</div>-->
+<!--            <div class="error-message" th:errors="*{firstName}">Błędy związane z imieniem</div>-->
+
+        </div>
+
+        <div class="form-group">
+            <label for="description" class="form-label">OPIS</label>
+            <textarea id="description" name="description"
+                      class="form-control" th:class="${#fields.hasErrors('description')} == FALSE ? 'form-control' : 'form-control is-invalid'"
+                      placeholder="Opis"
+                      th:field="*{description}">
+            </textarea>
+
+<!--            <div class="error-message" th:errors="*{bio}">Błędy związane z biogramem</div>-->
+
+        </div>
+
+        <div class="form-group">
+            <label for="dateAndTime" class="form-label">DATA I GODZINA</label>
+            <input type="datetime-local"
+                   id="dateAndTime" name="dateAndTime"
+                   class="form-control" th:class="${#fields.hasErrors('dateAndTime')} == FALSE ? 'form-control' : 'form-control is-invalid'"
+                   placeholder="Data i godzina"
+                   th:field="*{dateAndTime}">
+
+            <!--            <div id="firstNameErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.firstName.error.notNull.message}">Błędy związane z imieniem</div>-->
+            <div class="error-message" th:errors="*{dateAndTime}">Błędy związane z datą i godziną</div>
+
+        </div>
+
+        <div class="form-group">
+            <label for="city" class="form-label">MIASTO</label>
+            <input type="text"
+                   id="city" name="city"
+                   class="form-control" th:class="${#fields.hasErrors('city')} == FALSE ? 'form-control' : 'form-control is-invalid'"
+                   placeholder="Miasto"
+                   th:field="*{city}">
+
+            <!--            <div id="firstNameErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.firstName.error.notNull.message}">Błędy związane z imieniem</div>-->
+            <!--            <div class="error-message" th:errors="*{firstName}">Błędy związane z imieniem</div>-->
+
+        </div>
+
+        <div class="form-group">
+            <label for="location" class="form-label">LOKALIZACJA</label>
+            <input type="text"
+                   id="location" name="location"
+                   class="form-control" th:class="${#fields.hasErrors('location')} == FALSE ? 'form-control' : 'form-control is-invalid'"
+                   placeholder="Lokalizacja"
+                   th:field="*{location}">
+
+            <!--            <div id="firstNameErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.firstName.error.notNull.message}">Błędy związane z imieniem</div>-->
+            <!--            <div class="error-message" th:errors="*{firstName}">Błędy związane z imieniem</div>-->
+
+        </div>
+
+        <div class="d-grid gap-2 col-5 mx-auto" style="margin: 8px 0 8px 0;">
+            <button class="btn form-button" type="submit">Utwórz</button>
+        </div>
+
+    </form>
+</div>
+
+<th:block th:replace="fragments :: scripts"></th:block>
+<script type="text/javascript" src="../static/scripts/validation.js" th:src="@{/scripts/validation.js}"></script>
+</body>
+</html>
