@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.eq;
 import static pl.dreilt.basicspringmvcapp.service.AdminServiceTestHelper.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -187,7 +188,10 @@ class AdminServiceTest {
     @Test
     void shouldDeleteUser() {
         // given
+        Long userId = 1L;
         // when
+        adminService.deleteUser(userId);
         // then
+        Mockito.verify(adminRepository, Mockito.times(1)).deleteById(eq(userId));
     }
 }
