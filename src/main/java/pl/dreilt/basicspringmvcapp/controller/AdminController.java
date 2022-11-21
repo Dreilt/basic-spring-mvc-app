@@ -119,10 +119,8 @@ public class AdminController {
         }
     }
 
-
-
     @GetMapping("/admin_panel/users/{id}/settings/account")
-    public String getUserAccountEditForm(@PathVariable Long id, Model model) {
+    public String showUserAccountEditForm(@PathVariable Long id, Model model) {
         model.addAttribute("accountUpdated", false);
         model.addAttribute("userId", id);
         model.addAttribute("userAccountEditAdminPanelDto", adminService.findUserAccountToEdit(id));
@@ -150,7 +148,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin_panel/users/{id}/settings/edit_profile")
-    public String getUserProfileEditForm(@PathVariable Long id, Model model) {
+    public String showUserProfileEditForm(@PathVariable Long id, Model model) {
         model.addAttribute("profileUpdated", false);
         model.addAttribute("userId", id);
         model.addAttribute("userProfileEditAdminPanelDto", adminService.findUserProfileToEdit(id));
@@ -174,10 +172,8 @@ public class AdminController {
         }
     }
 
-
-
     @GetMapping("/admin_panel/users/{id}/settings/edit_password")
-    public String getUserPasswordEditForm(@PathVariable Long id, Model model) {
+    public String showUserPasswordEditForm(@PathVariable Long id, Model model) {
         model.addAttribute("passwordUpdated", false);
         model.addAttribute("userId", id);
         model.addAttribute("userPasswordEditAdminPanelDto", new AppUserPasswordEditAdminPanelDto());
@@ -201,8 +197,6 @@ public class AdminController {
             return "admin/forms/app-user-password-edit-form";
         }
     }
-
-
 
     @DeleteMapping("/admin_panel/users/{id}")
     public String deleteUser(@PathVariable Long id) {

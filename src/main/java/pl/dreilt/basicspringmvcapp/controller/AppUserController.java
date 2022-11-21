@@ -34,7 +34,7 @@ public class AppUserController {
     }
 
     @GetMapping("/settings/profile")
-    public String getUserProfileEditForm(Authentication authentication, Model model) {
+    public String showUserProfileEditForm(Authentication authentication, Model model) {
         AppUserProfileEditDto userProfileEditDto = appUserService.findUserProfileToEdit(authentication.getName());
         model.addAttribute("userProfileEditDto", userProfileEditDto);
         return "forms/app-user-profile-edit-form";
@@ -54,7 +54,7 @@ public class AppUserController {
     }
 
     @GetMapping("/settings/edit_password")
-    public String getUserPasswordEditForm(Model model) {
+    public String showUserPasswordEditForm(Model model) {
         model.addAttribute("userPasswordEditDto", new AppUserPasswordEditDto());
         return "forms/app-user-password-edit-form";
     }
