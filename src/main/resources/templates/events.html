@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pl"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Wydarzenia</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link href="../static/styles/main.css" th:href="@{/styles/main.css}" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+</head>
+<body>
+<nav th:replace="fragments :: navbar"></nav>
+<div class="container">
+
+    <div class="search-container">
+        <div class="search-form">
+            <div style="padding: 0.5rem 0.75rem;">
+                <i class="fa-solid fa-search search-icon"></i>
+            </div>
+            <input type="search"
+                   id="city" name="city"
+                   class="search-form-input"
+                   placeholder="Wybierz miasto"
+                   list="cities"
+                   onchange="getEventsByCity();"/>
+            <datalist id="cities">
+                <option th:each="city: ${cities}" th:value="${city.nameWithoutPlCharacters}"></option>
+            </datalist>
+        </div>
+    </div>
+
+    <div>
+        <div class="event-list-header">
+            <h2>
+                Nadchodzące wydarzenia:
+                <span style="color: #f39c12;" th:text="${cityName}">Kraków</span>
+                <span style="color: #f39c12;" th:text="${'(' + upcomingEvents.size + ')'}">(10)</span>
+            </h2>
+        </div>
+        <div class="event-list">
+            <th:block th:if="${upcomingEvents.size > 0}" th:each="upcomingEvent: ${upcomingEvents}">
+                <a style="color: gray; text-decoration: none;" th:href="@{'/events/' + ${upcomingEvent.id}}">
+                    <div class="row align-items-center event-row" style="width: 100%">
+                        <div class="col-sm-2">
+                            <span class="event-date" th:text="${upcomingEvent.date + ' | ' + upcomingEvent.dayOfWeek}">03.01 | wt.</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="event-name" th:text="${upcomingEvent.name}">Nazwa wydarzenia</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <span class="" th:text="${upcomingEvent.city}">Rzeszów</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <span th:text="${upcomingEvent.eventType}">Spotkanie</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <span th:text="${upcomingEvent.admission}">Bezpłatny</span>
+                        </div>
+                    </div>
+                </a>
+            </th:block>
+        </div>
+    </div>
+
+    <div>
+        <div class="event-list-header">
+            <h2>
+                Minione wydarzenia:
+                <span style="color: #f39c12;" th:text="${cityName}">Kraków</span>
+                <span style="color: #f39c12;" th:text="${'(' + pastEvents.size + ')'}">(10)</span>
+            </h2>
+        </div>
+        <div class="event-list">
+            <th:block th:if="${pastEvents.size > 0}" th:each="pastEvent: ${pastEvents}">
+                <a style="color: gray; text-decoration: none;" th:href="@{'/events/' + ${pastEvent.id}}">
+                    <div class="row align-items-center event-row" style="width: 100%">
+                        <div class="col-sm-2">
+                            <span class="event-date" th:text="${pastEvent.date + ' | ' + pastEvent.dayOfWeek}">03.01 | wt.</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="event-name" th:text="${pastEvent.name}">Nazwa wydarzenia</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <span class="" th:text="${pastEvent.city}">Rzeszów</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <span th:text="${pastEvent.eventType}">Spotkanie</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <span th:text="${pastEvent.admission}">Bezpłatny</span>
+                        </div>
+                    </div>
+                </a>
+            </th:block>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function getEventsByCity() {
+        const city = $('#city').val();
+        console.log(city);
+        window.location = '/events/cities/' + city;
+    }
+</script>
+
+<th:block th:replace="fragments :: scripts"></th:block>
+</body>
+</html>

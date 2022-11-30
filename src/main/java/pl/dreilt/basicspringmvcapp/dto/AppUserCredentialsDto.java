@@ -8,18 +8,18 @@ public class AppUserCredentialsDto {
     private final String email;
     private final String password;
     private final String avatarType;
-    private final String avatar;
+    private final String avatarData;
     private final boolean enabled;
     private final boolean accountNonLocked;
     private final Set<String> roles;
 
-    public AppUserCredentialsDto(String firstName, String lastName, String email, String password, String avatarType, String avatar, boolean enabled, boolean accountNonLocked, Set<String> roles) {
+    public AppUserCredentialsDto(String firstName, String lastName, String email, String password, String avatarType, String avatarData, boolean enabled, boolean accountNonLocked, Set<String> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.avatarType = avatarType;
-        this.avatar = avatar;
+        this.avatarData = avatarData;
         this.enabled = enabled;
         this.accountNonLocked = accountNonLocked;
         this.roles = roles;
@@ -45,8 +45,8 @@ public class AppUserCredentialsDto {
         return avatarType;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public String getAvatarData() {
+        return avatarData;
     }
 
     public boolean isEnabled() {

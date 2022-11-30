@@ -10,12 +10,15 @@
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="type_of_event" type="VARCHAR(50)"/>
             <column name="name" type="VARCHAR(100)"/>
-            <column name="description" type="VARCHAR(1000)"/>
+            <column name="event_type" type="VARCHAR(50)"/>
             <column name="date_and_time" type="DATETIME"/>
+            <column name="language" type="VARCHAR(50)"/>
+            <column name="admission" type="VARCHAR(50)"/>
             <column name="city" type="VARCHAR(100)"/>
             <column name="location" type="VARCHAR(100)"/>
+            <column name="address" type="VARCHAR(100)"/>
+            <column name="description" type="VARCHAR(1000)"/>
         </createTable>
     </changeSet>
 

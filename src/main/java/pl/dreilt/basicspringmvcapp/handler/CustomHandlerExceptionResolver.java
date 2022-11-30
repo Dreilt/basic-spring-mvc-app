@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.DefaultProfileImageNotFoundException;
+import pl.dreilt.basicspringmvcapp.exception.EventNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.NoSuchRoleException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,7 @@ import java.util.Locale;
 
 @Component
 public class CustomHandlerExceptionResolver extends AbstractHandlerExceptionResolver {
-    protected final Log logger = LogFactory.getLog(this.getClass());
+    protected final Log log = LogFactory.getLog(this.getClass());
     private final MessageSource messageSource;
 
     public CustomHandlerExceptionResolver(MessageSource messageSource) {
@@ -36,14 +37,17 @@ public class CustomHandlerExceptionResolver extends AbstractHandlerExceptionReso
             if (ex instanceof DefaultProfileImageNotFoundException) {
                 return handleDefaultProfileImageNotFound((DefaultProfileImageNotFoundException) ex, response, handler);
             }
+            if (ex instanceof EventNotFoundException) {
+                return handleEventNotFound((EventNotFoundException) ex, response, handler);
+            }
         } catch (Exception handlerException) {
-            logger.warn("Handling of [" + ex.getClass().getName() + "] resulted in Exception", handlerException);
+            log.warn("Handling of [" + ex.getClass().getName() + "] resulted in Exception", handlerException);
         }
         return null;
     }
 
     private ModelAndView handleNoSuchRole(NoSuchRoleException ex, HttpServletResponse response, Object handler) {
-        logger.error(String.format("Role with name %s not found", ex.getRoleName()));
+        log.error(String.format("Role with name %s not found", ex.getRoleName()));
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("httpStatus", response.getStatus());
@@ -54,7 +58,7 @@ public class CustomHandlerExceptionResolver extends AbstractHandlerExceptionReso
     }
 
     private ModelAndView handleAppUserNotFound(AppUserNotFoundException ex, HttpServletResponse response, Object handler) {
-        logger.error(ex.getMessage());
+        log.error(ex.getMessage());
         response.setStatus(HttpStatus.NOT_FOUND.value());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("httpStatus", response.getStatus());
@@ -65,11 +69,22 @@ public class CustomHandlerExceptionResolver extends AbstractHandlerExceptionReso
     }
 
     private ModelAndView handleDefaultProfileImageNotFound(DefaultProfileImageNotFoundException ex, HttpServletResponse response, Object handler) {
-        logger.error(ex.getMessage());
+        log.error(ex.getMessage());
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("httpStatus", response.getStatus());
         String errorMessage = messageSource.getMessage("registrationForm.DefaultProfileImageNotFoundException.message", null, Locale.getDefault());
+        modelAndView.addObject("errorMessage", errorMessage);
+        modelAndView.setViewName("error");
+        return modelAndView;
+    }
+
+    private ModelAndView handleEventNotFound(EventNotFoundException ex, HttpServletResponse response, Object handler) {
+        log.error(ex.getMessage());
+        response.setStatus(HttpStatus.NOT_FOUND.value());
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("httpStatus", response.getStatus());
+        String errorMessage = messageSource.getMessage("exception.EventNotFoundException.message", null, Locale.getDefault());
         modelAndView.addObject("errorMessage", errorMessage);
         modelAndView.setViewName("error");
         return modelAndView;

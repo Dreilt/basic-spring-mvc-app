@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .mvcMatchers("/").permitAll()
                 .mvcMatchers("/login**").permitAll()
                 .mvcMatchers("/register", "/confirmation").permitAll()
+                .mvcMatchers("/events", "/events/**").permitAll()
                 .mvcMatchers("/admin_panel/**").hasRole("ADMIN")
                 .mvcMatchers("/profile").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated());

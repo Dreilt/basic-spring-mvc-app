@@ -1,27 +1,18 @@
 package pl.dreilt.basicspringmvcapp.event.dto;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
-public class CreateEventDto {
-
+public class EventDto {
     private String name;
-    @NotNull(message = "{form.field.eventType.error.notNull.message}")
-    @NotEmpty(message = "{form.field.eventType.error.notEmpty.message}")
     private String eventType;
-    private String dateAndTime;
+    private String date;
+    private String hour;
     private String language;
-    @NotNull(message = "{form.field.admission.error.notNull.message}")
-    @NotEmpty(message = "{form.field.admission.error.notEmpty.message}")
     private String admission;
     private String city;
     private String location;
     private String address;
     private String description;
-
-    private MultipartFile eventImage;
+    private String imageType;
+    private String imageData;
 
     public String getName() {
         return name;
@@ -39,12 +30,20 @@ public class CreateEventDto {
         this.eventType = eventType;
     }
 
-    public String getDateAndTime() {
-        return dateAndTime;
+    public String getDate() {
+        return date;
     }
 
-    public void setDateAndTime(String dateAndTime) {
-        this.dateAndTime = dateAndTime;
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getHour() {
+        return hour;
+    }
+
+    public void setHour(String hour) {
+        this.hour = hour;
     }
 
     public String getLanguage() {
@@ -95,11 +94,19 @@ public class CreateEventDto {
         this.description = description;
     }
 
-    public MultipartFile getEventImage() {
-        return eventImage;
+    public String getImageType() {
+        return imageType;
     }
 
-    public void setEventImage(MultipartFile eventImage) {
-        this.eventImage = eventImage;
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
+    }
+
+    public String getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(String imageData) {
+        this.imageData = imageData;
     }
 }

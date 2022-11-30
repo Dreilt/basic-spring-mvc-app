@@ -30,7 +30,7 @@ public class AppUserDetailsService implements UserDetailsService {
                 .username(appUserCredentialsDto.getEmail())
                 .password(appUserCredentialsDto.getPassword())
                 .avatarType(appUserCredentialsDto.getAvatarType())
-                .avatarData(appUserCredentialsDto.getAvatar())
+                .avatarData(appUserCredentialsDto.getAvatarData())
                 .enabled(appUserCredentialsDto.isEnabled())
                 .accountNonLocked(appUserCredentialsDto.isAccountNonLocked())
                 .roles(appUserCredentialsDto.getRoles().toArray(String[]::new))

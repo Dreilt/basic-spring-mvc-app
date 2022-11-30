@@ -1,11 +1,8 @@
 package pl.dreilt.basicspringmvcapp.event;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import pl.dreilt.basicspringmvcapp.entity.AppUserProfileImage;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,13 +10,22 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String typeOfEvent;
     private String name;
-    private String description;
+    private String eventType;
     private LocalDateTime dateAndTime;
+    private String language;
+    private String admission;
     private String city;
     private String location;
+    private String address;
+    private String description;
+    @OneToOne
+    @JoinTable(
+            name = "event_event_image",
+            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "event_image_id", referencedColumnName = "id")
+    )
+    private EventImage eventImage;
 
     public Long getId() {
         return id;
@@ -27,14 +33,6 @@ public class Event {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getTypeOfEvent() {
-        return typeOfEvent;
-    }
-
-    public void setTypeOfEvent(String typeOfEvent) {
-        this.typeOfEvent = typeOfEvent;
     }
 
     public String getName() {
@@ -45,12 +43,12 @@ public class Event {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getEventType() {
+        return eventType;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
     }
 
     public LocalDateTime getDateAndTime() {
@@ -59,6 +57,22 @@ public class Event {
 
     public void setDateAndTime(LocalDateTime dateAndTime) {
         this.dateAndTime = dateAndTime;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getAdmission() {
+        return admission;
+    }
+
+    public void setAdmission(String admission) {
+        this.admission = admission;
     }
 
     public String getCity() {
@@ -75,5 +89,29 @@ public class Event {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public EventImage getEventImage() {
+        return eventImage;
+    }
+
+    public void setEventImage(EventImage eventImage) {
+        this.eventImage = eventImage;
     }
 }

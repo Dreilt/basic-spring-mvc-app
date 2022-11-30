@@ -18,6 +18,10 @@
                 <a class="nav-link" th:href="@{/events/create_event}" th:text="'Utwórz wydarzenie'">Utwórz wydarzenie</a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/events}" th:text="'Wydarzenia'">Wydarzenia</a>
+            </li>
+
             <li class="nav-item dropdown" sec:authorize="isAuthenticated() && hasRole('ADMIN')">
                 <a class="nav-link dropdown-toggle"
                    href="#"

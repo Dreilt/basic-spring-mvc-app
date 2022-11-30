@@ -24,15 +24,16 @@
 .container {
     margin: 100px auto auto auto;
     padding: 50px 75px;
-    max-width: 80%;
+    max-width: 75%;
 }
 
 .form-container {
     margin: 100px auto auto auto;
     padding: 50px 75px;
     max-width: 600px;
-    border: 1px solid #d3d3d3;
+    border: 1px solid #f39c12;
     border-radius: 0.25rem;
+    box-shadow: 0px 0px 3px 0px #999999;
 }
 
 .custom-form {
@@ -93,7 +94,7 @@
 }
 
 .search-container {
-    padding: 1px;
+    padding: 16px 12px 16px 0;
     background-color: #d3d3d3;
 }
 
@@ -168,7 +169,7 @@
 
 .app-label {
     font-weight: bold;
-    text-align: right;
+    text-align: left;
 }
 
 .custom-a {
@@ -196,4 +197,49 @@
     color: #ffffff;
     font-weight: bold;
     background-color: #f39c12;
+}
+
+
+
+.event-list-header {
+    margin: 24px 0 16px 0;
+}
+
+.event-list {
+    padding: 0 8px 0 8px;
+    border-top: 8px solid #f8f9f9;
+}
+
+.event-row {
+    font-size: 1.25rem;
+    margin: 16px 0 16px 0;
+    padding: 16px 0 16px 0;
+    height: 100px;
+    border: 1px solid #f39c12;
+    border-radius: 0.25rem;
+    box-shadow: 0px 0px 3px 0px #999999;
+}
+
+.event-row:hover {
+    box-shadow: 0px 0px 0px 3px #f39c12;
+}
+
+.event-date {
+    color: #f39c12;
+    font-weight: bold;
+}
+
+.event-name {
+    color: #f39c12;
+    font-weight: bold;
+}
+
+.event-container {
+    border: 1px solid #f39c12;
+    border-radius: 0.25rem;
+    box-shadow: 0px 0px 3px 0px #999999;
+}
+
+.event-heading {
+    margin: 16px 0 16px 0;
 }
