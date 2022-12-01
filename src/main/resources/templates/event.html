@@ -17,57 +17,61 @@
         <h2 th:text="${event.name}">Java Dev Talks #1</h2>
     </div>
 
-    <div class="row">
-        <label class="col-sm-2 app-label">Wydarzenie:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${event.name}">Java Dev Talks #1</span>
-    </div>
+    <div>
+        <div class="row" style="margin: 0 0 16px 0;">
+            <img th:src="${'data:' + event.imageType + ';base64,' + event.imageData}" width="480" height="270">
+        </div>
 
-    <div class="row">
-        <label class="col-sm-2 app-label">Typ wydarzenia:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${event.eventType}">Spotkanie</span>
-    </div>
+        <div class="row">
+            <label class="col-sm-2 app-label">Wydarzenie:</label>
+            <span class="col-sm-10" style="text-align: left;" th:text="${event.name}">Java Dev Talks #1</span>
+        </div>
 
-    <div class="row">
-        <label class="col-sm-2 app-label">Data:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${event.date}">01.03.2023</span>
-    </div>
+        <div class="row">
+            <label class="col-sm-2 app-label">Typ wydarzenia:</label>
+            <span class="col-sm-10" style="text-align: left;" th:text="${event.eventType}">Spotkanie</span>
+        </div>
 
-    <div class="row">
-        <label class="col-sm-2 app-label">Godzina:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${event.hour}">18:00</span>
-    </div>
+        <div class="row">
+            <label class="col-sm-2 app-label">Data:</label>
+            <span class="col-sm-10" style="text-align: left;" th:text="${event.date}">01.03.2023</span>
+        </div>
 
-    <div class="row">
-        <label class="col-sm-2 app-label">Język:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${event.language}">polski</span>
-    </div>
+        <div class="row">
+            <label class="col-sm-2 app-label">Godzina:</label>
+            <span class="col-sm-10" style="text-align: left;" th:text="${event.hour}">18:00</span>
+        </div>
 
-    <div class="row">
-        <label class="col-sm-2 app-label">Wstęp:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${event.admission}">Bezpłatny</span>
-    </div>
+        <div class="row">
+            <label class="col-sm-2 app-label">Język:</label>
+            <span class="col-sm-10" style="text-align: left;" th:text="${event.language}">polski</span>
+        </div>
 
-    <div class="row">
-        <label class="col-sm-2 app-label">Miasto:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${event.city}">Rzeszów</span>
-    </div>
+        <div class="row">
+            <label class="col-sm-2 app-label">Wstęp:</label>
+            <span class="col-sm-10" style="text-align: left;" th:text="${event.admission}">Bezpłatny</span>
+        </div>
 
-    <div class="row">
-        <label class="col-sm-2 app-label">Lokacja:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${event.location}">WSIiZ</span>
-    </div>
+        <div class="row">
+            <label class="col-sm-2 app-label">Miasto:</label>
+            <span class="col-sm-10" style="text-align: left;" th:text="${event.city}">Rzeszów</span>
+        </div>
 
-    <div class="row">
-        <label class="col-sm-2 app-label">Adres:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${event.address}">Sucharskiego 2, 35-225 Rzeszów</span>
-    </div>
+        <div class="row">
+            <label class="col-sm-2 app-label">Lokacja:</label>
+            <span class="col-sm-10" style="text-align: left;" th:text="${event.location}">WSIiZ</span>
+        </div>
 
-    <div class="row">
-        <label class="col-sm-2 app-label">Opis:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${event.description}">Spotkanie rzeszowskiej grupy pasjonatów języka Java.</span>
-    </div>
+        <div class="row">
+            <label class="col-sm-2 app-label">Adres:</label>
+            <span class="col-sm-10" style="text-align: left;" th:text="${event.address}">Sucharskiego 2, 35-225 Rzeszów</span>
+        </div>
 
-    <img th:src="${'data:' + event.imageType + ';base64,' + event.imageData}" width="40" height="40">
+        <div class="row">
+            <label class="col-sm-2 app-label">Opis:</label>
+            <span class="col-sm-10" style="text-align: left;" th:text="${event.description}">Spotkanie rzeszowskiej grupy pasjonatów języka Java.</span>
+        </div>
+    </div>
 
 </div>
 
