@@ -14,6 +14,7 @@
     <include file="changelog/0007_create_table_event.xml" relativeToChangelogFile="true"/>
     <include file="changelog/0008_create_table_event_images.xml" relativeToChangelogFile="true"/>
     <include file="changelog/0009_create_table_event_event_image.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/0010_create_table_event_app_user.xml" relativeToChangelogFile="true"/>
     <include file="testdata/app_users.sql" relativeToChangelogFile="true"/>
     <include file="testdata/roles.sql" relativeToChangelogFile="true"/>
     <include file="testdata/user_roles.sql" relativeToChangelogFile="true"/>
@@ -22,5 +23,5 @@
     <include file="testdata/events.sql" relativeToChangelogFile="true"/>
     <include file="testdata/event_image.sql" relativeToChangelogFile="true"/>
     <include file="testdata/event_event_image.sql" relativeToChangelogFile="true"/>
-
+    <include file="testdata/event_app_user.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

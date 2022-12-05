@@ -1,6 +1,7 @@
-package pl.dreilt.basicspringmvcapp.event;
+package pl.dreilt.basicspringmvcapp.mapper;
 
-import pl.dreilt.basicspringmvcapp.event.dto.EventDto;
+import pl.dreilt.basicspringmvcapp.entity.Event;
+import pl.dreilt.basicspringmvcapp.dto.EventDto;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
@@ -9,6 +10,7 @@ public class EventDtoMapper {
 
     public static EventDto mapToEventDto(Event event) {
         EventDto eventDto = new EventDto();
+        eventDto.setId(event.getId());
         eventDto.setName(event.getName());
         eventDto.setEventType(event.getEventType());
         eventDto.setDate(event.getDateAndTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));

@@ -1,4 +1,4 @@
-package pl.dreilt.basicspringmvcapp.event;
+package pl.dreilt.basicspringmvcapp.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

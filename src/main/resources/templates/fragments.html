@@ -13,15 +13,22 @@
     <a class="navbar-brand" href="#" th:href="@{/}">Basic Spring MVC App</a>
     <div class="collapse navbar-collapse">
         <ul class="navbar-nav ml-auto">
-
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/events/create_event}" th:text="'Utwórz wydarzenie'">Utwórz wydarzenie</a>
+            <li class="nav-item dropdown" sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('ORGANIZER'))">
+                <a class="nav-link dropdown-toggle"
+                   href="#"
+                   id="navbarDropdownMenuOrganizerLink"
+                   data-toggle="dropdown"
+                   aria-haspopup="true"
+                   aria-expanded="false">
+                    Panel organizatora
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuOrganizerLink">
+                    <a class="dropdown-item" th:href="@{/events/create_event}" th:text="'Utwórz wydarzenie'">Utwórz wydarzenie</a>
+                </div>
             </li>
-
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/events}" th:text="'Wydarzenia'">Wydarzenia</a>
             </li>
-
             <li class="nav-item dropdown" sec:authorize="isAuthenticated() && hasRole('ADMIN')">
                 <a class="nav-link dropdown-toggle"
                    href="#"

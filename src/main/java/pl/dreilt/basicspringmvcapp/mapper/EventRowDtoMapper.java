@@ -1,6 +1,7 @@
-package pl.dreilt.basicspringmvcapp.event;
+package pl.dreilt.basicspringmvcapp.mapper;
 
-import pl.dreilt.basicspringmvcapp.event.dto.EventRowDto;
+import pl.dreilt.basicspringmvcapp.entity.Event;
+import pl.dreilt.basicspringmvcapp.dto.EventRowDto;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;

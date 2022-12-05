@@ -1,4 +1,4 @@
-package pl.dreilt.basicspringmvcapp.event;
+package pl.dreilt.basicspringmvcapp.enums;
 
 public enum EventType {
     MEETING("meeting", "Spotkanie"),

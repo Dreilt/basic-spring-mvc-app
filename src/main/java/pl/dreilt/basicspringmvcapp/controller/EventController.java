@@ -1,16 +1,15 @@
-package pl.dreilt.basicspringmvcapp.event;
+package pl.dreilt.basicspringmvcapp.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import pl.dreilt.basicspringmvcapp.event.dto.CityDto;
-import pl.dreilt.basicspringmvcapp.event.dto.CreateEventDto;
-import pl.dreilt.basicspringmvcapp.event.dto.EventDto;
-import pl.dreilt.basicspringmvcapp.event.dto.EventRowDto;
+import org.springframework.web.bind.annotation.*;
+import pl.dreilt.basicspringmvcapp.enums.AdmissionType;
+import pl.dreilt.basicspringmvcapp.enums.EventType;
+import pl.dreilt.basicspringmvcapp.service.EventService;
+import pl.dreilt.basicspringmvcapp.dto.CityDto;
+import pl.dreilt.basicspringmvcapp.dto.CreateEventDto;
+import pl.dreilt.basicspringmvcapp.dto.EventRowDto;
 
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -83,5 +82,11 @@ public class EventController {
             eventService.createEvent(createEventDto);
             return "redirect:/events";
         }
+    }
+
+    @PatchMapping("/events/{id}/join")
+    public String joinToEvent(@PathVariable Long id, Model model) {
+        eventService.joinToEvent(id);
+        return "redirect:/events/" + id;
     }
 }

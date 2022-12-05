@@ -1,4 +1,4 @@
-package pl.dreilt.basicspringmvcapp.event.dto;
+package pl.dreilt.basicspringmvcapp.dto;
 
 public class CityDto {
     private String nameWithoutPlCharacters;

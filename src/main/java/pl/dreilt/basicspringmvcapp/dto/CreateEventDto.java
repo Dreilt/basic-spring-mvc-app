@@ -1,18 +1,27 @@
-package pl.dreilt.basicspringmvcapp.event.dto;
+package pl.dreilt.basicspringmvcapp.dto;
 
-public class EventDto {
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+public class CreateEventDto {
+
     private String name;
+    @NotNull(message = "{form.field.eventType.error.notNull.message}")
+    @NotEmpty(message = "{form.field.eventType.error.notEmpty.message}")
     private String eventType;
-    private String date;
-    private String hour;
+    private String dateAndTime;
     private String language;
+    @NotNull(message = "{form.field.admission.error.notNull.message}")
+    @NotEmpty(message = "{form.field.admission.error.notEmpty.message}")
     private String admission;
     private String city;
     private String location;
     private String address;
     private String description;
-    private String imageType;
-    private String imageData;
+
+    private MultipartFile eventImage;
 
     public String getName() {
         return name;
@@ -30,20 +39,12 @@ public class EventDto {
         this.eventType = eventType;
     }
 
-    public String getDate() {
-        return date;
+    public String getDateAndTime() {
+        return dateAndTime;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getHour() {
-        return hour;
-    }
-
-    public void setHour(String hour) {
-        this.hour = hour;
+    public void setDateAndTime(String dateAndTime) {
+        this.dateAndTime = dateAndTime;
     }
 
     public String getLanguage() {
@@ -94,19 +95,11 @@ public class EventDto {
         this.description = description;
     }
 
-    public String getImageType() {
-        return imageType;
+    public MultipartFile getEventImage() {
+        return eventImage;
     }
 
-    public void setImageType(String imageType) {
-        this.imageType = imageType;
-    }
-
-    public String getImageData() {
-        return imageData;
-    }
-
-    public void setImageData(String imageData) {
-        this.imageData = imageData;
+    public void setEventImage(MultipartFile eventImage) {
+        this.eventImage = eventImage;
     }
 }

@@ -1,31 +1,19 @@
-package pl.dreilt.basicspringmvcapp.event;
+package pl.dreilt.basicspringmvcapp.dto;
 
-import pl.dreilt.basicspringmvcapp.entity.AppUserProfileImage;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
-
-@Entity
-public class Event {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class EventDto {
     private Long id;
     private String name;
     private String eventType;
-    private LocalDateTime dateAndTime;
+    private String date;
+    private String hour;
     private String language;
     private String admission;
     private String city;
     private String location;
     private String address;
     private String description;
-    @OneToOne
-    @JoinTable(
-            name = "event_event_image",
-            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "event_image_id", referencedColumnName = "id")
-    )
-    private EventImage eventImage;
+    private String imageType;
+    private String imageData;
 
     public Long getId() {
         return id;
@@ -51,12 +39,20 @@ public class Event {
         this.eventType = eventType;
     }
 
-    public LocalDateTime getDateAndTime() {
-        return dateAndTime;
+    public String getDate() {
+        return date;
     }
 
-    public void setDateAndTime(LocalDateTime dateAndTime) {
-        this.dateAndTime = dateAndTime;
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getHour() {
+        return hour;
+    }
+
+    public void setHour(String hour) {
+        this.hour = hour;
     }
 
     public String getLanguage() {
@@ -107,11 +103,19 @@ public class Event {
         this.description = description;
     }
 
-    public EventImage getEventImage() {
-        return eventImage;
+    public String getImageType() {
+        return imageType;
     }
 
-    public void setEventImage(EventImage eventImage) {
-        this.eventImage = eventImage;
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
+    }
+
+    public String getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(String imageData) {
+        this.imageData = imageData;
     }
 }

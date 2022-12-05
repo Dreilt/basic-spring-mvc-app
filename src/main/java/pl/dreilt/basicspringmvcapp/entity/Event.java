@@ -1,27 +1,46 @@
-package pl.dreilt.basicspringmvcapp.event.dto;
+package pl.dreilt.basicspringmvcapp.entity;
 
-import org.springframework.web.multipart.MultipartFile;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
-public class CreateEventDto {
-
+@Entity
+public class Event {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
-    @NotNull(message = "{form.field.eventType.error.notNull.message}")
-    @NotEmpty(message = "{form.field.eventType.error.notEmpty.message}")
     private String eventType;
-    private String dateAndTime;
+    private LocalDateTime dateAndTime;
     private String language;
-    @NotNull(message = "{form.field.admission.error.notNull.message}")
-    @NotEmpty(message = "{form.field.admission.error.notEmpty.message}")
     private String admission;
     private String city;
     private String location;
     private String address;
     private String description;
+    @OneToOne
+    @JoinTable(
+            name = "event_event_image",
+            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "event_image_id", referencedColumnName = "id")
+    )
+    private EventImage eventImage;
+    @OneToMany
+    @JoinTable(
+            name = "event_app_user",
+            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "app_user_id", referencedColumnName = "id")
+    )
+    private List<AppUser> participants = new ArrayList<>();
 
-    private MultipartFile eventImage;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -39,11 +58,11 @@ public class CreateEventDto {
         this.eventType = eventType;
     }
 
-    public String getDateAndTime() {
+    public LocalDateTime getDateAndTime() {
         return dateAndTime;
     }
 
-    public void setDateAndTime(String dateAndTime) {
+    public void setDateAndTime(LocalDateTime dateAndTime) {
         this.dateAndTime = dateAndTime;
     }
 
@@ -95,11 +114,19 @@ public class CreateEventDto {
         this.description = description;
     }
 
-    public MultipartFile getEventImage() {
+    public EventImage getEventImage() {
         return eventImage;
     }
 
-    public void setEventImage(MultipartFile eventImage) {
+    public void setEventImage(EventImage eventImage) {
         this.eventImage = eventImage;
+    }
+
+    public List<AppUser> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<AppUser> participants) {
+        this.participants = participants;
     }
 }
