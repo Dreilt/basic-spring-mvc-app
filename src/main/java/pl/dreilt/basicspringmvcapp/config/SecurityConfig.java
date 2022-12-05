@@ -33,9 +33,12 @@ public class SecurityConfig {
                 .mvcMatchers("/").permitAll()
                 .mvcMatchers("/login**").permitAll()
                 .mvcMatchers("/register", "/confirmation").permitAll()
-                .mvcMatchers("/events", "/events/**").permitAll()
+                .mvcMatchers("/events/create_event").hasAnyRole("ADMIN", "ORGANIZER")
+                .mvcMatchers(HttpMethod.POST, "/events").hasAnyRole("ADMIN", "ORGANIZER")
+                .mvcMatchers("/events", "/events/cities/**", "/events/**").permitAll()
                 .mvcMatchers("/admin_panel/**").hasRole("ADMIN")
-                .mvcMatchers("/profile").hasAnyRole("ADMIN", "USER")
+                .mvcMatchers("/profile").hasAnyRole("ADMIN", "ORGANIZER", "USER")
+                .mvcMatchers("/settings/**").hasAnyRole("ADMIN", "ORGANIZER", "USER")
                 .anyRequest().authenticated());
         http.formLogin(login -> login
                 .loginPage("/login").permitAll()

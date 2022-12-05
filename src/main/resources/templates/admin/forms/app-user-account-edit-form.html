@@ -55,7 +55,7 @@
                     <label for="roles" class="form-label">ROLA</label>
                     <select id="roles" name="roles" th:field="*{roles}"
                             class="form-control">
-                        <option th:each="userRole: ${userRoles}" th:value="${userRole.id}" th:text="${userRole.visibleName}"></option>
+                        <option th:each="userRole: ${userRoles}" th:value="${userRole.id}" th:text="${userRole.displayName}"></option>
                     </select>
                 </div>
                 <div class="d-grid gap-2 col-5 mx-auto" style="margin: 8px 0 8px 0;">

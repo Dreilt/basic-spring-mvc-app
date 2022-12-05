@@ -11,7 +11,7 @@
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="VARCHAR(30)"/>
-            <column name="visible_name" type="VARCHAR(30)"/>
+            <column name="display_name" type="VARCHAR(30)"/>
             <column name="description" type="VARCHAR(200)"/>
         </createTable>
     </changeSet>

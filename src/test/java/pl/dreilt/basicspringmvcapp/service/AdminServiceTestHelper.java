@@ -88,7 +88,7 @@ public class AdminServiceTestHelper {
         AppUserRole userRole = new AppUserRole();
         userRole.setId(2L);
         userRole.setName("USER");
-        userRole.setVisibleName("Użytkownik");
+        userRole.setDisplayName("Użytkownik");
         userRole.setDescription("Dostęp ograniczony");
         return userRole;
     }

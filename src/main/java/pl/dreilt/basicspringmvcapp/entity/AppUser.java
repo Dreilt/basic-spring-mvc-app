@@ -47,9 +47,6 @@ public class AppUser {
     )
     private Set<AppUserRole> roles = new HashSet<>();
 
-    public AppUser() {
-    }
-
     public Long getId() {
         return id;
     }

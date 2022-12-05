@@ -6,7 +6,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class CreateEventDto {
-
     private String name;
     @NotNull(message = "{form.field.eventType.error.notNull.message}")
     @NotEmpty(message = "{form.field.eventType.error.notEmpty.message}")
@@ -20,7 +19,6 @@ public class CreateEventDto {
     private String location;
     private String address;
     private String description;
-
     private MultipartFile eventImage;
 
     public String getName() {

@@ -11,7 +11,7 @@ public class AppUserRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String visibleName;
+    private String displayName;
     private String description;
 
     public AppUserRole() {
@@ -33,12 +33,12 @@ public class AppUserRole {
         this.name = name;
     }
 
-    public String getVisibleName() {
-        return visibleName;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setVisibleName(String visibleName) {
-        this.visibleName = visibleName;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getDescription() {
@@ -54,7 +54,7 @@ public class AppUserRole {
         return "AppUserRole{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", visibleName='" + visibleName + '\'' +
+                ", displayName='" + displayName + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }

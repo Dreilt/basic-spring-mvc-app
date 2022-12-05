@@ -8,7 +8,7 @@ public class AppUserRoleServiceTestHelper {
         AppUserRole adminRole = new AppUserRole();
         adminRole.setId(1L);
         adminRole.setName("ADMIN");
-        adminRole.setVisibleName("Administrator");
+        adminRole.setDisplayName("Administrator");
         adminRole.setDescription("Ma dostęp do wszystkiego");
         return adminRole;
     }
@@ -17,7 +17,7 @@ public class AppUserRoleServiceTestHelper {
         AppUserRole userRole = new AppUserRole();
         userRole.setId(2L);
         userRole.setName("USER");
-        userRole.setVisibleName("Użytkownik");
+        userRole.setDisplayName("Użytkownik");
         userRole.setDescription("Dostęp ograniczony");
         return userRole;
     }

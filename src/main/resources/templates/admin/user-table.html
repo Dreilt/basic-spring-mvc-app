@@ -68,7 +68,7 @@
             <td th:text="${user.enabled == true ? 'Tak' : 'Nie'}">Tak</td>
             <td th:text="${user.accountNonLocked == true ? 'Nie' : 'Tak'}">Nie</td>
             <td>
-                <p th:each="role: ${user.roles}" th:text="${role.visibleName}">Użytkownik</p>
+                <p th:each="role: ${user.roles}" th:text="${role.displayName}">Użytkownik</p>
             </td>
             <td>
                 <a href="#" th:href="@{'/admin_panel/users/' + ${user.id} + '/settings/account'}"><i class="fa-solid fa-pen icon-button"></i></a>

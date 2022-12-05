@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class AppUserDetails extends User {
-
     private String firstName;
     private String lastName;
     private String avatarType;
