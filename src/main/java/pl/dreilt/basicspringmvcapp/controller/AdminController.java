@@ -52,7 +52,7 @@ public class AdminController {
                     String sortParams = "sort_by=" + sortProperty + "&order_by=" + sortDirection;
                     model.addAttribute("sortParams", sortParams);
                 }
-                return "admin/user-table";
+                return "admin/app-user-table";
             } else {
                 if ((sortProperty != null && !"".equals(sortProperty)) && (sortDirection != null && !"".equals(sortDirection))) {
                     return "redirect:/admin_panel/users?page=" + users.getTotalPages() + "&sort_by=" + sortProperty + "&order_by=" + sortDirection;
@@ -91,7 +91,7 @@ public class AdminController {
                         return "redirect:/admin_panel/users/results?search_query=" + searchQuery;
                     } else {
                         model.addAttribute("prefixSortUrl", "/admin_panel/users/results?search_query=" + searchQuery + "&");
-                        return "admin/user-table";
+                        return "admin/app-user-table";
                     }
                 } else if (page <= users.getTotalPages()) {
                     model.addAttribute("users", users);
