@@ -1,15 +1,16 @@
 package pl.dreilt.basicspringmvcapp.controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pl.dreilt.basicspringmvcapp.dto.CityDto;
+import pl.dreilt.basicspringmvcapp.dto.CreateEventDto;
+import pl.dreilt.basicspringmvcapp.dto.EventDto;
 import pl.dreilt.basicspringmvcapp.enums.AdmissionType;
 import pl.dreilt.basicspringmvcapp.enums.EventType;
 import pl.dreilt.basicspringmvcapp.service.EventService;
-import pl.dreilt.basicspringmvcapp.dto.CityDto;
-import pl.dreilt.basicspringmvcapp.dto.CreateEventDto;
-import pl.dreilt.basicspringmvcapp.dto.EventRowDto;
 
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -25,26 +26,19 @@ public class EventController {
     }
 
     @GetMapping("/events")
-    public String getAllEvents(Model model) {
+    public String getAllEvents(@RequestParam(name = "city", required = false) String city,
+                               Model model) {
         List<CityDto> cities = eventService.findAllCities();
         model.addAttribute("cities", cities);
-        List<EventRowDto> upcomingEvents = eventService.findAllUpcomingEvents();
-        model.addAttribute("upcomingEvents", upcomingEvents);
-        List<EventRowDto> pastEvents = eventService.findAllPastEvents();
-        model.addAttribute("pastEvents", pastEvents);
-        return "events";
-    }
-
-    @GetMapping("/events/cities/{city}")
-    public String getEventsByCity(@PathVariable String city, Model model) {
-        List<CityDto> cities = eventService.findAllCities();
-        model.addAttribute("cities", cities);
-        String cityName = getCityName(cities, city);
-        model.addAttribute("cityName", cityName);
-        List<EventRowDto> upcomingEvents = eventService.findUpcomingEventsByCity(cityName);
-        model.addAttribute("upcomingEvents", upcomingEvents);
-        List<EventRowDto> pastEvents = eventService.findPastEventsByCity(cityName);
-        model.addAttribute("pastEvents", pastEvents);
+        if (city != null) {
+            String cityName = getCityName(cities, city);
+            model.addAttribute("cityName", cityName);
+            model.addAttribute("upcomingEvents", eventService.findUpcomingEventsByCity(cityName));
+            model.addAttribute("pastEvents", eventService.findPastEventsByCity(cityName));
+            return "events";
+        }
+        model.addAttribute("upcomingEvents", eventService.findAllUpcomingEvents());
+        model.addAttribute("pastEvents", eventService.findAllPastEvents());
         return "events";
     }
 
@@ -59,8 +53,12 @@ public class EventController {
     }
 
     @GetMapping("/events/{id}")
-    public String getEvent(@PathVariable Long id, Model model) {
-        model.addAttribute("event", eventService.findEventById(id));
+    public String getEvent(Authentication authentication, @PathVariable Long id, Model model) {
+        EventDto event = eventService.findEventById(id);
+        model.addAttribute("event", event);
+        if (authentication != null) {
+            model.addAttribute("isParticipant", eventService.checkIfUserIsParticipant(event));
+        }
         return "event";
     }
 
@@ -88,5 +86,22 @@ public class EventController {
     public String joinToEvent(@PathVariable Long id, Model model) {
         eventService.joinToEvent(id);
         return "redirect:/events/" + id;
+    }
+
+    @GetMapping("/events/my_events")
+    public String getEventsByUser(@RequestParam(name = "city", required = false) String city,
+                                  Model model) {
+        List<CityDto> cities = eventService.findAllCities();
+        model.addAttribute("cities", cities);
+        if (city != null) {
+            String cityName = getCityName(cities, city);
+            model.addAttribute("cityName", cityName);
+            model.addAttribute("upcomingEvents", eventService.findUpcomingEventsByUserAndCity(cityName));
+            model.addAttribute("pastEvents", eventService.findPastEventsByUserAndCity(cityName));
+            return "app-user-events";
+        }
+        model.addAttribute("upcomingEvents", eventService.findUpcomingEventsByUser());
+        model.addAttribute("pastEvents", eventService.findPastEventsByUser());
+        return "app-user-events";
     }
 }

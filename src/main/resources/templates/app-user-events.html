@@ -22,7 +22,7 @@
                    class="search-form-input"
                    placeholder="Wybierz miasto"
                    list="cities"
-                   onchange="getEventsByCity();"/>
+                   onchange="getEventsByUserAndCity();"/>
             <datalist id="cities">
                 <option th:each="city: ${cities}" th:value="${city.nameWithoutPlCharacters}"></option>
             </datalist>
@@ -97,10 +97,10 @@
 </div>
 
 <script>
-    function getEventsByCity() {
+    function getEventsByUserAndCity() {
         const city = $('#city').val();
         console.log(city);
-        window.location = '/events?city=' + city;
+        window.location = '/events/my_events?city=' + city;
     }
 </script>
 

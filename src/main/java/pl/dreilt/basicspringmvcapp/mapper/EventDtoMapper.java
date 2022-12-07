@@ -24,6 +24,7 @@ public class EventDtoMapper {
         eventDto.setImageType(event.getEventImage().getFileType());
         String imageData = Base64.getEncoder().encodeToString(event.getEventImage().getFileData());
         eventDto.setImageData(imageData);
+        eventDto.setParticipants(event.getParticipants());
         return eventDto;
     }
 }

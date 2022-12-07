@@ -1,5 +1,9 @@
 package pl.dreilt.basicspringmvcapp.dto;
 
+import pl.dreilt.basicspringmvcapp.entity.AppUser;
+
+import java.util.List;
+
 public class EventDto {
     private Long id;
     private String name;
@@ -14,6 +18,7 @@ public class EventDto {
     private String description;
     private String imageType;
     private String imageData;
+    private List<AppUser> participants;
 
     public Long getId() {
         return id;
@@ -117,5 +122,13 @@ public class EventDto {
 
     public void setImageData(String imageData) {
         this.imageData = imageData;
+    }
+
+    public List<AppUser> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<AppUser> participants) {
+        this.participants = participants;
     }
 }

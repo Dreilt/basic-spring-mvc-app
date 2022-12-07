@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.dreilt.basicspringmvcapp.dto.CityDto;
 import pl.dreilt.basicspringmvcapp.dto.CreateEventDto;
 import pl.dreilt.basicspringmvcapp.dto.EventDto;
-import pl.dreilt.basicspringmvcapp.dto.EventRowDto;
+import pl.dreilt.basicspringmvcapp.dto.EventBoxDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.Event;
 import pl.dreilt.basicspringmvcapp.entity.EventImage;
@@ -19,7 +19,7 @@ import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.DefaultProfileImageNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.EventNotFoundException;
 import pl.dreilt.basicspringmvcapp.mapper.EventDtoMapper;
-import pl.dreilt.basicspringmvcapp.mapper.EventRowDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.EventBoxDtoMapper;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import pl.dreilt.basicspringmvcapp.repository.EventImageRepository;
 import pl.dreilt.basicspringmvcapp.repository.EventRepository;
@@ -74,24 +74,24 @@ public class EventService {
         }
     }
 
-    public List<EventRowDto> findAllUpcomingEvents() {
+    public List<EventBoxDto> findAllUpcomingEvents() {
         LocalDateTime currentDateAndTime = LocalDateTime.now();
-        return EventRowDtoMapper.mapToEventRowDtos(eventRepository.findAllUpcomingEvents(currentDateAndTime));
+        return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findAllUpcomingEvents(currentDateAndTime));
     }
 
-    public List<EventRowDto> findAllPastEvents() {
+    public List<EventBoxDto> findAllPastEvents() {
         LocalDateTime currentDateAndTime = LocalDateTime.now();
-        return EventRowDtoMapper.mapToEventRowDtos(eventRepository.findAllPastEvents(currentDateAndTime));
+        return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findAllPastEvents(currentDateAndTime));
     }
 
-    public List<EventRowDto> findUpcomingEventsByCity(String city) {
+    public List<EventBoxDto> findUpcomingEventsByCity(String city) {
         LocalDateTime currentDateAndTime = LocalDateTime.now();
-        return EventRowDtoMapper.mapToEventRowDtos(eventRepository.findUpcomingEventsByCity(currentDateAndTime, city));
+        return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findUpcomingEventsByCity(currentDateAndTime, city));
     }
 
-    public List<EventRowDto> findPastEventsByCity(String city) {
+    public List<EventBoxDto> findPastEventsByCity(String city) {
         LocalDateTime currentDateAndTime = LocalDateTime.now();
-        return EventRowDtoMapper.mapToEventRowDtos(eventRepository.findPastEventsByCity(currentDateAndTime, city));
+        return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findPastEventsByCity(currentDateAndTime, city));
     }
 
     public List<CityDto> findAllCities() {
@@ -177,6 +177,85 @@ public class EventService {
             event.getParticipants().add(user);
         } else {
             throw new EventNotFoundException("Event with ID " + eventId + " not found");
+        }
+    }
+
+    public List<EventBoxDto> findUpcomingEventsByUser() {
+        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+        if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
+            throw new AccessDeniedException("Odmowa dostępu");
+        }
+        String email = currentUser.getName();
+        Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
+        if (userOpt.isPresent()) {
+            AppUser user = userOpt.get();
+            LocalDateTime currentDateAndTime = LocalDateTime.now();
+            return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findUpcomingEventsByUser(currentDateAndTime, user));
+        } else {
+            throw new AppUserNotFoundException("User with email " + email + " not found");
+        }
+    }
+
+    public List<EventBoxDto> findPastEventsByUser() {
+        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+        if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
+            throw new AccessDeniedException("Odmowa dostępu");
+        }
+        String email = currentUser.getName();
+        Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
+        if (userOpt.isPresent()) {
+            AppUser user = userOpt.get();
+            LocalDateTime currentDateAndTime = LocalDateTime.now();
+            return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findPastEventsByUser(currentDateAndTime, user));
+        } else {
+            throw new AppUserNotFoundException("User with email " + email + " not found");
+        }
+    }
+
+    public List<EventBoxDto> findUpcomingEventsByUserAndCity(String city) {
+        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+        if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
+            throw new AccessDeniedException("Odmowa dostępu");
+        }
+        String email = currentUser.getName();
+        Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
+        if (userOpt.isPresent()) {
+            AppUser user = userOpt.get();
+            LocalDateTime currentDateAndTime = LocalDateTime.now();
+            return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findUpcomingEventsByUserAndCity(currentDateAndTime, user, city));
+        } else {
+            throw new AppUserNotFoundException("User with email " + email + " not found");
+        }
+    }
+
+    public List<EventBoxDto> findPastEventsByUserAndCity(String city) {
+        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+        if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
+            throw new AccessDeniedException("Odmowa dostępu");
+        }
+        String email = currentUser.getName();
+        Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
+        if (userOpt.isPresent()) {
+            AppUser user = userOpt.get();
+            LocalDateTime currentDateAndTime = LocalDateTime.now();
+            return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findPastEventsByUserAndCity(currentDateAndTime, user, city));
+        } else {
+            throw new AppUserNotFoundException("User with email " + email + " not found");
+        }
+    }
+
+    public boolean checkIfUserIsParticipant(EventDto event) {
+        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+        if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
+            throw new AccessDeniedException("Odmowa dostępu");
+        }
+        String email = currentUser.getName();
+        Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
+        if (userOpt.isPresent()) {
+            AppUser user = userOpt.get();
+            return event.getParticipants().contains(user);
+        } else {
+            throw new AppUserNotFoundException("User with email " + email + " not found");
         }
     }
 }

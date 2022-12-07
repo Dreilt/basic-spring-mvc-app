@@ -1,6 +1,6 @@
 package pl.dreilt.basicspringmvcapp.dto;
 
-public class EventRowDto {
+public class EventBoxDto {
     private Long id;
     private String date;
     private String dayOfWeek;

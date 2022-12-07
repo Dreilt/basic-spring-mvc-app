@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <div sec:authorize="isAuthenticated() && hasRole('USER')">
+    <div sec:authorize="isAuthenticated() && hasRole('USER')" th:if="${isParticipant == false}">
         <form method="post" th:method="patch" action="#" th:action="@{'/events/' + ${event.id} + '/join'}">
             <button class="btn form-button" type="submit" th:text="'Wezmę udział'">Wezmę udział</button>
         </form>
