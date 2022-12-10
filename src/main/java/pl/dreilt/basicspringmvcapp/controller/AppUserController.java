@@ -7,8 +7,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import pl.dreilt.basicspringmvcapp.dto.AppUserPasswordEditDto;
-import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditDto;
 import pl.dreilt.basicspringmvcapp.service.AppUserLoginDataService;
 import pl.dreilt.basicspringmvcapp.service.AppUserService;
@@ -26,10 +26,15 @@ public class AppUserController {
         this.appUserLoginDataService = appUserLoginDataService;
     }
 
+    @GetMapping("/users/{id}/profile")
+    public String getUserProfile(@PathVariable Long id, Model model) {
+        model.addAttribute("userProfile", appUserService.findUserProfileByUserId(id));
+        return "app-user-profile";
+    }
+
     @GetMapping("/profile")
     public String getUserProfile(Authentication authentication, Model model) {
-        AppUserProfileDto appUserProfile = appUserService.findUserProfile(authentication.getName());
-        model.addAttribute("appUserProfile", appUserProfile);
+        model.addAttribute("userProfile", appUserService.findUserProfile(authentication.getName()));
         return "app-user-profile";
     }
 

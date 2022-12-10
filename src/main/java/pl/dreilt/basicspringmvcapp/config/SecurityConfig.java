@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .mvcMatchers("/").permitAll()
                 .mvcMatchers("/login**").permitAll()
                 .mvcMatchers("/register", "/confirmation").permitAll()
+                .mvcMatchers("/users/*/profile").permitAll()
                 .mvcMatchers("/events/create_event").hasAnyRole("ADMIN", "ORGANIZER")
                 .mvcMatchers("/events/my_events").hasAnyRole("ADMIN", "ORGANIZER", "USER")
                 .mvcMatchers(HttpMethod.POST, "/events").hasAnyRole("ADMIN", "ORGANIZER")

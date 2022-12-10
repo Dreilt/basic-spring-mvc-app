@@ -10,27 +10,50 @@
 </head>
 <body>
 <nav th:replace="fragments :: navbar"></nav>
+
+<div class="container">
+
+    <div>
+        <h2>Profil użytkownika</h2>
+    </div>
+
+    <div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div style="width: 100%;">
+                    <img th:src="${'data:' + userProfile.avatarType + ';base64,' + userProfile.avatarData}" width="100" height="100">
+                </div>
+                <div style="width: 100%;">
+                    <span th:text="${userProfile.firstName + ' ' + userProfile.lastName}">Jan Kowalski</span>
+                </div>
+            </div>
+            <div class="col-sm-8">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <span th:text="${userProfile.bio}">Cześć! Nazywam się Jan Kowalski i jestem z Rzeszowa. Obecnie jestem na trzecim roku informatyki na Politechnice Rzeszowskiej.</span>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
 <div class="container" style="text-align: center">
     <h2>Profil użytkownika</h2>
-    <div class="row justify-content-center">
-        <label class="col-sm-2 app-label">Imię:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${appUserProfile.firstName}">Jan</span>
-    </div>
-    <div class="row justify-content-center">
-        <label class="col-sm-2 app-label">Nazwisko:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${appUserProfile.lastName}">Kowalski</span>
-    </div>
+
     <div class="row justify-content-center">
         <label class="col-sm-2 app-label">Email:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${appUserProfile.email}">jankowalski@example.com</span>
+        <span class="col-sm-4" style="text-align: left;" th:text="${userProfile.email}">jankowalski@example.com</span>
     </div>
-    <div class="row justify-content-center">
-        <label class="col-sm-2 app-label">Biogram:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${appUserProfile.bio}">Cześć! Nazywam się Jan Kowalski i jestem z Rzeszowa. Obecnie jestem na trzecim roku informatyki na Politechnice Rzeszowskiej.</span>
-    </div>
+
     <div class="row justify-content-center">
         <label class="col-sm-2 app-label">Miasto:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${appUserProfile.city}">Rzeszów</span>
+        <span class="col-sm-4" style="text-align: left;" th:text="${userProfile.city}">Rzeszów</span>
     </div>
     <div class="row justify-content-center">
         <a class="custom-a" th:href="@{/settings/profile}" th:text="'Edytuj profil'">Edytuj profil</a>

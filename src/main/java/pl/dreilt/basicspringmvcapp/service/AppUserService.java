@@ -163,4 +163,10 @@ public class AppUserService {
             throw new DefaultProfileImageNotFoundException("File not found");
         }
     }
+
+    public AppUserProfileDto findUserProfileByUserId(Long id) {
+        return appUserRepository.findById(id)
+                .map(AppUserProfileDtoMapper::mapToAppUserProfileDto)
+                .orElseThrow(() -> new AppUserNotFoundException("User with id " + id + " not found"));
+    }
 }

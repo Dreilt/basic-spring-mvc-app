@@ -3,6 +3,8 @@ package pl.dreilt.basicspringmvcapp.dto;
 public class AppUserProfileDto {
     private String firstName;
     private String lastName;
+    private String avatarType;
+    private String avatarData;
     private String email;
     private String bio;
     private String city;
@@ -21,6 +23,22 @@ public class AppUserProfileDto {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getAvatarType() {
+        return avatarType;
+    }
+
+    public void setAvatarType(String avatarType) {
+        this.avatarType = avatarType;
+    }
+
+    public String getAvatarData() {
+        return avatarData;
+    }
+
+    public void setAvatarData(String avatarData) {
+        this.avatarData = avatarData;
     }
 
     public String getEmail() {
