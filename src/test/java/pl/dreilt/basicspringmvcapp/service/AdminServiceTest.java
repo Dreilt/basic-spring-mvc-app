@@ -1,10 +1,10 @@
 package pl.dreilt.basicspringmvcapp.service;
 
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -14,6 +14,7 @@ import pl.dreilt.basicspringmvcapp.dto.AppUserAccountEditAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
+import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.repository.AdminRepository;
 
@@ -22,7 +23,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.mockito.Mockito.*;
 import static pl.dreilt.basicspringmvcapp.service.AdminServiceTestHelper.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,15 +39,14 @@ class AdminServiceTest {
     void shouldGetAllUsers() {
         // given
         List<AppUser> userList = createUserList();
-        Mockito.when(adminRepository.findAllUsers(pageRequest)).thenReturn(new PageImpl<>(userList, pageRequest, userList.size()));
+        when(adminRepository.findAllUsers(pageRequest)).thenReturn(new PageImpl<>(userList, pageRequest, userList.size()));
         // when
         Page<AppUserAdminPanelDto> users = adminService.findAllUsers(pageRequest);
         // then
-        assertThat(users).isNotEmpty();
-        assertThat(users).hasSize(3);
-        assertThat(users.getContent().get(0).getLastName()).isEqualTo("Kowalski");
-        assertThat(users.getContent().get(1).getLastName()).isEqualTo("Kowalski");
-        assertThat(users.getContent().get(2).getLastName()).isEqualTo("Nowak");
+        assertThat(users)
+                .isNotEmpty()
+                .hasSize(3);
+        assertThat(users.getContent()).extracting(AppUserAdminPanelDto::getLastName).contains("Kowalski", "Nowak");
     }
 
     @Test
@@ -62,14 +63,14 @@ class AdminServiceTest {
     void shouldGetUsersBySearchIfSearchQueryHasOneWord() {
         // given
         String searchQuery = "jan";
-        Mockito.when(adminRepository.findUsersBySearch(searchQuery, pageRequest)).thenReturn(new PageImpl<>(createUserListBySearch(searchQuery)));
+        when(adminRepository.findUsersBySearch(searchQuery, pageRequest)).thenReturn(new PageImpl<>(createUserListBySearch(searchQuery)));
         // when
         Page<AppUserAdminPanelDto> users = adminService.findUsersBySearch(searchQuery, pageRequest);
         // then
-        assertThat(users).isNotEmpty();
-        assertThat(users).hasSize(2);
-        assertThat(users.getContent().get(0).getLastName()).isEqualTo("Kowalski");
-        assertThat(users.getContent().get(1).getLastName()).isEqualTo("Nowak");
+        assertThat(users)
+                .isNotEmpty()
+                .hasSize(2);
+        assertThat(users.getContent()).extracting(AppUserAdminPanelDto::getLastName).contains("Kowalski", "Nowak");
     }
 
     @Test
@@ -77,21 +78,24 @@ class AdminServiceTest {
         // given
         String searchQuery = "jan kowalski";
         String[] searchWords = searchQuery.split(" ");
-        Mockito.when(adminRepository.findUsersBySearch(searchWords[0], searchWords[1], pageRequest)).thenReturn(new PageImpl<>(createUserListBySearch(searchQuery)));
+        when(adminRepository.findUsersBySearch(searchWords[0], searchWords[1], pageRequest)).thenReturn(new PageImpl<>(createUserListBySearch(searchQuery)));
         // when
         Page<AppUserAdminPanelDto> users = adminService.findUsersBySearch(searchQuery, pageRequest);
         // then
-        assertThat(users).isNotEmpty();
-        assertThat(users).hasSize(1);
-        assertThat(users.getContent().get(0).getFirstName()).isEqualTo("Jan");
-        assertThat(users.getContent().get(0).getLastName()).isEqualTo("Kowalski");
+        assertThat(users)
+                .isNotEmpty()
+                .hasSize(1);
+        assertThat(users.getContent())
+                .extracting("firstName", "lastName")
+                .contains(tuple("Jan", "Kowalski"))
+                .doesNotContain(tuple("Jan", "Nowak"));
     }
 
     @Test
     void shouldGetUserAccountToEdit() {
         // given
         Long userId = 1L;
-        Mockito.when(adminRepository.findById(userId)).thenReturn(Optional.of(createUser()));
+        when(adminRepository.findById(userId)).thenReturn(Optional.of(createUser()));
         // when
         AppUserAccountEditAdminPanelDto userAccount = adminService.findUserAccountToEdit(userId);
         // then
@@ -115,22 +119,27 @@ class AdminServiceTest {
     void shouldUpdateUserAccount() {
         // given
         Long userId = 1L;
-        Mockito.when(adminRepository.findById(userId)).thenReturn(Optional.of(createUser()));
+        when(adminRepository.findById(userId)).thenReturn(Optional.of(createUser()));
         // when
-        AppUserAccountEditAdminPanelDto userAccountUpdated = adminService.updateUserAccount(userId, createUserAccountEditAdminPanelDto());
+        AppUserAccountEditAdminPanelDto updated = adminService.updateUserAccount(userId, createUserAccountEditAdminPanelDto());
         // then
-        assertThat(userAccountUpdated).isNotNull();
-        assertThat(userAccountUpdated.isEnabled()).isTrue();
-        assertThat(userAccountUpdated.isAccountNonLocked()).isFalse();
-        assertThat(userAccountUpdated.getRoles()).hasSize(1);
+        assertThat(updated).isNotNull();
+        assertThat(updated.isEnabled()).isTrue();
+        assertThat(updated.isAccountNonLocked()).isFalse();
+        assertThat(updated.getRoles()).hasSize(1)
+//                .is(new Condition<>((r) -> r.contains(createUserRole()), "user roles should contain a defined role."));
+                .extracting("name", "visibleName")
+                .contains(tuple("USER", "Użytkownik"));
     }
 
     @Test
     void shouldThrowExceptionIfUserIsNotFoundWhileUpdatingAccount() {
         // given
         Long userId = 2L;
+        // and:
+        AppUserAccountEditAdminPanelDto usr = createUserAccountEditAdminPanelDto();
         // then
-        assertThatThrownBy(() -> adminService.updateUserAccount(userId, createUserAccountEditAdminPanelDto()))
+        assertThatThrownBy(() -> adminService.updateUserAccount(userId, usr))
                 .isInstanceOf(AppUserNotFoundException.class)
                 .hasMessage("User with ID " + userId + " not found");
     }
@@ -139,7 +148,7 @@ class AdminServiceTest {
     void shouldGetUserProfileToEdit() {
         // given
         Long userId = 1L;
-        Mockito.when(adminRepository.findById(userId)).thenReturn(Optional.of(createUser()));
+        when(adminRepository.findById(userId)).thenReturn(Optional.of(createUser()));
         // when
         AppUserProfileEditAdminPanelDto userProfile = adminService.findUserProfileToEdit(userId);
         // then
@@ -164,7 +173,7 @@ class AdminServiceTest {
     void shouldUpdateUserProfile() {
         // given
         Long userId = 1L;
-        Mockito.when(adminRepository.findById(userId)).thenReturn(Optional.of(createUser()));
+        when(adminRepository.findById(userId)).thenReturn(Optional.of(createUser()));
         // when
         AppUserProfileEditAdminPanelDto userProfileUpdated = adminService.updateUserProfile(userId, createUserProfileEditAdminPanelDto());
         // then
@@ -179,8 +188,10 @@ class AdminServiceTest {
     void shouldThrowExceptionIfUserIsNotFoundWhileUpdatingProfile() {
         // given
         Long userId = 2L;
+        // and:
+        AppUserProfileEditAdminPanelDto usr = createUserProfileEditAdminPanelDto();
         // then
-        assertThatThrownBy(() -> adminService.updateUserProfile(userId, createUserProfileEditAdminPanelDto()))
+        assertThatThrownBy(() -> adminService.updateUserProfile(userId, usr))
                 .isInstanceOf(AppUserNotFoundException.class)
                 .hasMessage("User with ID " + userId + " not found");
     }
@@ -192,6 +203,6 @@ class AdminServiceTest {
         // when
         adminService.deleteUser(userId);
         // then
-        Mockito.verify(adminRepository, Mockito.times(1)).deleteById(eq(userId));
+        verify(adminRepository, times(1)).deleteById(userId);
     }
 }
