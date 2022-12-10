@@ -45,18 +45,29 @@ public class EventService {
     }
 
     public void createEvent(CreateEventDto createEventDto) {
-        Event newEvent = new Event();
-        newEvent.setName(createEventDto.getName());
-        newEvent.setEventType(EventType.valueOf(createEventDto.getEventType().toUpperCase()).getDisplayName());
-        newEvent.setDateAndTime(LocalDateTime.parse(createEventDto.getDateAndTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-        newEvent.setLanguage(createEventDto.getLanguage());
-        newEvent.setAdmission(AdmissionType.valueOf(createEventDto.getAdmission().toUpperCase()).getDisplayName());
-        newEvent.setCity(createEventDto.getCity());
-        newEvent.setLocation(createEventDto.getLocation());
-        newEvent.setAddress(createEventDto.getAddress());
-        newEvent.setDescription(createEventDto.getDescription());
-        setEventImage(createEventDto.getEventImage(), newEvent);
-        eventRepository.save(newEvent);
+        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+        if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
+            throw new AccessDeniedException("Odmowa dostępu");
+        }
+        String email = currentUser.getName();
+        Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
+        if (userOpt.isPresent()) {
+            Event newEvent = new Event();
+            newEvent.setName(createEventDto.getName());
+            newEvent.setEventType(EventType.valueOf(createEventDto.getEventType().toUpperCase()).getDisplayName());
+            newEvent.setDateAndTime(LocalDateTime.parse(createEventDto.getDateAndTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            newEvent.setLanguage(createEventDto.getLanguage());
+            newEvent.setAdmission(AdmissionType.valueOf(createEventDto.getAdmission().toUpperCase()).getDisplayName());
+            newEvent.setCity(createEventDto.getCity());
+            newEvent.setLocation(createEventDto.getLocation());
+            newEvent.setAddress(createEventDto.getAddress());
+            newEvent.setOrganizer(userOpt.get());
+            newEvent.setDescription(createEventDto.getDescription());
+            setEventImage(createEventDto.getEventImage(), newEvent);
+            eventRepository.save(newEvent);
+        } else {
+            throw new AppUserNotFoundException("User with email " + email + " not found");
+        }
     }
 
     private void setEventImage(MultipartFile image, Event event) {

@@ -15,6 +15,10 @@ public class EventDto {
     private String city;
     private String location;
     private String address;
+    private Long organizerId;
+    private String organizerImageType;
+    private String organizerImageData;
+    private String organizerName;
     private String description;
     private String imageType;
     private String imageData;
@@ -98,6 +102,38 @@ public class EventDto {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Long getOrganizerId() {
+        return organizerId;
+    }
+
+    public void setOrganizerId(Long organizerId) {
+        this.organizerId = organizerId;
+    }
+
+    public String getOrganizerImageType() {
+        return organizerImageType;
+    }
+
+    public void setOrganizerImageType(String organizerImageType) {
+        this.organizerImageType = organizerImageType;
+    }
+
+    public String getOrganizerImageData() {
+        return organizerImageData;
+    }
+
+    public void setOrganizerImageData(String organizerImageData) {
+        this.organizerImageData = organizerImageData;
+    }
+
+    public String getOrganizerName() {
+        return organizerName;
+    }
+
+    public void setOrganizerName(String organizerName) {
+        this.organizerName = organizerName;
     }
 
     public String getDescription() {

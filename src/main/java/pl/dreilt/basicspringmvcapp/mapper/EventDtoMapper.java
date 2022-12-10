@@ -20,6 +20,11 @@ public class EventDtoMapper {
         eventDto.setCity(event.getCity());
         eventDto.setLocation(event.getLocation());
         eventDto.setAddress(event.getAddress());
+        eventDto.setOrganizerId(event.getOrganizer().getId());
+        eventDto.setOrganizerImageType(event.getOrganizer().getProfileImage().getFileType());
+        String organizerImageData = Base64.getEncoder().encodeToString(event.getOrganizer().getProfileImage().getFileData());
+        eventDto.setOrganizerImageData(organizerImageData);
+        eventDto.setOrganizerName(event.getOrganizer().getFirstName() + " " + event.getOrganizer().getLastName());
         eventDto.setDescription(event.getDescription());
         eventDto.setImageType(event.getEventImage().getFileType());
         String imageData = Base64.getEncoder().encodeToString(event.getEventImage().getFileData());

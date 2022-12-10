@@ -243,3 +243,15 @@
 .event-heading {
     margin-bottom: 32px;
 }
+
+.organizer-box {
+    margin-left: 15px;
+    margin-right: 15px;
+    border: 1px solid #f39c12;
+    border-radius: 0.25rem;
+    box-shadow: 0px 0px 3px 0px #999999;
+}
+
+.organizer-box:hover {
+    box-shadow: 0px 0px 0px 3px #f39c12;
+}

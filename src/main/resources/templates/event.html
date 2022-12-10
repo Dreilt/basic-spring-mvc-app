@@ -68,6 +68,16 @@
         </div>
 
         <div class="row">
+            <label class="col-sm-2 app-label">Organizator:</label>
+            <a style="color: gray; text-decoration: none;" th:href="@{'/users/' + ${event.organizerId} + '/profile'}">
+                <div class="organizer-box">
+                    <img th:src="${'data:' + event.organizerImageType + ';base64,' + event.organizerImageData}" width="100" height="100">
+                    <span style="text-align: left; padding-left: 16px; padding-right: 16px;" th:text="${event.organizerName}">Jan Kowalski</span>
+                </div>
+            </a>
+        </div>
+
+        <div class="row">
             <label class="col-sm-2 app-label">Opis:</label>
             <span class="col-sm-10" style="text-align: left;" th:text="${event.description}">Spotkanie rzeszowskiej grupy pasjonatów języka Java.</span>
         </div>

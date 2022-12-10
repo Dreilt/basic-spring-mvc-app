@@ -18,6 +18,9 @@ public class Event {
     private String city;
     private String location;
     private String address;
+    @OneToOne
+    @JoinColumn(name = "organizer_id")
+    private AppUser organizer;
     private String description;
     @OneToOne
     @JoinTable(
@@ -104,6 +107,14 @@ public class Event {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public AppUser getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(AppUser organizer) {
+        this.organizer = organizer;
     }
 
     public String getDescription() {
