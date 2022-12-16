@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dreilt.basicspringmvcapp.dto.CityDto;
 import pl.dreilt.basicspringmvcapp.dto.CreateEventDto;
-import pl.dreilt.basicspringmvcapp.dto.EventDto;
 import pl.dreilt.basicspringmvcapp.dto.EventBoxDto;
+import pl.dreilt.basicspringmvcapp.dto.EventDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.Event;
 import pl.dreilt.basicspringmvcapp.entity.EventImage;
@@ -18,8 +18,8 @@ import pl.dreilt.basicspringmvcapp.enums.EventType;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.DefaultProfileImageNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.EventNotFoundException;
-import pl.dreilt.basicspringmvcapp.mapper.EventDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.EventBoxDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.EventDtoMapper;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import pl.dreilt.basicspringmvcapp.repository.EventImageRepository;
 import pl.dreilt.basicspringmvcapp.repository.EventRepository;
@@ -85,23 +85,19 @@ public class EventService {
         }
     }
 
-    public List<EventBoxDto> findAllUpcomingEvents() {
-        LocalDateTime currentDateAndTime = LocalDateTime.now();
+    public List<EventBoxDto> findAllUpcomingEvents(LocalDateTime currentDateAndTime) {
         return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findAllUpcomingEvents(currentDateAndTime));
     }
 
-    public List<EventBoxDto> findAllPastEvents() {
-        LocalDateTime currentDateAndTime = LocalDateTime.now();
+    public List<EventBoxDto> findAllPastEvents(LocalDateTime currentDateAndTime) {
         return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findAllPastEvents(currentDateAndTime));
     }
 
-    public List<EventBoxDto> findUpcomingEventsByCity(String city) {
-        LocalDateTime currentDateAndTime = LocalDateTime.now();
+    public List<EventBoxDto> findUpcomingEventsByCity(LocalDateTime currentDateAndTime, String city) {
         return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findUpcomingEventsByCity(currentDateAndTime, city));
     }
 
-    public List<EventBoxDto> findPastEventsByCity(String city) {
-        LocalDateTime currentDateAndTime = LocalDateTime.now();
+    public List<EventBoxDto> findPastEventsByCity(LocalDateTime currentDateAndTime, String city) {
         return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findPastEventsByCity(currentDateAndTime, city));
     }
 
@@ -191,7 +187,7 @@ public class EventService {
         }
     }
 
-    public List<EventBoxDto> findUpcomingEventsByUser() {
+    public List<EventBoxDto> findUpcomingEventsByUser(LocalDateTime currentDateAndTime) {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
             throw new AccessDeniedException("Odmowa dostępu");
@@ -200,14 +196,13 @@ public class EventService {
         Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
         if (userOpt.isPresent()) {
             AppUser user = userOpt.get();
-            LocalDateTime currentDateAndTime = LocalDateTime.now();
             return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findUpcomingEventsByUser(currentDateAndTime, user));
         } else {
             throw new AppUserNotFoundException("User with email " + email + " not found");
         }
     }
 
-    public List<EventBoxDto> findPastEventsByUser() {
+    public List<EventBoxDto> findPastEventsByUser(LocalDateTime currentDateAndTime) {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
             throw new AccessDeniedException("Odmowa dostępu");
@@ -216,14 +211,13 @@ public class EventService {
         Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
         if (userOpt.isPresent()) {
             AppUser user = userOpt.get();
-            LocalDateTime currentDateAndTime = LocalDateTime.now();
             return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findPastEventsByUser(currentDateAndTime, user));
         } else {
             throw new AppUserNotFoundException("User with email " + email + " not found");
         }
     }
 
-    public List<EventBoxDto> findUpcomingEventsByUserAndCity(String city) {
+    public List<EventBoxDto> findUpcomingEventsByUserAndCity(LocalDateTime currentDateAndTime, String city) {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
             throw new AccessDeniedException("Odmowa dostępu");
@@ -232,14 +226,13 @@ public class EventService {
         Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
         if (userOpt.isPresent()) {
             AppUser user = userOpt.get();
-            LocalDateTime currentDateAndTime = LocalDateTime.now();
             return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findUpcomingEventsByUserAndCity(currentDateAndTime, user, city));
         } else {
             throw new AppUserNotFoundException("User with email " + email + " not found");
         }
     }
 
-    public List<EventBoxDto> findPastEventsByUserAndCity(String city) {
+    public List<EventBoxDto> findPastEventsByUserAndCity(LocalDateTime currentDateAndTime, String city) {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
             throw new AccessDeniedException("Odmowa dostępu");
@@ -248,7 +241,6 @@ public class EventService {
         Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
         if (userOpt.isPresent()) {
             AppUser user = userOpt.get();
-            LocalDateTime currentDateAndTime = LocalDateTime.now();
             return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findPastEventsByUserAndCity(currentDateAndTime, user, city));
         } else {
             throw new AppUserNotFoundException("User with email " + email + " not found");

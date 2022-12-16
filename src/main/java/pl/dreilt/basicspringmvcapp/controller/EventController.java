@@ -13,6 +13,7 @@ import pl.dreilt.basicspringmvcapp.enums.EventType;
 import pl.dreilt.basicspringmvcapp.service.EventService;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,19 +27,18 @@ public class EventController {
     }
 
     @GetMapping("/events")
-    public String getAllEvents(@RequestParam(name = "city", required = false) String city,
-                               Model model) {
+    public String getAllEvents(@RequestParam(name = "city", required = false) String city, Model model) {
         List<CityDto> cities = eventService.findAllCities();
         model.addAttribute("cities", cities);
         if (city != null) {
             String cityName = getCityName(cities, city);
             model.addAttribute("cityName", cityName);
-            model.addAttribute("upcomingEvents", eventService.findUpcomingEventsByCity(cityName));
-            model.addAttribute("pastEvents", eventService.findPastEventsByCity(cityName));
+            model.addAttribute("upcomingEvents", eventService.findUpcomingEventsByCity(LocalDateTime.now(), cityName));
+            model.addAttribute("pastEvents", eventService.findPastEventsByCity(LocalDateTime.now(), cityName));
             return "events";
         }
-        model.addAttribute("upcomingEvents", eventService.findAllUpcomingEvents());
-        model.addAttribute("pastEvents", eventService.findAllPastEvents());
+        model.addAttribute("upcomingEvents", eventService.findAllUpcomingEvents(LocalDateTime.now()));
+        model.addAttribute("pastEvents", eventService.findAllPastEvents(LocalDateTime.now()));
         return "events";
     }
 
@@ -96,12 +96,12 @@ public class EventController {
         if (city != null) {
             String cityName = getCityName(cities, city);
             model.addAttribute("cityName", cityName);
-            model.addAttribute("upcomingEvents", eventService.findUpcomingEventsByUserAndCity(cityName));
-            model.addAttribute("pastEvents", eventService.findPastEventsByUserAndCity(cityName));
+            model.addAttribute("upcomingEvents", eventService.findUpcomingEventsByUserAndCity(LocalDateTime.now(), cityName));
+            model.addAttribute("pastEvents", eventService.findPastEventsByUserAndCity(LocalDateTime.now(), cityName));
             return "app-user-events";
         }
-        model.addAttribute("upcomingEvents", eventService.findUpcomingEventsByUser());
-        model.addAttribute("pastEvents", eventService.findPastEventsByUser());
+        model.addAttribute("upcomingEvents", eventService.findUpcomingEventsByUser(LocalDateTime.now()));
+        model.addAttribute("pastEvents", eventService.findPastEventsByUser(LocalDateTime.now()));
         return "app-user-events";
     }
 }
