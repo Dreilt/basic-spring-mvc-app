@@ -13,14 +13,11 @@ public class AppUserProfileDtoMapper {
     public static AppUserProfileDto mapToAppUserProfileDto(AppUser appUser) {
         // tutaj można zastosować wzorzec Builder w przyszłości
         AppUserProfileDto appUserProfileDto = new AppUserProfileDto();
-
         appUserProfileDto.setFirstName(appUser.getFirstName());
         appUserProfileDto.setLastName(appUser.getLastName());
-
         appUserProfileDto.setAvatarType(appUser.getProfileImage().getFileType());
         String avatarData = Base64.getEncoder().encodeToString(appUser.getProfileImage().getFileData());
         appUserProfileDto.setAvatarData(avatarData);
-
         appUserProfileDto.setEmail(appUser.getEmail());
         appUserProfileDto.setBio(appUser.getBio());
         appUserProfileDto.setCity(appUser.getCity());

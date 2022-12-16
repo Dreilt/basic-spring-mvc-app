@@ -1,32 +1,34 @@
 package pl.dreilt.basicspringmvcapp.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pl.dreilt.basicspringmvcapp.dto.AppUserCredentialsDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditDto;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
-import pl.dreilt.basicspringmvcapp.exception.DefaultProfileImageNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.NoSuchRoleException;
 import pl.dreilt.basicspringmvcapp.repository.AppUserAvatarRepository;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRoleRepository;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static pl.dreilt.basicspringmvcapp.service.AppUserLoginDataServiceTestHelper.createUser;
 import static pl.dreilt.basicspringmvcapp.service.AppUserServiceTestHelper.*;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
 class AppUserServiceTest {
     static final String USER_ROLE = "USER";
     @Mock
@@ -41,6 +43,12 @@ class AppUserServiceTest {
     private ClassPathResource classPathResource;
     @InjectMocks
     private AppUserService appUserService;
+
+    @BeforeEach
+    void setUp() {
+        Authentication auth = new UsernamePasswordAuthenticationToken(createAppUserDetails(), null);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+    }
 
     @Test
     void shouldReturnTrueIfAppUserExists() {
@@ -161,5 +169,30 @@ class AppUserServiceTest {
         assertThatThrownBy(() -> appUserService.findUserProfileToEdit(email))
                 .isInstanceOf(AppUserNotFoundException.class)
                 .hasMessage("User with email " + email + " not found");
+    }
+
+    @Test
+    void shouldGetUpdatedUserProfile() {
+        // given
+        Mockito.when(appUserRepository.findByEmail("test@example.com")).thenReturn(Optional.of(AppUserServiceTestHelper.createUser()));
+        // when
+        AppUserProfileEditDto appUserProfileUpdated = appUserService.updateUserProfile(createAppUserProfileEditDto());
+        // then
+        assertThat(appUserProfileUpdated.getFirstName()).isEqualTo("NewFirstName");
+        assertThat(appUserProfileUpdated.getLastName()).isEqualTo("NewLastName");
+//        assertThat(appUserProfileUpdated.getProfileImage().getName()).isEqualTo("avatar.png"); // to jest null i to trzeba poprawić przy zwrocie
+        assertThat(appUserProfileUpdated.getBio()).isEqualTo("NewBio");
+        assertThat(appUserProfileUpdated.getCity()).isEqualTo("NewCity");
+    }
+
+    @Test
+    void shouldGetUserProfileByUserId() {
+        // given
+        Long userId = 1L;
+        Mockito.when(appUserRepository.findById(userId)).thenReturn(Optional.of(AppUserServiceTestHelper.createUser()));
+        // when
+        AppUserProfileDto userProfile = appUserService.findUserProfileByUserId(userId);
+        // then
+        assertThat(userProfile).isNotNull();
     }
 }
