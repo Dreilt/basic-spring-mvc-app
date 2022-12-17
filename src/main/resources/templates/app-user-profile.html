@@ -4,7 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Profil użytkownika</title>
+    <title th:text="${userProfile.firstName + ' ' + userProfile.lastName}">Jan Kowalski</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link href="../static/styles/main.css" th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
@@ -13,51 +13,36 @@
 
 <div class="container">
 
-    <div>
-        <h2>Profil użytkownika</h2>
-    </div>
+    <div class="row">
 
-    <div>
-        <div class="row">
-            <div class="col-sm-4">
-                <div style="width: 100%;">
-                    <img th:src="${'data:' + userProfile.avatarType + ';base64,' + userProfile.avatarData}" width="100" height="100">
-                </div>
-                <div style="width: 100%;">
-                    <span th:text="${userProfile.firstName + ' ' + userProfile.lastName}">Jan Kowalski</span>
-                </div>
+        <div class="col-sm-4">
+
+            <div style="width: 100%;">
+                <img th:src="${'data:' + userProfile.avatarType + ';base64,' + userProfile.avatarData}" width="100" height="100">
             </div>
-            <div class="col-sm-8">
+
+            <div style="width: 100%;">
+                <h2 th:text="${userProfile.firstName + ' ' + userProfile.lastName}">Jan Kowalski</h2>
             </div>
+
+            <div style="width: 100%;">
+                <label class="app-label" style="width: 25%;">Miasto:</label>
+                <span style="width: 75%; text-align: left;" th:text="${userProfile.city}">Rzeszów</span>
+            </div>
+
         </div>
 
-        <div class="row">
-            <div class="col-sm-12">
+        <div class="col-sm-8">
+
+            <div style="width: 100%;">
+                <label class="app-label" style="width: 100%;">O użytkowniku</label>
                 <span th:text="${userProfile.bio}">Cześć! Nazywam się Jan Kowalski i jestem z Rzeszowa. Obecnie jestem na trzecim roku informatyki na Politechnice Rzeszowskiej.</span>
             </div>
+
         </div>
 
     </div>
 
-</div>
-
-
-
-<div class="container" style="text-align: center">
-    <h2>Profil użytkownika</h2>
-
-    <div class="row justify-content-center">
-        <label class="col-sm-2 app-label">Email:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${userProfile.email}">jankowalski@example.com</span>
-    </div>
-
-    <div class="row justify-content-center">
-        <label class="col-sm-2 app-label">Miasto:</label>
-        <span class="col-sm-4" style="text-align: left;" th:text="${userProfile.city}">Rzeszów</span>
-    </div>
-    <div class="row justify-content-center">
-        <a class="custom-a" th:href="@{/settings/profile}" th:text="'Edytuj profil'">Edytuj profil</a>
-    </div>
 </div>
 
 <th:block th:replace="fragments :: scripts"></th:block>
