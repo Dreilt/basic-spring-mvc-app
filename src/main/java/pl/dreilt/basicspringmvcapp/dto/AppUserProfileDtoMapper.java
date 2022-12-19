@@ -1,6 +1,5 @@
-package pl.dreilt.basicspringmvcapp.mapper;
+package pl.dreilt.basicspringmvcapp.dto;
 
-import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 
 import java.util.Base64;

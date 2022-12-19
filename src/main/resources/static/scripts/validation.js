@@ -60,6 +60,30 @@ function validateUserPasswordEditForm() {
     return isNotCurrentPasswordError && isNotNewPasswordError && isNotConfirmNewPasswordError;
 }
 
+function validateCreateEventForm() {
+    const nameValue = document.createEventForm.name.value;
+    const isNotNameError = checkIfNotEmpty('name', nameValue);
+    const eventTypeValue = document.createEventForm.eventType.value;
+    const isNotEventTypeError = checkIfNotEmpty('eventType', eventTypeValue);
+    const dateAndTimeValue = document.createEventForm.dateAndTime.value;
+    const isNotDateAndTimeError = checkIfNotEmpty('dateAndTime', dateAndTimeValue);
+    const languageValue = document.createEventForm.language.value;
+    const isNotLanguageError = checkIfNotEmpty('language', languageValue);
+    const admissionValue = document.createEventForm.admission.value;
+    const isNotAdmissionError = checkIfNotEmpty('admission', admissionValue);
+    const cityValue = document.createEventForm.city.value;
+    const isNotCityError = checkIfNotEmpty('city', cityValue);
+    const locationValue = document.createEventForm.location.value;
+    const isNotLocationError = checkIfNotEmpty('location', locationValue);
+    const addressValue = document.createEventForm.address.value;
+    const isNotAddressError = checkIfNotEmpty('address', addressValue);
+    const descriptionValue = document.createEventForm.description.value;
+    const isNotDescriptionError = checkIfNotEmpty('description', descriptionValue);
+
+    return isNotNameError && isNotEventTypeError && isNotDateAndTimeError && isNotLanguageError && isNotAdmissionError &&
+           isNotCityError && isNotLocationError && isNotAddressError && isNotDescriptionError;
+}
+
 function checkIfNotEmpty(fieldName, fieldValue) {
     if (!fieldValue) {
         document.getElementById(`${fieldName}`).className='form-control is-invalid';

@@ -4,10 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Arrays;
 
 @Entity
-public class AppUserProfileImage {
+public class ProfileImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,15 +44,5 @@ public class AppUserProfileImage {
 
     public void setFileData(byte[] fileData) {
         this.fileData = fileData;
-    }
-
-    @Override
-    public String toString() {
-        return "AppUserProfileImage{" +
-                "id=" + id +
-                ", fileName='" + fileName + '\'' +
-                ", fileType='" + fileType + '\'' +
-                ", fileData=" + Arrays.toString(fileData) +
-                '}';
     }
 }

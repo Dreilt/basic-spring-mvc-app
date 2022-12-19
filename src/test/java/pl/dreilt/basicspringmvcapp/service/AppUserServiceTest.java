@@ -17,9 +17,9 @@ import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditDto;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.NoSuchRoleException;
-import pl.dreilt.basicspringmvcapp.repository.AppUserAvatarRepository;
+import pl.dreilt.basicspringmvcapp.registration.ProfileImageRepository;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
-import pl.dreilt.basicspringmvcapp.repository.AppUserRoleRepository;
+import pl.dreilt.basicspringmvcapp.registration.AppUserRoleRepository;
 
 import java.util.Optional;
 
@@ -38,7 +38,7 @@ class AppUserServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
-    private AppUserAvatarRepository appUserAvatarRepository;
+    private ProfileImageRepository profileImageRepository;
     @Mock
     private ClassPathResource classPathResource;
     @InjectMocks

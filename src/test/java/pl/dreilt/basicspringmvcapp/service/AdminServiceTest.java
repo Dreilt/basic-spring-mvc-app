@@ -12,7 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import pl.dreilt.basicspringmvcapp.dto.AppUserAccountEditAdminPanelDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserAdminPanelDto;
-import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditAdminPanelDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDataEditAPDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.repository.AdminRepository;
@@ -141,7 +141,7 @@ class AdminServiceTest {
         Long userId = 1L;
         Mockito.when(adminRepository.findById(userId)).thenReturn(Optional.of(createUser()));
         // when
-        AppUserProfileEditAdminPanelDto userProfile = adminService.findUserProfileToEdit(userId);
+        AppUserProfileDataEditAPDto userProfile = adminService.findUserProfileToEdit(userId);
         // then
         assertThat(userProfile).isNotNull();
         assertThat(userProfile.getFirstName()).isEqualTo("Test");
@@ -166,7 +166,7 @@ class AdminServiceTest {
         Long userId = 1L;
         Mockito.when(adminRepository.findById(userId)).thenReturn(Optional.of(createUser()));
         // when
-        AppUserProfileEditAdminPanelDto userProfileUpdated = adminService.updateUserProfile(userId, createUserProfileEditAdminPanelDto());
+        AppUserProfileDataEditAPDto userProfileUpdated = adminService.updateUserProfile(userId, createUserProfileEditAdminPanelDto());
         // then
         assertThat(userProfileUpdated).isNotNull();
         assertThat(userProfileUpdated.getFirstName()).isEqualTo("Jan");

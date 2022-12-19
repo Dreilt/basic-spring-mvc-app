@@ -1,7 +1,7 @@
 package pl.dreilt.basicspringmvcapp.validator;
 
 import org.springframework.web.multipart.MultipartFile;
-import pl.dreilt.basicspringmvcapp.annotation.ProfileImage;
+import pl.dreilt.basicspringmvcapp.annotation.Image;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
@@ -13,34 +13,37 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ProfileImageValidator implements ConstraintValidator<ProfileImage, MultipartFile> {
+public class ImageValidator implements ConstraintValidator<Image, MultipartFile> {
+    private int width;
+    private int height;
 
     @Override
-    public void initialize(ProfileImage constraintAnnotation) {
-        ConstraintValidator.super.initialize(constraintAnnotation);
+    public void initialize(Image constraintAnnotation) {
+        this.width = constraintAnnotation.width();
+        this.height = constraintAnnotation.height();
     }
 
     @Override
-    public boolean isValid(MultipartFile profileImage, ConstraintValidatorContext context) {
+    public boolean isValid(MultipartFile image, ConstraintValidatorContext context) {
         List<String> errorMessages = new ArrayList<>();
         String message;
 
-        if (!profileImage.isEmpty()) {
+        if (!image.isEmpty()) {
             String[] allowedFileTypes = new String[] { "image/jpeg", "image/jpg", "image/png" };
-            String fileType = profileImage.getContentType();
+            String fileType = image.getContentType();
             boolean isFileTypeValid = Arrays.stream(allowedFileTypes).anyMatch(fileType::equals);
 
             if (!isFileTypeValid) {
-                message = "{form.field.profileImage.error.invalidFileType.message}";
+                message = "{form.field.image.error.invalidFileType.message}";
                 errorMessages.add(message);
             }
 
             if (isFileTypeValid) {
                 try {
-                    ImageInputStream imageInputStream = ImageIO.createImageInputStream(profileImage.getInputStream());
+                    ImageInputStream imageInputStream = ImageIO.createImageInputStream(image.getInputStream());
                     BufferedImage bufferedImage = ImageIO.read(imageInputStream);
-                    if (bufferedImage.getWidth() > 500 || bufferedImage.getHeight() > 500) {
-                        message = "{form.field.profileImage.error.invalidProfileImageSize.message}";
+                    if (bufferedImage.getWidth() > width || bufferedImage.getHeight() > height) {
+                        message = "{form.field.image.error.invalidImageSize.message}";
                         errorMessages.add(message);
                     }
                 } catch (IOException e) {
@@ -48,8 +51,8 @@ public class ProfileImageValidator implements ConstraintValidator<ProfileImage, 
                 }
             }
 
-            if (profileImage.getSize() > 2097152) {
-                message = "{form.field.profileImage.error.invalidFileSize.message}";
+            if (image.getSize() > 2097152) {
+                message = "{form.field.image.error.invalidFileSize.message}";
                 errorMessages.add(message);
             }
 

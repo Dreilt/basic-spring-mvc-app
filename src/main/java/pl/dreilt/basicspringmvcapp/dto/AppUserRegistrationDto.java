@@ -15,9 +15,11 @@ import javax.validation.constraints.Size;
 })
 public class AppUserRegistrationDto {
     @NotNull(message = "{form.field.firstName.error.notNull.message}")
+    @NotEmpty(message = "{form.field.firstName.error.notEmpty.message}")
     @Size(min = 2, max = 50, message = "{form.field.firstName.error.size.message}")
     private String firstName;
     @NotNull(message = "{form.field.lastName.error.notNull.message}")
+    @NotEmpty(message = "{form.field.lastName.error.notEmpty.message}")
     @Size(min = 2, max = 50, message = "{form.field.lastName.error.size.message}")
     private String lastName;
     @NotNull(message = "{form.field.email.error.notNull.message}")
@@ -25,9 +27,11 @@ public class AppUserRegistrationDto {
     @Email
     private String email;
     @NotNull(message = "{form.field.password.error.notNull.message}")
+    @NotEmpty(message = "{form.field.password.error.notEmpty.message}")
     @Size(min = 5, max = 100, message = "{form.field.password.error.size.message}")
     private String password;
     @NotNull(message = "{form.field.confirmPassword.error.notNull.message}")
+    @NotEmpty(message = "{form.field.confirmPassword.error.notEmpty.message}")
     @Size(min = 5, max = 100, message = "{form.field.confirmPassword.error.size.message}")
     private String confirmPassword;
 

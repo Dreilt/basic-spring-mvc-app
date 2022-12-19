@@ -29,7 +29,7 @@
             </ul>
         </div>
         <div class="col-md-9">
-            <form id="userAccountEditFormAdminPanel" name="userAccountEditFormAdminPanel" class="custom-form" method="post" th:method="patch" action="#" th:action="@{'/admin_panel/users/' + ${userId} + '/settings/account'}" th:object="${userAccountEditAdminPanelDto}">
+            <form id="userAccountEditFormAdminPanel" name="userAccountEditFormAdminPanel" class="custom-form" method="post" th:method="patch" action="#" th:action="@{'/admin_panel/users/' + ${userId} + '/settings/account'}" th:object="${userAccountDataEditAPDto}">
                 <div class="form-heading">
                     <h2>Edycja konta użytkownika</h2>
                     <span>Zaktualizuj konto użytkownika poniżej</span>

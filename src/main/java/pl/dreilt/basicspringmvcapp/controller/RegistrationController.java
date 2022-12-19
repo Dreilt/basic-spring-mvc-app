@@ -9,19 +9,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import pl.dreilt.basicspringmvcapp.dto.AppUserRegistrationDto;
-import pl.dreilt.basicspringmvcapp.service.AppUserService;
+import pl.dreilt.basicspringmvcapp.service.RegistrationService;
 
 import javax.validation.Valid;
 import java.util.Locale;
 
 @Controller
 public class RegistrationController {
-
-    private final AppUserService appUserService;
+    private final RegistrationService registrationService;
     private final MessageSource messageSource;
 
-    public RegistrationController(AppUserService appUserService, MessageSource messageSource) {
-        this.appUserService = appUserService;
+    public RegistrationController(RegistrationService registrationService, MessageSource messageSource) {
+        this.registrationService = registrationService;
         this.messageSource = messageSource;
     }
 
@@ -34,13 +33,13 @@ public class RegistrationController {
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("userRegistrationDto") AppUserRegistrationDto userRegistrationDto,
                            BindingResult bindingResult) {
-        if (appUserService.checkIfAppUserExists(userRegistrationDto.getEmail())) {
+        if (registrationService.checkIfAppUserExists(userRegistrationDto.getEmail())) {
             bindingResult.addError(new FieldError("userRegistrationDto", "email", messageSource.getMessage("form.field.email.error.emailIsInUse.message", null, Locale.getDefault())));
         }
         if (bindingResult.hasErrors()) {
             return "forms/registration-form";
         } else {
-            appUserService.register(userRegistrationDto);
+            registrationService.register(userRegistrationDto);
             return "redirect:/confirmation";
         }
     }

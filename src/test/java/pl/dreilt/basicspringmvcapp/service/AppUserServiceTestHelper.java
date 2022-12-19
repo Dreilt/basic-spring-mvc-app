@@ -6,7 +6,7 @@ import pl.dreilt.basicspringmvcapp.config.AppUserDetails;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserRegistrationDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
-import pl.dreilt.basicspringmvcapp.entity.AppUserProfileImage;
+import pl.dreilt.basicspringmvcapp.entity.ProfileImage;
 import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
 
 import java.util.Set;
@@ -55,8 +55,8 @@ public class AppUserServiceTestHelper {
         return userRole;
     }
 
-    private static AppUserProfileImage createProfileImage() {
-        AppUserProfileImage profileImage = new AppUserProfileImage();
+    private static ProfileImage createProfileImage() {
+        ProfileImage profileImage = new ProfileImage();
         profileImage.setId(1L);
         profileImage.setFileName("default_profile_image.png");
         profileImage.setFileType("image/png");

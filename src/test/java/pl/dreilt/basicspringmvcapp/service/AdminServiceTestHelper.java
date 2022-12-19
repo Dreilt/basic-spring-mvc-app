@@ -1,9 +1,9 @@
 package pl.dreilt.basicspringmvcapp.service;
 
 import pl.dreilt.basicspringmvcapp.dto.AppUserAccountEditAdminPanelDto;
-import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditAdminPanelDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDataEditAPDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
-import pl.dreilt.basicspringmvcapp.entity.AppUserProfileImage;
+import pl.dreilt.basicspringmvcapp.entity.ProfileImage;
 import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
 
 import java.util.ArrayList;
@@ -106,8 +106,8 @@ public class AdminServiceTestHelper {
         return userAccountEditAdminPanelDto;
     }
 
-    static AppUserProfileEditAdminPanelDto createUserProfileEditAdminPanelDto() {
-        AppUserProfileEditAdminPanelDto userProfileEditAdminPanelDto = new AppUserProfileEditAdminPanelDto();
+    static AppUserProfileDataEditAPDto createUserProfileEditAdminPanelDto() {
+        AppUserProfileDataEditAPDto userProfileEditAdminPanelDto = new AppUserProfileDataEditAPDto();
         userProfileEditAdminPanelDto.setFirstName("Jan");
         userProfileEditAdminPanelDto.setLastName("Kowalski");
         userProfileEditAdminPanelDto.setBio("Cześć! Nazywam się Jan Kowalski i niedawno przeprowadziłem się do Krakowa.");
@@ -115,8 +115,8 @@ public class AdminServiceTestHelper {
         return userProfileEditAdminPanelDto;
     }
 
-    private static AppUserProfileImage createProfileImage() {
-        AppUserProfileImage profileImage = new AppUserProfileImage();
+    private static ProfileImage createProfileImage() {
+        ProfileImage profileImage = new ProfileImage();
         profileImage.setId(1L);
         profileImage.setFileName("default_profile_image.png");
         profileImage.setFileType("image/png");

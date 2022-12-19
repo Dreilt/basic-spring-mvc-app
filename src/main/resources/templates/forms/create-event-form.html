@@ -16,19 +16,14 @@
             <h2>Utwórz wydarzenie</h2>
             <span>Wprowadź informacje o wydarzeniu poniżej</span>
         </div>
-
         <div class="form-group">
             <label for="eventImage" class="form-label">ZDJĘCIE WYDARZENIA</label>
-<!--            <div style="margin: 8px 0 8px 0;">-->
-<!--                <img style="border-radius: 50%;" th:src="${'data:' + #authentication.principal.avatarType + ';base64,' + #authentication.principal.avatarData}" width="120" height="120">-->
-<!--            </div>-->
             <input type="file"
                    id="eventImage" name="eventImage"
                    class="form-control-file" th:class="${#fields.hasErrors('eventImage')} == FALSE ? 'form-control-file' : 'form-control-file is-invalid'"
                    th:field="*{eventImage}">
             <div class="error-message" th:errors="*{eventImage}">Błędy związane ze zdjęciem wydarzenia</div>
         </div>
-
         <div class="form-group">
             <label for="name" class="form-label">NAZWA</label>
             <input type="text"
@@ -36,12 +31,9 @@
                    class="form-control" th:class="${#fields.hasErrors('name')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    placeholder="Nazwa"
                    th:field="*{name}">
-
-<!--            <div id="firstNameErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.firstName.error.notNull.message}">Błędy związane z imieniem</div>-->
-<!--            <div class="error-message" th:errors="*{firstName}">Błędy związane z imieniem</div>-->
-
+            <div id="nameErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.name.error.notEmpty.message}">Błędy związane z nazwą</div>
+            <div class="error-message" th:errors="*{name}">Błędy związane z nazwą</div>
         </div>
-
         <div class="form-group">
             <label for="eventType" class="form-label">TYP WYDARZENIA</label>
             <select id="eventType" name="eventType"
@@ -49,22 +41,18 @@
                     th:field="*{eventType}">
                 <option th:each="eventType: ${eventTypeList}" th:value="${eventType.name}" th:text="${eventType.displayName}"></option>
             </select>
-            <div id="eventTypeErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.eventType.error.notNull.message}">Błędy związane z typem wydarzenia</div>
+            <div id="eventTypeErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.eventType.error.notEmpty.message}">Błędy związane z typem wydarzenia</div>
             <div class="error-message" th:errors="*{eventType}">Błędy związane z typem wydarzenia</div>
         </div>
-
         <div class="form-group">
             <label for="dateAndTime" class="form-label">DATA I GODZINA</label>
             <input type="datetime-local"
                    id="dateAndTime" name="dateAndTime"
                    class="form-control" th:class="${#fields.hasErrors('dateAndTime')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    th:field="*{dateAndTime}">
-
-            <!--            <div id="emailErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.email.error.notNull.message}">Błędy związane z emailem</div>-->
-            <!--            <div class="error-message" th:errors="*{email}">Błędy związane z emailem</div>-->
-
+            <div id="dateAndTimeErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.dateAndTime.error.notEmpty.message}">Błędy związane z datą i godziną wydarzenia</div>
+            <div class="error-message" th:errors="*{dateAndTime}">Błędy związane z datą i godziną wydarzenia</div>
         </div>
-
         <div class="form-group">
             <label for="language" class="form-label">JĘZYK</label>
             <input type="text"
@@ -72,12 +60,9 @@
                    class="form-control" th:class="${#fields.hasErrors('language')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    placeholder="Język"
                    th:field="*{language}">
-
-<!--            <div id="emailErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.email.error.notNull.message}">Błędy związane z emailem</div>-->
-<!--            <div class="error-message" th:errors="*{email}">Błędy związane z emailem</div>-->
-
+            <div id="languageErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.language.error.notEmpty.message}">Błędy związane z językiem</div>
+            <div class="error-message" th:errors="*{language}">Błędy związane z językiem</div>
         </div>
-
         <div class="form-group">
             <label for="admission" class="form-label">WSTĘP</label>
             <select id="admission" name="admission"
@@ -85,8 +70,9 @@
                     th:field="*{admission}">
                 <option th:each="admissionType: ${admissionTypeList}" th:value="${admissionType.name}" th:text="${admissionType.displayName}"></option>
             </select>
+            <div id="admissionErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.admission.error.notEmpty.message}">Błędy związane z wstępem</div>
+            <div class="error-message" th:errors="*{admission}">Błędy związane z wstępem</div>
         </div>
-
         <div class="form-group">
             <label for="city" class="form-label">MIASTO</label>
             <input type="text"
@@ -94,12 +80,9 @@
                    class="form-control" th:class="${#fields.hasErrors('city')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    placeholder="Miasto"
                    th:field="*{city}">
-
-            <!--            <div id="emailErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.email.error.notNull.message}">Błędy związane z emailem</div>-->
-            <!--            <div class="error-message" th:errors="*{email}">Błędy związane z emailem</div>-->
-
+            <div id="cityErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.city.error.notEmpty.message}">Błędy związane z miastem</div>
+            <div class="error-message" th:errors="*{city}">Błędy związane z miastem</div>
         </div>
-
         <div class="form-group">
             <label for="location" class="form-label">LOKACJA</label>
             <input type="text"
@@ -107,12 +90,9 @@
                    class="form-control" th:class="${#fields.hasErrors('location')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    placeholder="Lokacja"
                    th:field="*{location}">
-
-            <!--            <div id="emailErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.email.error.notNull.message}">Błędy związane z emailem</div>-->
-            <!--            <div class="error-message" th:errors="*{email}">Błędy związane z emailem</div>-->
-
+            <div id="locationErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.location.error.notEmpty.message}">Błędy związane z lokacją</div>
+            <div class="error-message" th:errors="*{location}">Błędy związane z lokacją</div>
         </div>
-
         <div class="form-group">
             <label for="address" class="form-label">ADRES</label>
             <input type="text"
@@ -120,12 +100,9 @@
                    class="form-control" th:class="${#fields.hasErrors('address')} == FALSE ? 'form-control' : 'form-control is-invalid'"
                    placeholder="Adres"
                    th:field="*{address}">
-
-            <!--            <div id="emailErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.email.error.notNull.message}">Błędy związane z emailem</div>-->
-            <!--            <div class="error-message" th:errors="*{email}">Błędy związane z emailem</div>-->
-
+            <div id="addressErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.address.error.notEmpty.message}">Błędy związane z adresem</div>
+            <div class="error-message" th:errors="*{address}">Błędy związane z adresem</div>
         </div>
-
         <div class="form-group">
             <label for="description" class="form-label">OPIS</label>
             <textarea id="description" name="description"
@@ -133,16 +110,12 @@
                       placeholder="Opis"
                       th:field="*{description}">
             </textarea>
-
-            <!--            <div id="emailErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.email.error.notNull.message}">Błędy związane z emailem</div>-->
-            <!--            <div class="error-message" th:errors="*{email}">Błędy związane z emailem</div>-->
-
+            <div id="descriptionErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.description.error.notEmpty.message}">Błędy związane z opisem</div>
+            <div class="error-message" th:errors="*{description}">Błędy związane z opisem</div>
         </div>
-
         <div class="d-grid gap-2 col-5 mx-auto" style="margin: 8px 0 8px 0;">
-            <button class="btn form-button" type="submit">Zarejestruj się</button>
+            <button class="btn form-button" type="submit">Utwórz wydarzenie</button>
         </div>
-
     </form>
 </div>
 

@@ -51,7 +51,7 @@ public class CustomHandlerExceptionResolver extends AbstractHandlerExceptionReso
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("httpStatus", response.getStatus());
-        String errorMessage = messageSource.getMessage("register.registrationForm.NoSuchRoleException.message", null, Locale.getDefault());
+        String errorMessage = messageSource.getMessage("registrationForm.exception.NoSuchRoleException.message", null, Locale.getDefault());
         modelAndView.addObject("errorMessage", errorMessage);
         modelAndView.setViewName("error");
         return modelAndView;
@@ -73,7 +73,7 @@ public class CustomHandlerExceptionResolver extends AbstractHandlerExceptionReso
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("httpStatus", response.getStatus());
-        String errorMessage = messageSource.getMessage("registrationForm.DefaultProfileImageNotFoundException.message", null, Locale.getDefault());
+        String errorMessage = messageSource.getMessage("registrationForm.exception.DefaultProfileImageNotFoundException.message", null, Locale.getDefault());
         modelAndView.addObject("errorMessage", errorMessage);
         modelAndView.setViewName("error");
         return modelAndView;

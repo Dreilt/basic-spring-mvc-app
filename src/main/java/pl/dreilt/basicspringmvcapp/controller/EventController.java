@@ -19,7 +19,6 @@ import java.util.List;
 
 @Controller
 public class EventController {
-
     private final EventService eventService;
 
     public EventController(EventService eventService) {

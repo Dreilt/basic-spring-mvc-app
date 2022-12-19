@@ -32,7 +32,7 @@ public class AppUser {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "profile_image_id", referencedColumnName = "id")
     )
-    private AppUserProfileImage profileImage;
+    private ProfileImage profileImage;
     @Size(max = 1000, message = "{form.field.bio.error.size.message}")
     private String bio;
     @Size(max = 50, message = "{form.field.city.error.size.message}")
@@ -87,11 +87,11 @@ public class AppUser {
         this.password = password;
     }
 
-    public AppUserProfileImage getProfileImage() {
+    public ProfileImage getProfileImage() {
         return profileImage;
     }
 
-    public void setProfileImage(AppUserProfileImage profileImage) {
+    public void setProfileImage(ProfileImage profileImage) {
         this.profileImage = profileImage;
     }
 
@@ -133,20 +133,5 @@ public class AppUser {
 
     public void setRoles(Set<AppUserRole> roles) {
         this.roles = roles;
-    }
-
-    @Override
-    public String toString() {
-        return "AppUser{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", bio='" + bio + '\'' +
-                ", city='" + city + '\'' +
-                ", enabled=" + enabled +
-                ", accountNonLocked=" + accountNonLocked +
-                '}';
     }
 }

@@ -9,7 +9,6 @@ import java.util.Set;
 
 @Service
 public class AppUserRoleService {
-
     private final AppUserRoleRepository appUserRoleRepository;
 
     public AppUserRoleService(AppUserRoleRepository appUserRoleRepository) {

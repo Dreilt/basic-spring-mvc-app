@@ -9,7 +9,6 @@ import pl.dreilt.basicspringmvcapp.service.AppUserService;
 
 @Component
 public class AppUserDetailsService implements UserDetailsService {
-
     private final AppUserService appUserService;
 
     public AppUserDetailsService(AppUserService appUserService) {

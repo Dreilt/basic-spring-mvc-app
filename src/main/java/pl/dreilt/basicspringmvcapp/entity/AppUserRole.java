@@ -14,9 +14,6 @@ public class AppUserRole {
     private String displayName;
     private String description;
 
-    public AppUserRole() {
-    }
-
     public Long getId() {
         return id;
     }
@@ -47,15 +44,5 @@ public class AppUserRole {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "AppUserRole{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", displayName='" + displayName + '\'' +
-                ", description='" + description + '\'' +
-                '}';
     }
 }

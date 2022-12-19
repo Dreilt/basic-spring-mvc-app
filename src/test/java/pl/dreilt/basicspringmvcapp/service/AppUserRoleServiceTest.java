@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
-import pl.dreilt.basicspringmvcapp.repository.AppUserRoleRepository;
+import pl.dreilt.basicspringmvcapp.registration.AppUserRoleRepository;
 
 import java.util.Collections;
 import java.util.HashSet;

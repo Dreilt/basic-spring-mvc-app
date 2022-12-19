@@ -1,5 +1,8 @@
 package pl.dreilt.basicspringmvcapp.service;
 
+import pl.dreilt.basicspringmvcapp.entity.AppUser;
+import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
+import pl.dreilt.basicspringmvcapp.entity.ProfileImage;
 import pl.dreilt.basicspringmvcapp.entity.*;
 
 import java.time.Clock;
@@ -87,8 +90,8 @@ public class EventServiceTestHelper {
         return user;
     }
 
-    private static AppUserProfileImage createProfileImage() {
-        AppUserProfileImage profileImage = new AppUserProfileImage();
+    private static ProfileImage createProfileImage() {
+        ProfileImage profileImage = new ProfileImage();
         profileImage.setId(1L);
         profileImage.setFileName("default_profile_image.png");
         profileImage.setFileType("image/png");

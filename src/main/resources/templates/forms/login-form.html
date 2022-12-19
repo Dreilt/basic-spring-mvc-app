@@ -16,10 +16,10 @@
             <h2>Logowanie</h2>
             <span>Wprowadź swoje dane poniżej</span>
         </div>
-        <div class="alert custom-alert-danger" role="alert" th:if="${#httpServletRequest.getParameter('error') == 'badCredentials'}" th:text="#{login.loginForm.BadCredentialsException.message}"></div>
-        <div class="alert custom-alert-danger" role="alert" th:if="${#httpServletRequest.getParameter('error') == 'disabledAccount'}" th:text="#{login.loginForm.DisabledException.message}"></div>
-        <div class="alert custom-alert-danger" role="alert" th:if="${#httpServletRequest.getParameter('error') == 'lockedAccount'}" th:text="#{login.loginForm.LockedException.message}"></div>
-        <div class="alert custom-alert-danger" role="alert" th:if="${#httpServletRequest.getParameter('error') == 'unknownError'}" th:text="#{login.loginForm.unknownError.message}"></div>
+        <div class="alert custom-alert-danger" role="alert" th:if="${#httpServletRequest.getParameter('error') == 'badCredentials'}" th:text="#{loginForm.exception.BadCredentialsException.message}"></div>
+        <div class="alert custom-alert-danger" role="alert" th:if="${#httpServletRequest.getParameter('error') == 'disabledAccount'}" th:text="#{loginForm.exception.DisabledException.message}"></div>
+        <div class="alert custom-alert-danger" role="alert" th:if="${#httpServletRequest.getParameter('error') == 'lockedAccount'}" th:text="#{loginForm.exception.LockedException.message}"></div>
+        <div class="alert custom-alert-danger" role="alert" th:if="${#httpServletRequest.getParameter('error') == 'unknownError'}" th:text="#{loginForm.exception.unknownError.message}"></div>
         <div class="form-group">
             <label for="username" class="form-label">E-MAIL</label>
             <input type="text"

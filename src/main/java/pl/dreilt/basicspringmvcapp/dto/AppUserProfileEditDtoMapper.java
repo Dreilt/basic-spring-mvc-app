@@ -1,6 +1,5 @@
-package pl.dreilt.basicspringmvcapp.mapper;
+package pl.dreilt.basicspringmvcapp.dto;
 
-import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 
 public class AppUserProfileEditDtoMapper {

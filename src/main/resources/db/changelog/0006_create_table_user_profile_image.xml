@@ -30,8 +30,8 @@
     <changeSet id="0006-3" author="Dreilt">
         <addForeignKeyConstraint baseTableName="user_profile_image"
                                  baseColumnNames="profile_image_id"
-                                 constraintName="fk_user_profile_image_app_user_profile_image"
-                                 referencedTableName="app_user_profile_image"
+                                 constraintName="fk_user_profile_image_profile_image"
+                                 referencedTableName="profile_image"
                                  referencedColumnNames="id"/>
     </changeSet>
 
