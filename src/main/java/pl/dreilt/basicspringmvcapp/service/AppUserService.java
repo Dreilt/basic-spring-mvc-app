@@ -8,14 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dreilt.basicspringmvcapp.config.AppUserDetails;
-import pl.dreilt.basicspringmvcapp.dto.AppUserCredentialsDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDataEditDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.ProfileImage;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.DefaultProfileImageNotFoundException;
-import pl.dreilt.basicspringmvcapp.mapper.AppUserCredentialsDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileDataEditDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileDtoMapper;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
@@ -23,7 +21,6 @@ import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
-import java.util.Optional;
 
 @Service
 public class AppUserService {
@@ -31,11 +28,6 @@ public class AppUserService {
 
     public AppUserService(AppUserRepository appUserRepository) {
         this.appUserRepository = appUserRepository;
-    }
-
-    public Optional<AppUserCredentialsDto> findAppUserCredentialsByEmail(String email) {
-        return appUserRepository.findByEmail(email)
-                .map(AppUserCredentialsDtoMapper::mapToAppUserCredentialsDto);
     }
 
     public AppUserProfileDto findUserProfile(String email) {
