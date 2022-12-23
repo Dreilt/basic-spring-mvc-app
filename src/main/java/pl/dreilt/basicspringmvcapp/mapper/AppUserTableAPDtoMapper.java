@@ -14,14 +14,15 @@ public class AppUserTableAPDtoMapper {
     }
 
     private static AppUserTableAPDto mapToAppUserTableAPDto(AppUser appUser) {
-        AppUserTableAPDto appUserTableAPDto = new AppUserTableAPDto();
-        appUserTableAPDto.setId(appUser.getId());
-        appUserTableAPDto.setFirstName(appUser.getFirstName());
-        appUserTableAPDto.setLastName(appUser.getLastName());
-        appUserTableAPDto.setEmail(appUser.getEmail());
-        appUserTableAPDto.setEnabled(appUser.isEnabled());
-        appUserTableAPDto.setAccountNonLocked(appUser.isAccountNonLocked());
-        appUserTableAPDto.setRoles(appUser.getRoles());
-        return appUserTableAPDto;
+        return new AppUserTableAPDto.AppUserTableAPDtoBuilder()
+                .withId(appUser.getId())
+                .withFirstName(appUser.getFirstName())
+                .withLastName(appUser.getLastName())
+                .withEmail(appUser.getEmail())
+                .withEnabled(appUser.isEnabled())
+                .withAccountNonLocked(appUser.isAccountNonLocked())
+                .withRoles(appUser.getRoles())
+                .build();
+
     }
 }

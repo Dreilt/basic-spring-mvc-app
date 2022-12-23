@@ -1,17 +1,18 @@
 package pl.dreilt.basicspringmvcapp.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import pl.dreilt.basicspringmvcapp.config.AppUserDetails;
+import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 
@@ -19,15 +20,12 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static pl.dreilt.basicspringmvcapp.service.AppUserLoginDataServiceTestHelper.createUser;
+import static org.mockito.Mockito.when;
+import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createAppUser;
+import static pl.dreilt.basicspringmvcapp.service.AppUserServiceTestHelper.createAppUserDetails;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration
+@ExtendWith(MockitoExtension.class)
 class AppUserLoginDataServiceTest {
-    static final Long userId = 1L;
-    static final String userEmail = "user@example.com";
-    static final String oldPassword = "user";
-    static final String newPassword = "password123";
     @Mock
     private AuthenticationManager authenticationManager;
     @Mock
@@ -37,70 +35,68 @@ class AppUserLoginDataServiceTest {
     @InjectMocks
     private AppUserLoginDataService appUserLoginDataService;
 
-    @BeforeEach
-    void setUp() {
-        Mockito.when(appUserRepository.findByEmail(userEmail)).thenReturn(Optional.of(createUser()));
-        Mockito.when(appUserRepository.findById(userId)).thenReturn(Optional.of(createUser()));
-    }
-
     @Test
     void shouldThrowExceptionIfUserIsNotAuthenticated() {
+        // given
+        SecurityContextHolder.getContext().setAuthentication(null);
         // then
-        assertThatThrownBy(() -> appUserLoginDataService.changePassword(oldPassword, newPassword))
+        assertThatThrownBy(() -> appUserLoginDataService.changePassword("user1", "qwerty"))
                 .isInstanceOf(AccessDeniedException.class)
                 .hasMessage("Can't change password as no Authentication object found in context for current user.");
     }
 
     @Test
-    @WithMockUser(username = "user@example.com", password = "user", roles = {"USER"})
     void shouldChangePasswordIfUserIsAuthenticated() {
+        // given
+        AppUserDetails userDetails = createAppUserDetails("Jan", "Kowalski", "jankowalski@example.com", "USER");
+        Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, "user1", userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        AppUser user = createAppUser(2L, "Jan", "Kowalski", "jankowalski@example.com");
+        when(appUserRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         // when
-        appUserLoginDataService.changePassword(oldPassword, newPassword);
+        appUserLoginDataService.changePassword("user1", "qwerty");
         // then
         assertThat(authenticationManager).isNotNull();
-        assertThat(appUserRepository.findByEmail(userEmail).get().getPassword())
-                .isEqualTo(passwordEncoder.encode(newPassword));
+        assertThat(appUserRepository.findByEmail(user.getEmail()).get().getPassword())
+                .isEqualTo(passwordEncoder.encode("qwerty"));
     }
 
     @Test
-    @WithMockUser(username = "user@example.com", password = "user", roles = {"USER"})
     void shouldThrowExceptionIfUserDoesNotExistInDatabase() {
         // given
-        Mockito.when(appUserRepository.findByEmail(userEmail)).thenReturn(Optional.empty());
+        AppUserDetails userDetails = createAppUserDetails("Jan", "Kowalski", "jankowalski@example.com", "USER");
+        Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, "user1", userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        AppUser user = createAppUser(2L, "Jan", "Kowalski", "jankowalski@example.com");
+        when(appUserRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
         // then
-        assertThatThrownBy(() -> appUserLoginDataService.changePassword(oldPassword, newPassword))
+        assertThatThrownBy(() -> appUserLoginDataService.changePassword("user1", "qwerty"))
                 .isInstanceOf(AppUserNotFoundException.class)
                 .hasMessage("Current user doesn't exist in database.");
     }
 
     // ADMIN
     @Test
-    @WithMockUser(username = "user@example.com", password = "user", roles = {"USER"})
     void shouldThrowExceptionIfUserHasNotAdminRole() {
+        // given
+        AppUserDetails userDetails = createAppUserDetails("Jan", "Kowalski", "jankowalski@example.com", "USER");
+        Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, "user1", userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
         // when
-        assertThatThrownBy(() -> appUserLoginDataService.changePassword(userId, newPassword))
+        assertThatThrownBy(() -> appUserLoginDataService.changePassword(2L, "qwerty"))
                 .isInstanceOf(AccessDeniedException.class)
                 .hasMessage("Can't change password as no admin role user found in context for current user.");
     }
 
     @Test
-    @WithMockUser(username = "admin@example.com", password = "admin", roles = {"ADMIN"})
-    void shouldChangeUserPassword() {
-        // when
-        appUserLoginDataService.changePassword(userId, newPassword);
-        // then
-        assertThat(appUserRepository.findById(userId).get().getPassword())
-                .isEqualTo(passwordEncoder.encode(newPassword));
-    }
-
-    @Test
-    @WithMockUser(username = "admin@example.com", password = "admin", roles = {"ADMIN"})
-    void shouldThrowExceptionIfUserIsNotFound() {
+    void shouldChangePasswordIfUserHasAdminRole() {
         // given
-        Mockito.when(appUserRepository.findById(userId)).thenReturn(Optional.empty());
+        AppUserDetails userDetails = createAppUserDetails("Admin", "Admin", "admin@example.com", "ADMIN");
+        Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, "admin", userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        AppUser user = createAppUser(2L, "Jan", "Kowalski", "jankowalski@example.com");
+        when(appUserRepository.findById(user.getId())).thenReturn(Optional.of(user));
         // when
-        assertThatThrownBy(() -> appUserLoginDataService.changePassword(userId, newPassword))
-                .isInstanceOf(AppUserNotFoundException.class)
-                .hasMessage("User with ID %s not found", userId);
+        appUserLoginDataService.changePassword(2L, "qwerty");
     }
 }

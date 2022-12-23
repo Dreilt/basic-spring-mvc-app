@@ -7,6 +7,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,7 @@ public class AppUserLoginDataService {
     @Transactional
     public void changePassword(Long id, String newPassword) {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-        if (currentUser != null && !currentUser.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+        if (currentUser == null || !checkIfUserHasAdminRole(currentUser)) {
             throw new AccessDeniedException("Can't change password as no admin role user found in context for current user.");
         }
 
@@ -66,5 +67,15 @@ public class AppUserLoginDataService {
         }
         String passwordHash = passwordEncoder.encode(newPassword);
         user.get().setPassword(passwordHash);
+    }
+
+    private boolean checkIfUserHasAdminRole(Authentication user) {
+        for (GrantedAuthority userRole : user.getAuthorities()) {
+            if (userRole.getAuthority().equals("ROLE_ADMIN")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

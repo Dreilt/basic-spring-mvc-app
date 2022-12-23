@@ -9,6 +9,9 @@ public class AppUserProfileDto {
     private String bio;
     private String city;
 
+    private AppUserProfileDto() {
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -63,5 +66,65 @@ public class AppUserProfileDto {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public static class AppUserProfileDtoBuilder {
+        private String firstName;
+        private String lastName;
+        private String avatarType;
+        private String avatarData;
+        private String email;
+        private String bio;
+        private String city;
+
+        public AppUserProfileDtoBuilder() {
+        }
+
+        public AppUserProfileDtoBuilder withFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public AppUserProfileDtoBuilder withLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public AppUserProfileDtoBuilder withAvatarType(String avatarType) {
+            this.avatarType = avatarType;
+            return this;
+        }
+
+        public AppUserProfileDtoBuilder withAvatarData(String avatarData) {
+            this.avatarData = avatarData;
+            return this;
+        }
+
+        public AppUserProfileDtoBuilder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public AppUserProfileDtoBuilder withBio(String bio) {
+            this.bio = bio;
+            return this;
+        }
+
+        public AppUserProfileDtoBuilder withCity(String city) {
+            this.city = city;
+            return this;
+        }
+
+        public AppUserProfileDto build() {
+            AppUserProfileDto userProfileDto = new AppUserProfileDto();
+            userProfileDto.firstName = firstName;
+            userProfileDto.lastName = lastName;
+            userProfileDto.avatarType = avatarType;
+            userProfileDto.avatarData = avatarData;
+            userProfileDto.email = email;
+            userProfileDto.bio = bio;
+            userProfileDto.city = city;
+            return userProfileDto;
+        }
     }
 }

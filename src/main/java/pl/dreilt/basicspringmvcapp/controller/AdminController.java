@@ -129,9 +129,9 @@ public class AdminController {
 
     @PatchMapping("/admin_panel/users/{id}/settings/account")
     public String updateUserAccountData(@PathVariable Long id,
-                                    @Valid @ModelAttribute(name = "userAccountDataEditAPDto") AppUserAccountDataEditAPDto userAccountDataEditAPDto,
-                                    BindingResult bindingResult,
-                                    Model model) {
+                                        @Valid @ModelAttribute(name = "userAccountDataEditAPDto") AppUserAccountDataEditAPDto userAccountDataEditAPDto,
+                                        BindingResult bindingResult,
+                                        Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("accountUpdated", false);
             model.addAttribute("userId", id);
@@ -156,9 +156,9 @@ public class AdminController {
 
     @PatchMapping("/admin_panel/users/{id}/settings/edit_profile")
     public String updateUserProfileData(@PathVariable Long id,
-                                    @Valid @ModelAttribute(name = "userProfileDataEditAPDto") AppUserProfileDataEditAPDto userProfileDataEditAPDto,
-                                    BindingResult bindingResult,
-                                    Model model) {
+                                        @Valid @ModelAttribute(name = "userProfileDataEditAPDto") AppUserProfileDataEditAPDto userProfileDataEditAPDto,
+                                        BindingResult bindingResult,
+                                        Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("profileUpdated", false);
             model.addAttribute("userId", id);

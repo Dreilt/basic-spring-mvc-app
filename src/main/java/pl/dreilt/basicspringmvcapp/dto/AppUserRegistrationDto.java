@@ -35,6 +35,9 @@ public class AppUserRegistrationDto {
     @Size(min = 5, max = 100, message = "{form.field.confirmPassword.error.size.message}")
     private String confirmPassword;
 
+    public AppUserRegistrationDto() {
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -73,5 +76,51 @@ public class AppUserRegistrationDto {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public static class AppUserRegistrationDtoBuilder {
+        private String firstName;
+        private String lastName;
+        private String email;
+        private String password;
+        private String confirmPassword;
+
+        public AppUserRegistrationDtoBuilder() {
+        }
+
+        public AppUserRegistrationDtoBuilder withFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public AppUserRegistrationDtoBuilder withLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public AppUserRegistrationDtoBuilder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public AppUserRegistrationDtoBuilder withPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public AppUserRegistrationDtoBuilder withConfirmPassword(String confirmPassword) {
+            this.confirmPassword = confirmPassword;
+            return this;
+        }
+
+        public AppUserRegistrationDto build() {
+            AppUserRegistrationDto userRegistrationDto = new AppUserRegistrationDto();
+            userRegistrationDto.firstName = firstName;
+            userRegistrationDto.lastName = lastName;
+            userRegistrationDto.email = email;
+            userRegistrationDto.password = password;
+            userRegistrationDto.confirmPassword = confirmPassword;
+            return userRegistrationDto;
+        }
     }
 }

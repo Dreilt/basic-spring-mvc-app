@@ -1,13 +1,13 @@
-package pl.dreilt.basicspringmvcapp.enums;
+package pl.dreilt.basicspringmvcapp.enumeration;
 
-public enum AdmissionType {
-    PAID("paid", "Płatny"),
-    FREE("free", "Bezpłatny");
+public enum EventType {
+    MEETING("meeting", "Spotkanie"),
+    CONFERENCE("conference", "Konferencja");
 
     public final String name;
     public final String displayName;
 
-    AdmissionType(String name, String displayName) {
+    EventType(String name, String displayName) {
         this.name = name;
         this.displayName = displayName;
     }

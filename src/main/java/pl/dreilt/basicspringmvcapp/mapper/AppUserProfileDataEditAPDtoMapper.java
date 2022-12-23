@@ -9,11 +9,11 @@ public class AppUserProfileDataEditAPDtoMapper {
     }
 
     public static AppUserProfileDataEditAPDto mapToAppUserProfileDataEditAPDto(AppUser appUser) {
-        AppUserProfileDataEditAPDto appUserProfileDataEditAPDto = new AppUserProfileDataEditAPDto();
-        appUserProfileDataEditAPDto.setFirstName(appUser.getFirstName());
-        appUserProfileDataEditAPDto.setLastName(appUser.getLastName());
-        appUserProfileDataEditAPDto.setBio(appUser.getBio());
-        appUserProfileDataEditAPDto.setCity(appUser.getCity());
-        return appUserProfileDataEditAPDto;
+        return new AppUserProfileDataEditAPDto.AppUserProfileDataEditAPDtoBuilder()
+                .withFirstName(appUser.getFirstName())
+                .withLastName(appUser.getLastName())
+                .withBio(appUser.getBio())
+                .withCity(appUser.getCity())
+                .build();
     }
 }

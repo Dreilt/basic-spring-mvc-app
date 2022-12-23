@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import pl.dreilt.basicspringmvcapp.dto.AppUserPasswordEditDto;
-import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDataEditDto;
 import pl.dreilt.basicspringmvcapp.service.AppUserLoginDataService;
 import pl.dreilt.basicspringmvcapp.service.AppUserService;
 
@@ -40,19 +40,19 @@ public class AppUserController {
 
     @GetMapping("/settings/profile")
     public String showUserProfileEditForm(Authentication authentication, Model model) {
-        AppUserProfileEditDto userProfileEditDto = appUserService.findUserProfileToEdit(authentication.getName());
+        AppUserProfileDataEditDto userProfileEditDto = appUserService.findUserProfileToEdit(authentication.getName());
         model.addAttribute("userProfileEditDto", userProfileEditDto);
         return "forms/app-user-profile-edit-form";
     }
 
     @PatchMapping("/settings/profile")
-    public String updateUserProfile(@Valid @ModelAttribute(name = "userProfileEditDto") AppUserProfileEditDto userProfileEditDto,
+    public String updateUserProfile(@Valid @ModelAttribute(name = "userProfileEditDto") AppUserProfileDataEditDto userProfileEditDto,
                                     BindingResult bindingResult,
                                     Model model) {
         if (bindingResult.hasErrors()) {
             return "forms/app-user-profile-edit-form";
         } else {
-            AppUserProfileEditDto userProfileUpdated = appUserService.updateUserProfile(userProfileEditDto);
+            AppUserProfileDataEditDto userProfileUpdated = appUserService.updateUserProfile(userProfileEditDto);
             model.addAttribute("userProfileEditDto", userProfileUpdated);
             return "forms/app-user-profile-edit-form";
         }

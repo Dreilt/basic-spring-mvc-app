@@ -47,9 +47,7 @@ public class AdminService {
                 Optional<Sort.Order> order = pageable.getSort().stream().findFirst();
                 Sort.Direction direction = order.get().getDirection();
                 PageRequest newPageRequest = PageRequest
-                        .of(pageable.getPageNumber(),
-                                pageable.getPageSize(),
-                                Sort.by(direction, "last_name"));
+                        .of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(direction, "last_name"));
                 return AppUserTableAPDtoMapper.mapToAppUserTableAPDtos(
                         adminRepository.findUsersBySearch(searchWords, newPageRequest));
             }
@@ -63,7 +61,7 @@ public class AdminService {
     }
 
     @Transactional
-    public Object updateUserAccountData(Long id, AppUserAccountDataEditAPDto userAccountDataEditAPDto) {
+    public AppUserAccountDataEditAPDto updateUserAccountData(Long id, AppUserAccountDataEditAPDto userAccountDataEditAPDto) {
         return adminRepository.findById(id)
                 .map(target -> setUserAccountDataFields(userAccountDataEditAPDto, target))
                 .map(AppUserAccountDataEditAPDtoMapper::mapToAppUserAccountDataEditAPDto)

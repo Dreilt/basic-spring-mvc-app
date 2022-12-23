@@ -9,10 +9,10 @@ public class AppUserAccountDataEditAPDtoMapper {
     }
 
     public static AppUserAccountDataEditAPDto mapToAppUserAccountDataEditAPDto(AppUser appUser) {
-        AppUserAccountDataEditAPDto appUserAccountDataEditAPDto = new AppUserAccountDataEditAPDto();
-        appUserAccountDataEditAPDto.setEnabled(appUser.isEnabled());
-        appUserAccountDataEditAPDto.setAccountNonLocked(appUser.isAccountNonLocked());
-        appUserAccountDataEditAPDto.setRoles(appUser.getRoles());
-        return appUserAccountDataEditAPDto;
+        return new AppUserAccountDataEditAPDto.AppUserAccountDataEditAPDtoBuilder()
+                .withEnabled(appUser.isEnabled())
+                .withAccountNonLocked(appUser.isAccountNonLocked())
+                .withRoles(appUser.getRoles())
+                .build();
     }
 }

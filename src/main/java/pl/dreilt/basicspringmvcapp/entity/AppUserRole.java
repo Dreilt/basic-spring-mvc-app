@@ -45,4 +45,43 @@ public class AppUserRole {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public static class AppUserRoleBuilder {
+        private Long id;
+        private String name;
+        private String displayName;
+        private String description;
+
+        public AppUserRoleBuilder() {
+        }
+
+        public AppUserRoleBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public AppUserRoleBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public AppUserRoleBuilder withDisplayName(String displayName) {
+            this.displayName = displayName;
+            return this;
+        }
+
+        public AppUserRoleBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public AppUserRole build() {
+            AppUserRole userRole = new AppUserRole();
+            userRole.id = id;
+            userRole.name = name;
+            userRole.displayName = displayName;
+            userRole.description = description;
+            return userRole;
+        }
+    }
 }

@@ -8,12 +8,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dreilt.basicspringmvcapp.config.AppUserDetails;
-import pl.dreilt.basicspringmvcapp.dto.*;
+import pl.dreilt.basicspringmvcapp.dto.AppUserCredentialsDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDataEditDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.ProfileImage;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.DefaultProfileImageNotFoundException;
 import pl.dreilt.basicspringmvcapp.mapper.AppUserCredentialsDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileDataEditDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileDtoMapper;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 
 import java.io.IOException;
@@ -40,14 +44,14 @@ public class AppUserService {
                 .orElseThrow(() -> new AppUserNotFoundException("User with email " + email + " not found"));
     }
 
-    public AppUserProfileEditDto findUserProfileToEdit(String email) {
+    public AppUserProfileDataEditDto findUserProfileToEdit(String email) {
         return appUserRepository.findByEmail(email)
-                .map(AppUserProfileEditDtoMapper::mapToAppUserProfileEditDto)
+                .map(AppUserProfileDataEditDtoMapper::mapToAppUserProfileEditDto)
                 .orElseThrow(() -> new AppUserNotFoundException("User with email " + email + " not found"));
     }
 
     @Transactional
-    public AppUserProfileEditDto updateUserProfile(AppUserProfileEditDto appUserProfile) {
+    public AppUserProfileDataEditDto updateUserProfile(AppUserProfileDataEditDto appUserProfile) {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         if (currentUser == null) {
             throw new AccessDeniedException("Odmowa dostępu");
@@ -55,11 +59,11 @@ public class AppUserService {
         String email = currentUser.getName();
         return appUserRepository.findByEmail(email)
                 .map(target -> setUserProfileFields(currentUser, appUserProfile, target))
-                .map(AppUserProfileEditDtoMapper::mapToAppUserProfileEditDto)
+                .map(AppUserProfileDataEditDtoMapper::mapToAppUserProfileEditDto)
                 .orElseThrow(() -> new AppUserNotFoundException("User with email " + email + " not found"));
     }
 
-    private AppUser setUserProfileFields(Authentication currentUser, AppUserProfileEditDto source, AppUser target) {
+    private AppUser setUserProfileFields(Authentication currentUser, AppUserProfileDataEditDto source, AppUser target) {
         AppUserDetails appUserDetails = (AppUserDetails) currentUser.getPrincipal();
         boolean isAppUserDetailsEdited = false;
 

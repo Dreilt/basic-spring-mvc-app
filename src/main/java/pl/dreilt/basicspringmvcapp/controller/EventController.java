@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.dreilt.basicspringmvcapp.dto.CityDto;
 import pl.dreilt.basicspringmvcapp.dto.CreateEventDto;
 import pl.dreilt.basicspringmvcapp.dto.EventDto;
-import pl.dreilt.basicspringmvcapp.enums.AdmissionType;
-import pl.dreilt.basicspringmvcapp.enums.EventType;
+import pl.dreilt.basicspringmvcapp.enumeration.AdmissionType;
+import pl.dreilt.basicspringmvcapp.enumeration.EventType;
 import pl.dreilt.basicspringmvcapp.service.EventService;
 
 import javax.validation.Valid;

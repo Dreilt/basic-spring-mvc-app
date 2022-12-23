@@ -22,15 +22,15 @@ import java.util.Optional;
 public class RegistrationService {
     private static final String USER_ROLE = "USER";
     private final RegistrationRepository registrationRepository;
+    private final PasswordEncoder passwordEncoder;
     private final ProfileImageRepository profileImageRepository;
     private final AppUserRoleRepository appUserRoleRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public RegistrationService(RegistrationRepository registrationRepository, ProfileImageRepository profileImageRepository, AppUserRoleRepository appUserRoleRepository, PasswordEncoder passwordEncoder) {
+    public RegistrationService(RegistrationRepository registrationRepository, PasswordEncoder passwordEncoder, ProfileImageRepository profileImageRepository, AppUserRoleRepository appUserRoleRepository) {
         this.registrationRepository = registrationRepository;
+        this.passwordEncoder = passwordEncoder;
         this.profileImageRepository = profileImageRepository;
         this.appUserRoleRepository = appUserRoleRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public boolean checkIfAppUserExists(String email) {

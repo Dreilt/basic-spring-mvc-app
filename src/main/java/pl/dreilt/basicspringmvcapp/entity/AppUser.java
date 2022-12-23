@@ -134,4 +134,92 @@ public class AppUser {
     public void setRoles(Set<AppUserRole> roles) {
         this.roles = roles;
     }
+
+    public static class AppUserBuilder {
+        private Long id;
+        private String firstName;
+        private String lastName;
+        private String email;
+        private String password;
+        private ProfileImage profileImage;
+        private String bio;
+        private String city;
+        private boolean enabled;
+        private boolean accountNonLocked;
+        private Set<AppUserRole> roles;
+
+        public AppUserBuilder() {
+        }
+
+        public AppUserBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public AppUserBuilder withFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public AppUserBuilder withLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public AppUserBuilder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public AppUserBuilder withPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public AppUserBuilder withProfileImage(ProfileImage profileImage) {
+            this.profileImage = profileImage;
+            return this;
+        }
+
+        public AppUserBuilder withBio(String bio) {
+            this.bio = bio;
+            return this;
+        }
+
+        public AppUserBuilder withCity(String city) {
+            this.city = city;
+            return this;
+        }
+
+        public AppUserBuilder withEnabled(boolean enabled) {
+            this.enabled = enabled;
+            return this;
+        }
+
+        public AppUserBuilder withAccountNonLocked(boolean accountNonLocked) {
+            this.accountNonLocked = accountNonLocked;
+            return this;
+        }
+
+        public AppUserBuilder withRoles(Set<AppUserRole> roles) {
+            this.roles = roles;
+            return this;
+        }
+
+        public AppUser build() {
+            AppUser user = new AppUser();
+            user.id = id;
+            user.firstName = firstName;
+            user.lastName = lastName;
+            user.email = email;
+            user.password = password;
+            user.profileImage = profileImage;
+            user.bio = bio;
+            user.city = city;
+            user.enabled = enabled;
+            user.accountNonLocked = accountNonLocked;
+            user.roles = roles;
+            return user;
+        }
+    }
 }

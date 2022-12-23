@@ -18,35 +18,61 @@ public class AppUserProfileDataEditAPDto {
     @Size(max = 50, message = "{form.field.city.error.size.message}")
     private String city;
 
-    public String getFirstName() {
-        return firstName;
+    private AppUserProfileDataEditAPDto() {
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public String getFirstName() {
+        return firstName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getBio() {
         return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
     }
 
     public String getCity() {
         return city;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public static class AppUserProfileDataEditAPDtoBuilder {
+        private String firstName;
+        private String lastName;
+        private String bio;
+        private String city;
+
+        public AppUserProfileDataEditAPDtoBuilder() {
+        }
+
+        public AppUserProfileDataEditAPDtoBuilder withFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public AppUserProfileDataEditAPDtoBuilder withLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public AppUserProfileDataEditAPDtoBuilder withBio(String bio) {
+            this.bio = bio;
+            return this;
+        }
+
+        public AppUserProfileDataEditAPDtoBuilder withCity(String city) {
+            this.city = city;
+            return this;
+        }
+
+        public AppUserProfileDataEditAPDto build() {
+            AppUserProfileDataEditAPDto userProfileDataEditAPDto = new AppUserProfileDataEditAPDto();
+            userProfileDataEditAPDto.firstName = firstName;
+            userProfileDataEditAPDto.lastName = lastName;
+            userProfileDataEditAPDto.bio = bio;
+            userProfileDataEditAPDto.city = city;
+            return userProfileDataEditAPDto;
+        }
     }
 }

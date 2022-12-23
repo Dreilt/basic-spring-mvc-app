@@ -1,143 +1,56 @@
 package pl.dreilt.basicspringmvcapp.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.core.io.ClassPathResource;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import pl.dreilt.basicspringmvcapp.dto.AppUserCredentialsDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDto;
-import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDataEditDto;
+import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
-import pl.dreilt.basicspringmvcapp.exception.NoSuchRoleException;
-import pl.dreilt.basicspringmvcapp.registration.ProfileImageRepository;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
-import pl.dreilt.basicspringmvcapp.registration.AppUserRoleRepository;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static pl.dreilt.basicspringmvcapp.service.AppUserLoginDataServiceTestHelper.createUser;
-import static pl.dreilt.basicspringmvcapp.service.AppUserServiceTestHelper.*;
+import static org.mockito.Mockito.when;
+import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createAppUser;
+import static pl.dreilt.basicspringmvcapp.service.AppUserServiceTestHelper.createAppUserDetails;
+import static pl.dreilt.basicspringmvcapp.service.AppUserServiceTestHelper.createAppUserProfileDataEditDto;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 class AppUserServiceTest {
-    static final String USER_ROLE = "USER";
     @Mock
     private AppUserRepository appUserRepository;
-    @Mock
-    private AppUserRoleRepository appUserRoleRepository;
-    @Mock
-    private PasswordEncoder passwordEncoder;
-    @Mock
-    private ProfileImageRepository profileImageRepository;
-    @Mock
-    private ClassPathResource classPathResource;
     @InjectMocks
     private AppUserService appUserService;
 
-    @BeforeEach
-    void setUp() {
-        Authentication auth = new UsernamePasswordAuthenticationToken(createAppUserDetails(), null);
-        SecurityContextHolder.getContext().setAuthentication(auth);
-    }
-
     @Test
-    void shouldReturnTrueIfAppUserExists() {
+    void shouldGetUserProfile() {
         // given
-        String email = "test@example.com";
-        Mockito.when(appUserRepository.findByEmail(email)).thenReturn(Optional.of(createUser()));
+        AppUser user = createAppUser(2L, "Jan", "Kowalski", "jankowalski@example.com");
+        when(appUserRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         // when
-        boolean isAppUserExists = appUserService.checkIfAppUserExists(email);
-        // then
-        assertThat(isAppUserExists).isTrue();
-    }
-
-    @Test
-    void shouldReturnFalseIfAppUserDoesNotExists() {
-        // given
-        String email = "test2@example.com";
-        Mockito.when(appUserRepository.findByEmail(email)).thenReturn(Optional.empty());
-        // when
-        boolean isAppUserExists = appUserService.checkIfAppUserExists(email);
-        // then
-        assertThat(isAppUserExists).isFalse();
-    }
-
-    @Test
-    void shouldGetAppUserCredentials() {
-        // given
-        String email = "test@example.com";
-        Mockito.when(appUserRepository.findByEmail(email)).thenReturn(Optional.of(createUser()));
-        // when
-        Optional<AppUserCredentialsDto> appUserCredentials = appUserService.findAppUserCredentialsByEmail(email);
-        // then
-        assertThat(appUserCredentials.isPresent()).isTrue();
-        assertThat(appUserCredentials.get().getEmail()).isEqualTo(email);
-    }
-
-    // ##### POPRAWKA #####
-//    @Test
-//    void shouldRegisterAppUser() throws IOException {
-////        // given
-////
-////        Mockito.lenient().when(classPathResource.getInputStream()).thenReturn(null);
-////
-//////        Mockito.when(appUserRoleRepository.findRoleByName(USER_ROLE)).thenReturn(Optional.of(createUserRole()));
-////        // when
-//////        appUserService.register(createAppUserRegistrationDto());
-////        // then
-////        assertThatThrownBy(() -> appUserService.register(createAppUserRegistrationDto()))
-////                .isInstanceOf(DefaultProfileImageNotFoundException.class);
-//
-//
-//        // given
-//        Resource mockResource = Mockito.mock(Resource.class);
-//        Mockito.when(mockResource.getInputStream()).thenReturn(null);
-//        // then
-//        assertThatThrownBy(() -> appUserService.register(createAppUserRegistrationDto()))
-//                .isInstanceOf(DefaultProfileImageNotFoundException.class);
-//    }
-
-    @Test
-    void shouldThrowExceptionIfUserRoleIsNotFound() {
-        // given
-        Mockito.when(appUserRoleRepository.findRoleByName(USER_ROLE)).thenReturn(Optional.empty());
-        // then
-        assertThatThrownBy(() -> appUserService.register(createAppUserRegistrationDto()))
-                .isInstanceOf(NoSuchRoleException.class)
-                .hasMessage("Invalid role: " + USER_ROLE, USER_ROLE);
-    }
-
-    @Test
-    void shouldGetAppUserProfile() {
-        // given
-        String email = "test@example.com";
-        Mockito.when(appUserRepository.findByEmail(email)).thenReturn(Optional.of(createUser()));
-        // when
-        AppUserProfileDto userProfile = appUserService.findUserProfile(email);
+        AppUserProfileDto userProfile = appUserService.findUserProfile(user.getEmail());
         // then
         assertThat(userProfile).isNotNull();
-        assertThat(userProfile.getFirstName()).isEqualTo("Test");
-        assertThat(userProfile.getLastName()).isEqualTo("Test");
-        assertThat(userProfile.getEmail()).isEqualTo("test@example.com");
-        assertThat(userProfile.getBio()).isEqualTo("Cześć! Nazywam się Test Test i jestem z Rzeszowa. Obecnie jestem na trzecim roku informatyki na Politechnice Rzeszowskiej.");
-        assertThat(userProfile.getCity()).isEqualTo("Rzeszów");
+        assertThat(userProfile.getFirstName()).isEqualTo("Jan");
+        assertThat(userProfile.getLastName()).isEqualTo("Kowalski");
+        assertThat(userProfile.getEmail()).isEqualTo("jankowalski@example.com");
+        assertThat(userProfile.getBio()).isNull();
+        assertThat(userProfile.getCity()).isNull();
     }
 
     @Test
     void shouldThrowExceptionIfUserIsNotFound() {
         // given
-        String email = "test2@example.com";
-        Mockito.when(appUserRepository.findByEmail(email)).thenReturn(Optional.empty());
+        String email = "test@example.com";
+        when(appUserRepository.findByEmail(email)).thenReturn(Optional.empty());
         // then
         assertThatThrownBy(() -> appUserService.findUserProfile(email))
                 .isInstanceOf(AppUserNotFoundException.class)
@@ -145,26 +58,26 @@ class AppUserServiceTest {
     }
 
     @Test
-    void shouldGetAppUserProfileToEdit() {
+    void shouldGetUserProfileDataToEdit() {
         // given
-        String email = "test@example.com";
-        Mockito.when(appUserRepository.findByEmail(email)).thenReturn(Optional.of(createUser()));
+        AppUser user = createAppUser(1L, "emptyFirstName", "emptyLastName", "jankowalski@example.com");
+        when(appUserRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         // when
-        AppUserProfileEditDto userProfileToEdit = appUserService.findUserProfileToEdit(email);
+        AppUserProfileDataEditDto userProfileToEdit = appUserService.findUserProfileToEdit(user.getEmail());
         // then
         assertThat(userProfileToEdit).isNotNull();
-        assertThat(userProfileToEdit.getFirstName()).isEqualTo("Test");
-        assertThat(userProfileToEdit.getLastName()).isEqualTo("Test");
+        assertThat(userProfileToEdit.getFirstName()).isEqualTo("emptyFirstName");
+        assertThat(userProfileToEdit.getLastName()).isEqualTo("emptyLastName");
         assertThat(userProfileToEdit.getProfileImage()).isNull();
-        assertThat(userProfileToEdit.getBio()).isEqualTo("Cześć! Nazywam się Test Test i jestem z Rzeszowa. Obecnie jestem na trzecim roku informatyki na Politechnice Rzeszowskiej.");
-        assertThat(userProfileToEdit.getCity()).isEqualTo("Rzeszów");
+        assertThat(userProfileToEdit.getBio()).isNull();
+        assertThat(userProfileToEdit.getCity()).isNull();
     }
 
     @Test
     void shouldThrowExceptionIfUserIsNotFoundWhileSearchingProfileToEdit() {
         // given
-        String email = "test2@example.com";
-        Mockito.when(appUserRepository.findByEmail(email)).thenReturn(Optional.empty());
+        String email = "test@example.com";
+        when(appUserRepository.findByEmail(email)).thenReturn(Optional.empty());
         // then
         assertThatThrownBy(() -> appUserService.findUserProfileToEdit(email))
                 .isInstanceOf(AppUserNotFoundException.class)
@@ -172,26 +85,29 @@ class AppUserServiceTest {
     }
 
     @Test
-    void shouldGetUpdatedUserProfile() {
+    void shouldGetUpdatedUserProfileData() {
         // given
-        Mockito.when(appUserRepository.findByEmail("test@example.com")).thenReturn(Optional.of(AppUserServiceTestHelper.createUser()));
+        Authentication auth = new UsernamePasswordAuthenticationToken(createAppUserDetails("emptyFirstName", "emptyLastName", "jankowalski@example.com", "USER"), null);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        AppUser user = createAppUser(1L, "emptyFirstName", "emptyLastName", "jankowalski@example.com");
+        when(appUserRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         // when
-        AppUserProfileEditDto appUserProfileUpdated = appUserService.updateUserProfile(createAppUserProfileEditDto());
+        AppUserProfileDataEditDto userProfileUpdated = appUserService.updateUserProfile(createAppUserProfileDataEditDto());
         // then
-        assertThat(appUserProfileUpdated.getFirstName()).isEqualTo("NewFirstName");
-        assertThat(appUserProfileUpdated.getLastName()).isEqualTo("NewLastName");
-//        assertThat(appUserProfileUpdated.getProfileImage().getName()).isEqualTo("avatar.png"); // to jest null i to trzeba poprawić przy zwrocie
-        assertThat(appUserProfileUpdated.getBio()).isEqualTo("NewBio");
-        assertThat(appUserProfileUpdated.getCity()).isEqualTo("NewCity");
+        assertThat(userProfileUpdated.getFirstName()).isEqualTo("Jan");
+        assertThat(userProfileUpdated.getLastName()).isEqualTo("Kowalski");
+        assertThat(userProfileUpdated.getProfileImage()).isNull();
+        assertThat(userProfileUpdated.getBio()).isEqualTo("Cześć! Nazywam się Jan Kowalski i niedawno przeprowadziłem się do Krakowa.");
+        assertThat(userProfileUpdated.getCity()).isEqualTo("Kraków");
     }
 
     @Test
     void shouldGetUserProfileByUserId() {
         // given
-        Long userId = 1L;
-        Mockito.when(appUserRepository.findById(userId)).thenReturn(Optional.of(AppUserServiceTestHelper.createUser()));
+        AppUser user = createAppUser(2L, "Patryk", "Kowalski", "patrykkowalski@example.com");
+        when(appUserRepository.findById(user.getId())).thenReturn(Optional.of(user));
         // when
-        AppUserProfileDto userProfile = appUserService.findUserProfileByUserId(userId);
+        AppUserProfileDto userProfile = appUserService.findUserProfileByUserId(user.getId());
         // then
         assertThat(userProfile).isNotNull();
     }
