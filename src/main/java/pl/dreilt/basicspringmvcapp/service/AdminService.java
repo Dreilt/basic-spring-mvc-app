@@ -1,9 +1,8 @@
 package pl.dreilt.basicspringmvcapp.service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.dreilt.basicspringmvcapp.dto.AppUserAccountDataEditAPDto;
@@ -15,8 +14,9 @@ import pl.dreilt.basicspringmvcapp.mapper.AppUserAccountDataEditAPDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileDataEditAPDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.AppUserTableAPDtoMapper;
 import pl.dreilt.basicspringmvcapp.repository.AdminRepository;
-
-import java.util.Optional;
+import pl.dreilt.basicspringmvcapp.specification.AppUserSpecification;
+import pl.dreilt.basicspringmvcapp.specification.SearchCriteria;
+import pl.dreilt.basicspringmvcapp.specification.SearchOperation;
 
 @Service
 public class AdminService {
@@ -31,27 +31,43 @@ public class AdminService {
     }
 
     public Page<AppUserTableAPDto> findUsersBySearch(String searchQuery, Pageable pageable) {
-        if (searchQuery.equals("")) {
-            return Page.empty();
-        } else {
-            searchQuery = searchQuery.toLowerCase();
-            String[] searchWords = searchQuery.split(" ");
+        searchQuery = searchQuery.toLowerCase();
+        String[] searchWords = searchQuery.split(" ");
 
-            if (searchWords.length == 1) {
-                return AppUserTableAPDtoMapper.mapToAppUserTableAPDtos(
-                        adminRepository.findUsersBySearch(searchQuery, pageable));
-            } else if (searchWords.length == 2) {
-                return AppUserTableAPDtoMapper.mapToAppUserTableAPDtos(
-                        adminRepository.findUsersBySearch(searchWords[0], searchWords[1], pageable));
-            } else {
-                Optional<Sort.Order> order = pageable.getSort().stream().findFirst();
-                Sort.Direction direction = order.get().getDirection();
-                PageRequest newPageRequest = PageRequest
-                        .of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(direction, "last_name"));
-                return AppUserTableAPDtoMapper.mapToAppUserTableAPDtos(
-                        adminRepository.findUsersBySearch(searchWords, newPageRequest));
-            }
+        if (searchWords.length == 1 && "".equals(searchWords[0])) {
+            return Page.empty();
         }
+
+        if (searchWords.length == 1) {
+            AppUserSpecification firstNameSpec = new AppUserSpecification();
+            firstNameSpec.add(new SearchCriteria("firstName", searchWords[0], SearchOperation.LIKE));
+            AppUserSpecification lastNameSpec = new AppUserSpecification();
+            lastNameSpec.add(new SearchCriteria("lastName", searchWords[0], SearchOperation.LIKE));
+            AppUserSpecification emailSpec = new AppUserSpecification();
+            emailSpec.add(new SearchCriteria("email", searchWords[0], SearchOperation.LIKE));
+
+            return AppUserTableAPDtoMapper.mapToAppUserTableAPDtos(adminRepository.findAll(
+                    Specification
+                            .where(firstNameSpec)
+                            .or(lastNameSpec)
+                            .or(emailSpec), pageable)
+            );
+        }
+
+        if (searchWords.length == 2) {
+            AppUserSpecification firstNameSpec = new AppUserSpecification();
+            firstNameSpec.add(new SearchCriteria("firstName", searchWords[0], SearchOperation.LIKE));
+            AppUserSpecification lastNameSpec = new AppUserSpecification();
+            lastNameSpec.add(new SearchCriteria("lastName", searchWords[1], SearchOperation.LIKE));
+
+            return AppUserTableAPDtoMapper.mapToAppUserTableAPDtos(adminRepository.findAll(
+                    Specification
+                            .where(firstNameSpec)
+                            .and(lastNameSpec), pageable)
+            );
+        }
+
+        return Page.empty();
     }
 
     public AppUserAccountDataEditAPDto findUserAccountDataToEdit(Long id) {

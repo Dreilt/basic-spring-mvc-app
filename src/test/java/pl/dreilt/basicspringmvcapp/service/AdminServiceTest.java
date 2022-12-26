@@ -10,12 +10,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import pl.dreilt.basicspringmvcapp.dto.AppUserAccountDataEditAPDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDataEditAPDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserTableAPDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.repository.AdminRepository;
+import pl.dreilt.basicspringmvcapp.specification.AppUserSpecification;
+import pl.dreilt.basicspringmvcapp.specification.SearchCriteria;
+import pl.dreilt.basicspringmvcapp.specification.SearchOperation;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +27,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createAppUser;
 import static pl.dreilt.basicspringmvcapp.service.AdminServiceTestHelper.*;
@@ -64,7 +69,13 @@ class AdminServiceTest {
     void shouldGetUsersBySearchIfSearchQueryHasOneWord() {
         // given
         String searchQuery = "jan";
-        when(adminRepository.findUsersBySearch(searchQuery, pageRequest)).thenReturn(new PageImpl<>(createAppUserListBySearch(searchQuery)));
+        AppUserSpecification firstNameSpec = new AppUserSpecification();
+        firstNameSpec.add(new SearchCriteria("firstName", searchQuery, SearchOperation.LIKE));
+        AppUserSpecification lastNameSpec = new AppUserSpecification();
+        lastNameSpec.add(new SearchCriteria("lastName", searchQuery, SearchOperation.LIKE));
+        AppUserSpecification emailSpec = new AppUserSpecification();
+        emailSpec.add(new SearchCriteria("email", searchQuery, SearchOperation.LIKE));
+        lenient().when(adminRepository.findAll(Specification.where(firstNameSpec).or(lastNameSpec).or(emailSpec), pageRequest)).thenReturn(new PageImpl<>(createAppUserListBySearch(searchQuery)));
         // when
         Page<AppUserTableAPDto> users = adminService.findUsersBySearch(searchQuery, pageRequest);
         // then
@@ -79,7 +90,11 @@ class AdminServiceTest {
         // given
         String searchQuery = "jan kowalski";
         String[] searchWords = searchQuery.split(" ");
-        when(adminRepository.findUsersBySearch(searchWords[0], searchWords[1], pageRequest)).thenReturn(new PageImpl<>(createAppUserListBySearch(searchQuery)));
+        AppUserSpecification firstNameSpec = new AppUserSpecification();
+        firstNameSpec.add(new SearchCriteria("firstName", searchWords[0], SearchOperation.LIKE));
+        AppUserSpecification lastNameSpec = new AppUserSpecification();
+        lastNameSpec.add(new SearchCriteria("lastName", searchWords[1], SearchOperation.LIKE));
+        lenient().when(adminRepository.findAll(Specification.where(firstNameSpec).and(lastNameSpec), pageRequest)).thenReturn(new PageImpl<>(createAppUserListBySearch(searchQuery)));
         // when
         Page<AppUserTableAPDto> users = adminService.findUsersBySearch(searchQuery, pageRequest);
         // then
