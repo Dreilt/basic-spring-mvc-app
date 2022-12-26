@@ -1,5 +1,6 @@
 package pl.dreilt.basicspringmvcapp.service;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,7 +19,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.when;
 import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createAppUser;
 import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createUserRole;
@@ -74,16 +77,18 @@ class RegistrationServiceTest {
     void shouldRegisterUser() {
         // given
         AppUserRegistrationDto userRegistrationDto = createAppUserRegistrationDto("Jan", "Kowalski", "jankowalski@example.com");
-
-        AppUser newUser = createAppUser(2L, userRegistrationDto.getFirstName(), userRegistrationDto.getLastName(), userRegistrationDto.getEmail());
-
         when(appUserRoleRepository.findRoleByName(USER_ROLE)).thenReturn(Optional.of(createUserRole()));
-
-        when(registrationRepository.save(newUser)).thenReturn(newUser);
-
         // when
         registrationService.register(userRegistrationDto);
         // then
-        Mockito.verify(registrationRepository, Mockito.times(1)).save(eq(newUser));
+        Mockito.verify(registrationRepository, Mockito.times(1)).save(argThat((AppUser saved) -> {
+            Assertions.assertAll("Testing saved user",
+                    () -> assertEquals(userRegistrationDto.getFirstName(), saved.getFirstName()),
+                    () -> assertEquals(userRegistrationDto.getLastName(), saved.getLastName()),
+                    () -> assertEquals(userRegistrationDto.getEmail(), saved.getEmail()),
+                    () -> assertNull(saved.getId())
+            );
+            return true;
+        }));
     }
 }
