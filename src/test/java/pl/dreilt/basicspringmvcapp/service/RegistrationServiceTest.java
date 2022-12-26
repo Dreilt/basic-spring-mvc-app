@@ -4,8 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import pl.dreilt.basicspringmvcapp.dto.AppUserRegistrationDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.exception.NoSuchRoleException;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRoleRepository;
@@ -16,8 +18,10 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createAppUser;
+import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createUserRole;
 import static pl.dreilt.basicspringmvcapp.service.RegistrationServiceTestHelper.createAppUserRegistrationDto;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,7 +41,7 @@ class RegistrationServiceTest {
     @Test
     void shouldReturnTrueIfAppUserExists() {
         // given
-        AppUser user = createAppUser(1L, "Jan", "Kowalski", "jankowalski@example.com");
+        AppUser user = createAppUser(2L, "Jan", "Kowalski", "jankowalski@example.com");
         when(registrationRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         // when
         boolean isAppUserExists = registrationService.checkIfAppUserExists(user.getEmail());
@@ -64,5 +68,22 @@ class RegistrationServiceTest {
         assertThatThrownBy(() -> registrationService.register(createAppUserRegistrationDto("Jan", "Kowalski", "jankowalski@example.com")))
                 .isInstanceOf(NoSuchRoleException.class)
                 .hasMessage("Invalid role: " + USER_ROLE, USER_ROLE);
+    }
+
+    @Test
+    void shouldRegisterUser() {
+        // given
+        AppUserRegistrationDto userRegistrationDto = createAppUserRegistrationDto("Jan", "Kowalski", "jankowalski@example.com");
+
+        AppUser newUser = createAppUser(2L, userRegistrationDto.getFirstName(), userRegistrationDto.getLastName(), userRegistrationDto.getEmail());
+
+        when(appUserRoleRepository.findRoleByName(USER_ROLE)).thenReturn(Optional.of(createUserRole()));
+
+        when(registrationRepository.save(newUser)).thenReturn(newUser);
+
+        // when
+        registrationService.register(userRegistrationDto);
+        // then
+        Mockito.verify(registrationRepository, Mockito.times(1)).save(eq(newUser));
     }
 }

@@ -10,6 +10,9 @@
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
+            <column name="uuid" type="UUID">
+                <constraints nullable="false" unique="true"/>
+            </column>
             <column name="file_name" type="VARCHAR(50)"/>
             <column name="file_type" type="VARCHAR(50)"/>
             <column name="file_data" type="BLOB"/>

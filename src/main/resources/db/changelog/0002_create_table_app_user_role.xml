@@ -10,6 +10,9 @@
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
+            <column name="uuid" type="UUID">
+                <constraints nullable="false" unique="true"/>
+            </column>
             <column name="name" type="VARCHAR(30)"/>
             <column name="display_name" type="VARCHAR(30)"/>
             <column name="description" type="VARCHAR(200)"/>

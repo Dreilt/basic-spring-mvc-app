@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import java.util.Arrays;
 
 @Entity
-public class EventImage {
+public class EventImage extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
