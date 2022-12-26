@@ -24,22 +24,6 @@ public class AppUserHelper {
                 .build();
     }
 
-    public static AppUser createAppUser(String firstName, String lastName, String email) {
-        return new AppUser.AppUserBuilder()
-//                .withId(id)
-                .withFirstName(firstName)
-                .withLastName(lastName)
-                .withEmail(email)
-                .withPassword(null)
-//                .withProfileImage(createProfileImage(id))
-                .withBio(null)
-                .withCity(null)
-                .withEnabled(true)
-                .withAccountNonLocked(true)
-                .withRoles(Set.of(createUserRole()))
-                .build();
-    }
-
     static ProfileImage createProfileImage(Long id) {
         ProfileImage profileImage = new ProfileImage();
         profileImage.setId(id);
