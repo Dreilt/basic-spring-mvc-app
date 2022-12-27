@@ -69,13 +69,7 @@ class AdminServiceTest {
     void shouldGetUsersBySearchIfSearchQueryHasOneWord() {
         // given
         String searchQuery = "jan";
-        AppUserSpecification firstNameSpec = new AppUserSpecification();
-        firstNameSpec.add(new SearchCriteria("firstName", searchQuery, SearchOperation.LIKE));
-        AppUserSpecification lastNameSpec = new AppUserSpecification();
-        lastNameSpec.add(new SearchCriteria("lastName", searchQuery, SearchOperation.LIKE));
-        AppUserSpecification emailSpec = new AppUserSpecification();
-        emailSpec.add(new SearchCriteria("email", searchQuery, SearchOperation.LIKE));
-        lenient().when(adminRepository.findAll(Specification.where(firstNameSpec).or(lastNameSpec).or(emailSpec), pageRequest)).thenReturn(new PageImpl<>(createAppUserListBySearch(searchQuery)));
+        when(adminRepository.findAll(AppUserSpecification.bySearch(searchQuery), pageRequest)).thenReturn(new PageImpl<>(createAppUserListBySearch(searchQuery)));
         // when
         Page<AppUserTableAPDto> users = adminService.findUsersBySearch(searchQuery, pageRequest);
         // then
@@ -90,11 +84,7 @@ class AdminServiceTest {
         // given
         String searchQuery = "jan kowalski";
         String[] searchWords = searchQuery.split(" ");
-        AppUserSpecification firstNameSpec = new AppUserSpecification();
-        firstNameSpec.add(new SearchCriteria("firstName", searchWords[0], SearchOperation.LIKE));
-        AppUserSpecification lastNameSpec = new AppUserSpecification();
-        lastNameSpec.add(new SearchCriteria("lastName", searchWords[1], SearchOperation.LIKE));
-        lenient().when(adminRepository.findAll(Specification.where(firstNameSpec).and(lastNameSpec), pageRequest)).thenReturn(new PageImpl<>(createAppUserListBySearch(searchQuery)));
+        when(adminRepository.findAll(AppUserSpecification.bySearch(searchWords[0], searchWords[1]), pageRequest)).thenReturn(new PageImpl<>(createAppUserListBySearch(searchQuery)));
         // when
         Page<AppUserTableAPDto> users = adminService.findUsersBySearch(searchQuery, pageRequest);
         // then
