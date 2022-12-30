@@ -6,10 +6,12 @@ import pl.dreilt.basicspringmvcapp.annotation.Image;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class CreateEventDto {
+public class NewEventDto {
     @NotNull(message = "{form.field.name.error.notNull.message}")
     @NotEmpty(message = "{form.field.name.error.notEmpty.message}")
     private String name;
+    @Image(width = 480, height = 270)
+    private MultipartFile eventImage;
     @NotNull(message = "{form.field.eventType.error.notNull.message}")
     @NotEmpty(message = "{form.field.eventType.error.notEmpty.message}")
     private String eventType;
@@ -32,8 +34,6 @@ public class CreateEventDto {
     @NotNull(message = "{form.field.description.error.notNull.message}")
     @NotEmpty(message = "{form.field.description.error.notEmpty.message}")
     private String description;
-    @Image(width = 480, height = 270)
-    private MultipartFile eventImage;
 
     public String getName() {
         return name;
@@ -41,6 +41,14 @@ public class CreateEventDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public MultipartFile getEventImage() {
+        return eventImage;
+    }
+
+    public void setEventImage(MultipartFile eventImage) {
+        this.eventImage = eventImage;
     }
 
     public String getEventType() {
@@ -107,11 +115,84 @@ public class CreateEventDto {
         this.description = description;
     }
 
-    public MultipartFile getEventImage() {
-        return eventImage;
-    }
+    public static class NewEventDtoBuilder {
+        private String name;
+        private MultipartFile eventImage;
+        private String eventType;
+        private String dateAndTime;
+        private String language;
+        private String admission;
+        private String city;
+        private String location;
+        private String address;
+        private String description;
 
-    public void setEventImage(MultipartFile eventImage) {
-        this.eventImage = eventImage;
+        public NewEventDtoBuilder() {
+        }
+
+        public NewEventDtoBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public NewEventDtoBuilder withEventImage(MultipartFile eventImage) {
+            this.eventImage = eventImage;
+            return this;
+        }
+
+        public NewEventDtoBuilder withEventType(String eventType) {
+            this.eventType = eventType;
+            return this;
+        }
+
+        public NewEventDtoBuilder withDateAndTime(String dateAndTime) {
+            this.dateAndTime = dateAndTime;
+            return this;
+        }
+
+        public NewEventDtoBuilder withLanguage(String language) {
+            this.language = language;
+            return this;
+        }
+
+        public NewEventDtoBuilder withAdmission(String admission) {
+            this.admission = admission;
+            return this;
+        }
+
+        public NewEventDtoBuilder withCity(String city) {
+            this.city = city;
+            return this;
+        }
+
+        public NewEventDtoBuilder withLocation(String location) {
+            this.location = location;
+            return this;
+        }
+
+        public NewEventDtoBuilder withAddress(String address) {
+            this.address = address;
+            return this;
+        }
+
+        public NewEventDtoBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public NewEventDto build() {
+            NewEventDto newEventDto = new NewEventDto();
+            newEventDto.name = name;
+            newEventDto.eventImage = eventImage;
+            newEventDto.eventType = eventType;
+            newEventDto.dateAndTime = dateAndTime;
+            newEventDto.language = language;
+            newEventDto.admission = admission;
+            newEventDto.city = city;
+            newEventDto.location = location;
+            newEventDto.address = address;
+            newEventDto.description = description;
+            return newEventDto;
+        }
     }
 }

@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class AppUserHelper {
 
-    public static AppUser createAppUser(Long id, String firstName, String lastName, String email) {
+    public static AppUser createAppUser(Long id, String firstName, String lastName, String email, AppUserRole userRole) {
         return new AppUser.AppUserBuilder()
                 .withId(id)
                 .withFirstName(firstName)
@@ -20,7 +20,7 @@ public class AppUserHelper {
                 .withCity(null)
                 .withEnabled(true)
                 .withAccountNonLocked(true)
-                .withRoles(Set.of(createUserRole()))
+                .withRoles(Set.of(userRole))
                 .build();
     }
 

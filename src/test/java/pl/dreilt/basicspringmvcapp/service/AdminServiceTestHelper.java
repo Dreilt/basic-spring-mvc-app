@@ -9,16 +9,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createAppUser;
-import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createOrganizerRole;
+import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.*;
 
 public class AdminServiceTestHelper {
 
     static List<AppUser> createAppUserList() {
         return Arrays.asList(
-                createAppUser(1L, "Jan", "Kowalski", "jankowalski@example.com"),
-                createAppUser(2L, "Patryk", "Kowalski", "patrykkowalski@example.com"),
-                createAppUser(3L, "Jan", "Nowak", "jannowak@example.com")
+                createAppUser(1L, "Jan", "Kowalski", "jankowalski@example.com", createOrganizerRole()),
+                createAppUser(2L, "Patryk", "Kowalski", "patrykkowalski@example.com", createUserRole()),
+                createAppUser(3L, "Jan", "Nowak", "jannowak@example.com", createUserRole())
         );
     }
 

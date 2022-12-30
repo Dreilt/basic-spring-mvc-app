@@ -28,7 +28,7 @@ public class ImageValidator implements ConstraintValidator<Image, MultipartFile>
         List<String> errorMessages = new ArrayList<>();
         String message;
 
-        if (!image.isEmpty()) {
+        if (image != null && !image.isEmpty()) {
             String[] allowedFileTypes = new String[] { "image/jpeg", "image/jpg", "image/png" };
             String fileType = image.getContentType();
             boolean isFileTypeValid = Arrays.stream(allowedFileTypes).anyMatch(fileType::equals);

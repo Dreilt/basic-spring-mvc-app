@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
-import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createAppUser;
+import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.*;
 import static pl.dreilt.basicspringmvcapp.service.AppUserServiceTestHelper.createAppUserDetails;
 import static pl.dreilt.basicspringmvcapp.service.AppUserServiceTestHelper.createAppUserProfileDataEditDto;
 
@@ -33,7 +33,7 @@ class AppUserServiceTest {
     @Test
     void shouldGetUserProfile() {
         // given
-        AppUser user = createAppUser(2L, "Jan", "Kowalski", "jankowalski@example.com");
+        AppUser user = createAppUser(2L, "Jan", "Kowalski", "jankowalski@example.com", createOrganizerRole());
         when(appUserRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         // when
         AppUserProfileDto userProfile = appUserService.findUserProfile(user.getEmail());
@@ -60,7 +60,7 @@ class AppUserServiceTest {
     @Test
     void shouldGetUserProfileDataToEdit() {
         // given
-        AppUser user = createAppUser(1L, "emptyFirstName", "emptyLastName", "jankowalski@example.com");
+        AppUser user = createAppUser(1L, "emptyFirstName", "emptyLastName", "jankowalski@example.com", createOrganizerRole());
         when(appUserRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         // when
         AppUserProfileDataEditDto userProfileToEdit = appUserService.findUserProfileToEdit(user.getEmail());
@@ -89,7 +89,7 @@ class AppUserServiceTest {
         // given
         Authentication auth = new UsernamePasswordAuthenticationToken(createAppUserDetails("emptyFirstName", "emptyLastName", "jankowalski@example.com", "USER"), null);
         SecurityContextHolder.getContext().setAuthentication(auth);
-        AppUser user = createAppUser(1L, "emptyFirstName", "emptyLastName", "jankowalski@example.com");
+        AppUser user = createAppUser(1L, "emptyFirstName", "emptyLastName", "jankowalski@example.com", createOrganizerRole());
         when(appUserRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         // when
         AppUserProfileDataEditDto userProfileUpdated = appUserService.updateUserProfile(createAppUserProfileDataEditDto());
@@ -104,7 +104,7 @@ class AppUserServiceTest {
     @Test
     void shouldGetUserProfileByUserId() {
         // given
-        AppUser user = createAppUser(2L, "Patryk", "Kowalski", "patrykkowalski@example.com");
+        AppUser user = createAppUser(2L, "Patryk", "Kowalski", "patrykkowalski@example.com", createUserRole());
         when(appUserRepository.findById(user.getId())).thenReturn(Optional.of(user));
         // when
         AppUserProfileDto userProfile = appUserService.findUserProfileByUserId(user.getId());

@@ -11,18 +11,10 @@
 <body>
 <nav th:replace="fragments :: navbar"></nav>
 <div class="form-container">
-    <form id="createEventForm" name="createEventForm" class="custom-form" onsubmit="return validateCreateEventForm();" method="post" th:method="post" action="#" th:action="@{/events}" th:object="${createEventDto}">
+    <form id="createEventForm" name="createEventForm" class="custom-form" enctype="multipart/form-data" onsubmit="return validateCreateEventForm();" method="post" th:method="post" action="#" th:action="@{/events}" th:object="${newEventDto}">
         <div class="form-heading">
             <h2>Utwórz wydarzenie</h2>
             <span>Wprowadź informacje o wydarzeniu poniżej</span>
-        </div>
-        <div class="form-group">
-            <label for="eventImage" class="form-label">ZDJĘCIE WYDARZENIA</label>
-            <input type="file"
-                   id="eventImage" name="eventImage"
-                   class="form-control-file" th:class="${#fields.hasErrors('eventImage')} == FALSE ? 'form-control-file' : 'form-control-file is-invalid'"
-                   th:field="*{eventImage}">
-            <div class="error-message" th:errors="*{eventImage}">Błędy związane ze zdjęciem wydarzenia</div>
         </div>
         <div class="form-group">
             <label for="name" class="form-label">NAZWA</label>
@@ -34,6 +26,16 @@
             <div id="nameErrorMessage" class="error-message" style="display: none;" th:text="#{form.field.name.error.notEmpty.message}">Błędy związane z nazwą</div>
             <div class="error-message" th:errors="*{name}">Błędy związane z nazwą</div>
         </div>
+
+        <div class="form-group">
+            <label for="eventImage" class="form-label">ZDJĘCIE WYDARZENIA</label>
+            <input type="file"
+                   id="eventImage" name="eventImage"
+                   class="form-control-file" th:class="${#fields.hasErrors('eventImage')} == FALSE ? 'form-control-file' : 'form-control-file is-invalid'"
+                   th:field="*{eventImage}">
+            <div class="error-message" th:errors="*{eventImage}">Błędy związane ze zdjęciem wydarzenia</div>
+        </div>
+
         <div class="form-group">
             <label for="eventType" class="form-label">TYP WYDARZENIA</label>
             <select id="eventType" name="eventType"

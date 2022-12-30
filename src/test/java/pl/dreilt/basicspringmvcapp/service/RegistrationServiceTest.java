@@ -23,8 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.when;
-import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createAppUser;
-import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createUserRole;
+import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.*;
 import static pl.dreilt.basicspringmvcapp.service.RegistrationServiceTestHelper.createAppUserRegistrationDto;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,7 +43,7 @@ class RegistrationServiceTest {
     @Test
     void shouldReturnTrueIfAppUserExists() {
         // given
-        AppUser user = createAppUser(2L, "Jan", "Kowalski", "jankowalski@example.com");
+        AppUser user = createAppUser(2L, "Jan", "Kowalski", "jankowalski@example.com", createOrganizerRole());
         when(registrationRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         // when
         boolean isAppUserExists = registrationService.checkIfAppUserExists(user.getEmail());
@@ -83,10 +82,10 @@ class RegistrationServiceTest {
         // then
         Mockito.verify(registrationRepository, Mockito.times(1)).save(argThat((AppUser saved) -> {
             Assertions.assertAll("Testing saved user",
+                    () -> assertNull(saved.getId()),
                     () -> assertEquals(userRegistrationDto.getFirstName(), saved.getFirstName()),
                     () -> assertEquals(userRegistrationDto.getLastName(), saved.getLastName()),
-                    () -> assertEquals(userRegistrationDto.getEmail(), saved.getEmail()),
-                    () -> assertNull(saved.getId())
+                    () -> assertEquals(userRegistrationDto.getEmail(), saved.getEmail())
             );
             return true;
         }));

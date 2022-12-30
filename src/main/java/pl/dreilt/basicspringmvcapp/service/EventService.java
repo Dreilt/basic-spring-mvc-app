@@ -1,5 +1,6 @@
 package pl.dreilt.basicspringmvcapp.service;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -7,9 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dreilt.basicspringmvcapp.dto.CityDto;
-import pl.dreilt.basicspringmvcapp.dto.CreateEventDto;
 import pl.dreilt.basicspringmvcapp.dto.EventBoxDto;
 import pl.dreilt.basicspringmvcapp.dto.EventDto;
+import pl.dreilt.basicspringmvcapp.dto.NewEventDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.Event;
 import pl.dreilt.basicspringmvcapp.entity.EventImage;
@@ -44,7 +45,13 @@ public class EventService {
         this.appUserRepository = appUserRepository;
     }
 
-    public void createEvent(CreateEventDto createEventDto) {
+    public EventDto findEventById(Long id) {
+        return eventRepository.findById(id)
+                .map(EventDtoMapper::mapToEventDto)
+                .orElseThrow(() -> new EventNotFoundException("Event with ID " + id + " not found"));
+    }
+
+    public EventDto createEvent(NewEventDto newEventDto) {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
             throw new AccessDeniedException("Odmowa dostępu");
@@ -53,20 +60,38 @@ public class EventService {
         Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
         if (userOpt.isPresent()) {
             Event newEvent = new Event();
-            newEvent.setName(createEventDto.getName());
-            newEvent.setEventType(EventType.valueOf(createEventDto.getEventType().toUpperCase()).getDisplayName());
-            newEvent.setDateAndTime(LocalDateTime.parse(createEventDto.getDateAndTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-            newEvent.setLanguage(createEventDto.getLanguage());
-            newEvent.setAdmission(AdmissionType.valueOf(createEventDto.getAdmission().toUpperCase()).getDisplayName());
-            newEvent.setCity(createEventDto.getCity());
-            newEvent.setLocation(createEventDto.getLocation());
-            newEvent.setAddress(createEventDto.getAddress());
+            newEvent.setName(newEventDto.getName());
+            if (newEventDto.getEventImage() == null || newEventDto.getEventImage().isEmpty()) {
+                setDefaultEventImage(newEvent);
+            } else {
+                setEventImage(newEventDto.getEventImage(), newEvent);
+            }
+            newEvent.setEventType(EventType.valueOf(newEventDto.getEventType().toUpperCase()).getDisplayName());
+            newEvent.setDateAndTime(LocalDateTime.parse(newEventDto.getDateAndTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            newEvent.setLanguage(newEventDto.getLanguage());
+            newEvent.setAdmission(AdmissionType.valueOf(newEventDto.getAdmission().toUpperCase()).getDisplayName());
+            newEvent.setCity(newEventDto.getCity());
+            newEvent.setLocation(newEventDto.getLocation());
+            newEvent.setAddress(newEventDto.getAddress());
             newEvent.setOrganizer(userOpt.get());
-            newEvent.setDescription(createEventDto.getDescription());
-            setEventImage(createEventDto.getEventImage(), newEvent);
-            eventRepository.save(newEvent);
+            newEvent.setDescription(newEventDto.getDescription());
+            return EventDtoMapper.mapToEventDto(eventRepository.save(newEvent));
         } else {
             throw new AppUserNotFoundException("User with email " + email + " not found");
+        }
+    }
+
+    private void setDefaultEventImage(Event event) {
+        ClassPathResource resource = new ClassPathResource("static/images/default_profile_image.png");
+        try (InputStream defaultEventImage = resource.getInputStream()) {
+            EventImage eventImage = new EventImage();
+            eventImage.setFileName(resource.getFilename());
+            eventImage.setFileType("image/png");
+            eventImage.setFileData(defaultEventImage.readAllBytes());
+            eventImageRepository.save(eventImage);
+            event.setEventImage(eventImage);
+        } catch (IOException e) {
+            throw new DefaultProfileImageNotFoundException("File " + resource.getPath() + " not found");
         }
     }
 
@@ -76,29 +101,13 @@ public class EventService {
             if (eventImage.getFileData() != is.readAllBytes()) {
                 eventImage.setFileName(image.getOriginalFilename());
                 eventImage.setFileType(image.getContentType());
-                eventImage.setFileData(is.readAllBytes());
+                eventImage.setFileData(image.getBytes());
                 eventImageRepository.save(eventImage);
                 event.setEventImage(eventImage);
             }
         } catch (IOException e) {
             throw new DefaultProfileImageNotFoundException("File not found");
         }
-    }
-
-    public List<EventBoxDto> findAllUpcomingEvents(LocalDateTime currentDateAndTime) {
-        return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findAllUpcomingEvents(currentDateAndTime));
-    }
-
-    public List<EventBoxDto> findAllPastEvents(LocalDateTime currentDateAndTime) {
-        return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findAllPastEvents(currentDateAndTime));
-    }
-
-    public List<EventBoxDto> findUpcomingEventsByCity(LocalDateTime currentDateAndTime, String city) {
-        return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findUpcomingEventsByCity(currentDateAndTime, city));
-    }
-
-    public List<EventBoxDto> findPastEventsByCity(LocalDateTime currentDateAndTime, String city) {
-        return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findPastEventsByCity(currentDateAndTime, city));
     }
 
     public List<CityDto> findAllCities() {
@@ -155,36 +164,20 @@ public class EventService {
         return word;
     }
 
-    public EventDto findEventById(Long id) {
-        return eventRepository.findById(id)
-                .map(EventDtoMapper::mapToEventDto)
-                .orElseThrow(() -> new EventNotFoundException("Event with ID " + id + " not found"));
+    public List<EventBoxDto> findAllUpcomingEvents(LocalDateTime currentDateAndTime) {
+        return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findAllUpcomingEvents(currentDateAndTime));
     }
 
-    @Transactional
-    public void joinToEvent(Long eventId) {
-        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-        if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
-            throw new AccessDeniedException("Odmowa dostępu");
-        }
-        String email = currentUser.getName();
-        Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
-        if (userOpt.isPresent()) {
-            AppUser user = userOpt.get();
-            addUserToEvent(eventId, user);
-        } else {
-            throw new AppUserNotFoundException("User with email " + email + " not found");
-        }
+    public List<EventBoxDto> findAllPastEvents(LocalDateTime currentDateAndTime) {
+        return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findAllPastEvents(currentDateAndTime));
     }
 
-    private void addUserToEvent(Long eventId, AppUser user) {
-        Optional<Event> eventOpt = eventRepository.findById(eventId);
-        if (eventOpt.isPresent()) {
-            Event event = eventOpt.get();
-            event.getParticipants().add(user);
-        } else {
-            throw new EventNotFoundException("Event with ID " + eventId + " not found");
-        }
+    public List<EventBoxDto> findUpcomingEventsByCity(LocalDateTime currentDateAndTime, String city) {
+        return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findUpcomingEventsByCity(currentDateAndTime, city));
+    }
+
+    public List<EventBoxDto> findPastEventsByCity(LocalDateTime currentDateAndTime, String city) {
+        return EventBoxDtoMapper.mapToEventBoxDtos(eventRepository.findPastEventsByCity(currentDateAndTime, city));
     }
 
     public List<EventBoxDto> findUpcomingEventsByUser(LocalDateTime currentDateAndTime) {
@@ -259,6 +252,32 @@ public class EventService {
             return event.getParticipants().contains(user);
         } else {
             throw new AppUserNotFoundException("User with email " + email + " not found");
+        }
+    }
+
+    @Transactional
+    public void joinToEvent(Long eventId) {
+        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+        if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
+            throw new AccessDeniedException("Odmowa dostępu");
+        }
+        String email = currentUser.getName();
+        Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
+        if (userOpt.isPresent()) {
+            AppUser user = userOpt.get();
+            addUserToEvent(eventId, user);
+        } else {
+            throw new AppUserNotFoundException("User with email " + email + " not found");
+        }
+    }
+
+    private void addUserToEvent(Long eventId, AppUser user) {
+        Optional<Event> eventOpt = eventRepository.findById(eventId);
+        if (eventOpt.isPresent()) {
+            Event event = eventOpt.get();
+            event.getParticipants().add(user);
+        } else {
+            throw new EventNotFoundException("Event with ID " + eventId + " not found");
         }
     }
 }

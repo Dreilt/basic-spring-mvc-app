@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createAppUser;
+import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createOrganizerRole;
 import static pl.dreilt.basicspringmvcapp.service.AppUserServiceTestHelper.createAppUserDetails;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,7 +52,7 @@ class AppUserLoginDataServiceTest {
         AppUserDetails userDetails = createAppUserDetails("Jan", "Kowalski", "jankowalski@example.com", "USER");
         Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, "user1", userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
-        AppUser user = createAppUser(2L, "Jan", "Kowalski", "jankowalski@example.com");
+        AppUser user = createAppUser(2L, "Jan", "Kowalski", "jankowalski@example.com", createOrganizerRole());
         when(appUserRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         // when
         appUserLoginDataService.changePassword("user1", "qwerty");
@@ -64,10 +65,10 @@ class AppUserLoginDataServiceTest {
     @Test
     void shouldThrowExceptionIfUserDoesNotExistInDatabase() {
         // given
-        AppUserDetails userDetails = createAppUserDetails("Jan", "Kowalski", "jankowalski@example.com", "USER");
+        AppUserDetails userDetails = createAppUserDetails("Jan", "Kowalski", "jankowalski@example.com", "ORGANIZER");
         Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, "user1", userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
-        AppUser user = createAppUser(2L, "Jan", "Kowalski", "jankowalski@example.com");
+        AppUser user = createAppUser(2L, "Jan", "Kowalski", "jankowalski@example.com", createOrganizerRole());
         when(appUserRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
         // then
         assertThatThrownBy(() -> appUserLoginDataService.changePassword("user1", "qwerty"))
@@ -94,7 +95,7 @@ class AppUserLoginDataServiceTest {
         AppUserDetails userDetails = createAppUserDetails("Admin", "Admin", "admin@example.com", "ADMIN");
         Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, "admin", userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
-        AppUser user = createAppUser(2L, "Jan", "Kowalski", "jankowalski@example.com");
+        AppUser user = createAppUser(2L, "Jan", "Kowalski", "jankowalski@example.com", createOrganizerRole());
         when(appUserRepository.findById(user.getId())).thenReturn(Optional.of(user));
         // when
         appUserLoginDataService.changePassword(2L, "qwerty");

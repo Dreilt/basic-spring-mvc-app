@@ -11,6 +11,13 @@ public class Event extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @OneToOne
+    @JoinTable(
+            name = "event_event_image",
+            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "event_image_id", referencedColumnName = "id")
+    )
+    private EventImage eventImage;
     private String eventType;
     private LocalDateTime dateAndTime;
     private String language;
@@ -22,13 +29,6 @@ public class Event extends BaseEntity {
     @JoinColumn(name = "organizer_id")
     private AppUser organizer;
     private String description;
-    @OneToOne
-    @JoinTable(
-            name = "event_event_image",
-            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "event_image_id", referencedColumnName = "id")
-    )
-    private EventImage eventImage;
     @OneToMany
     @JoinTable(
             name = "event_app_user",
@@ -51,6 +51,14 @@ public class Event extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public EventImage getEventImage() {
+        return eventImage;
+    }
+
+    public void setEventImage(EventImage eventImage) {
+        this.eventImage = eventImage;
     }
 
     public String getEventType() {
@@ -123,14 +131,6 @@ public class Event extends BaseEntity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public EventImage getEventImage() {
-        return eventImage;
-    }
-
-    public void setEventImage(EventImage eventImage) {
-        this.eventImage = eventImage;
     }
 
     public List<AppUser> getParticipants() {

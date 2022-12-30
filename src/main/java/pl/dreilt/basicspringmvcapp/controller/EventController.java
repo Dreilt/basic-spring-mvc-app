@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.dreilt.basicspringmvcapp.dto.CityDto;
-import pl.dreilt.basicspringmvcapp.dto.CreateEventDto;
+import pl.dreilt.basicspringmvcapp.dto.NewEventDto;
 import pl.dreilt.basicspringmvcapp.dto.EventDto;
 import pl.dreilt.basicspringmvcapp.enumeration.AdmissionType;
 import pl.dreilt.basicspringmvcapp.enumeration.EventType;
@@ -63,21 +63,21 @@ public class EventController {
 
     @GetMapping("/events/create_event")
     public String showCreateEventForm(Model model) {
-        model.addAttribute("createEventDto", new CreateEventDto());
+        model.addAttribute("newEventDto", new NewEventDto());
         model.addAttribute("eventTypeList", Arrays.asList(EventType.values()));
         model.addAttribute("admissionTypeList", Arrays.asList(AdmissionType.values()));
         return "forms/create-event-form";
     }
 
     @PostMapping("/events")
-    public String createEvent(@Valid @ModelAttribute("createEventDto") CreateEventDto createEventDto, BindingResult bindingResult, Model model) {
+    public String createEvent(@Valid @ModelAttribute("newEventDto") NewEventDto newEventDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("eventTypeList", Arrays.asList(EventType.values()));
             model.addAttribute("admissionTypeList", Arrays.asList(AdmissionType.values()));
             return "forms/create-event-form";
         } else {
-            eventService.createEvent(createEventDto);
-            return "redirect:/events";
+            EventDto newEvent = eventService.createEvent(newEventDto);
+            return "redirect:/events/" + newEvent.getId();
         }
     }
 
@@ -88,8 +88,7 @@ public class EventController {
     }
 
     @GetMapping("/events/my_events")
-    public String getEventsByUser(@RequestParam(name = "city", required = false) String city,
-                                  Model model) {
+    public String getEventsByUser(@RequestParam(name = "city", required = false) String city, Model model) {
         List<CityDto> cities = eventService.findAllCities();
         model.addAttribute("cities", cities);
         if (city != null) {

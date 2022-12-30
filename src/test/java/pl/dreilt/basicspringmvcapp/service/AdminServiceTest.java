@@ -17,9 +17,6 @@ import pl.dreilt.basicspringmvcapp.dto.AppUserTableAPDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.repository.AdminRepository;
-import pl.dreilt.basicspringmvcapp.specification.AppUserSpecification;
-import pl.dreilt.basicspringmvcapp.specification.SearchCriteria;
-import pl.dreilt.basicspringmvcapp.specification.SearchOperation;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,9 +24,9 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createAppUser;
+import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.createOrganizerRole;
 import static pl.dreilt.basicspringmvcapp.service.AdminServiceTestHelper.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -69,7 +66,7 @@ class AdminServiceTest {
     void shouldGetUsersBySearchIfSearchQueryHasOneWord() {
         // given
         String searchQuery = "jan";
-        when(adminRepository.findAll(AppUserSpecification.bySearch(searchQuery), pageRequest)).thenReturn(new PageImpl<>(createAppUserListBySearch(searchQuery)));
+        when(adminRepository.findAll(Mockito.any(Specification.class), Mockito.eq(pageRequest))).thenReturn(new PageImpl<>(createAppUserListBySearch(searchQuery)));
         // when
         Page<AppUserTableAPDto> users = adminService.findUsersBySearch(searchQuery, pageRequest);
         // then
@@ -83,8 +80,7 @@ class AdminServiceTest {
     void shouldGetUsersBySearchIfSearchQueryHasTwoWord() {
         // given
         String searchQuery = "jan kowalski";
-        String[] searchWords = searchQuery.split(" ");
-        when(adminRepository.findAll(AppUserSpecification.bySearch(searchWords[0], searchWords[1]), pageRequest)).thenReturn(new PageImpl<>(createAppUserListBySearch(searchQuery)));
+        when(adminRepository.findAll(Mockito.any(Specification.class), Mockito.eq(pageRequest))).thenReturn(new PageImpl<>(createAppUserListBySearch(searchQuery)));
         // when
         Page<AppUserTableAPDto> users = adminService.findUsersBySearch(searchQuery, pageRequest);
         // then
@@ -97,7 +93,7 @@ class AdminServiceTest {
     @Test
     void shouldGetUserAccountDataToEdit() {
         // given
-        AppUser user = createAppUser(1L, "Jan", "Kowalski", "jankowalski@example.com");
+        AppUser user = createAppUser(1L, "Jan", "Kowalski", "jankowalski@example.com", createOrganizerRole());
         when(adminRepository.findById(user.getId())).thenReturn(Optional.of(user));
         // when
         AppUserAccountDataEditAPDto userAccountData = adminService.findUserAccountDataToEdit(user.getId());
@@ -121,7 +117,7 @@ class AdminServiceTest {
     @Test
     void shouldUpdateUserAccountData() {
         // given
-        AppUser user = createAppUser(1L, "Jan", "Kowalski", "jankowalski@example.com");
+        AppUser user = createAppUser(1L, "Jan", "Kowalski", "jankowalski@example.com", createOrganizerRole());
         when(adminRepository.findById(user.getId())).thenReturn(Optional.of(user));
         // when
         AppUserAccountDataEditAPDto userAccountUpdated = adminService.updateUserAccountData(user.getId(), createAppUserAccountDataEditAPDto());
@@ -146,7 +142,7 @@ class AdminServiceTest {
     @Test
     void shouldGetUserProfileDataToEdit() {
         // given
-        AppUser user = createAppUser(1L, "emptyFirstName", "emptyLastName", "jankowalski@example.com");
+        AppUser user = createAppUser(1L, "emptyFirstName", "emptyLastName", "jankowalski@example.com", createOrganizerRole());
         when(adminRepository.findById(user.getId())).thenReturn(Optional.of(user));
         // when
         AppUserProfileDataEditAPDto userProfile = adminService.findUserProfileDataToEdit(user.getId());
@@ -171,7 +167,7 @@ class AdminServiceTest {
     @Test
     void shouldGetUpdatedUserProfileData() {
         // given
-        AppUser user = createAppUser(1L, "emptyFirstName", "emptyLastName", "jankowalski@example.com");
+        AppUser user = createAppUser(1L, "emptyFirstName", "emptyLastName", "jankowalski@example.com", createOrganizerRole());
         when(adminRepository.findById(user.getId())).thenReturn(Optional.of(user));
         // when
         AppUserProfileDataEditAPDto userProfileUpdated = adminService.updateUserProfile(user.getId(), createAppUserProfileDataEditAPDto());
