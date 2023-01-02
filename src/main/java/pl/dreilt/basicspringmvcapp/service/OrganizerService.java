@@ -154,22 +154,12 @@ public class OrganizerService {
         if (source.getName() != null && !source.getName().equals(target.getName())) {
             target.setName(source.getName());
         }
-
-
-
-        // to do poprawy jutro, bo chyba przychodzi null, albo nie ma wartości zwracanej w tej metodzie wyżej i nie ma skąd pobrać obrazka
-        // sprawdzić co się dziej w mapperze po aktualizacji
         if (!source.getEventImage().isEmpty()) {
             setEventImage(source.getEventImage(), target);
         }
-
-
-
 //        if (source.getDateAndTime() != null && !source.getDateAndTime().equals(target.getDateAndTime().toString())) {
 //            target.setDateAndTime(source.getDateAndTime());
 //        }
-
-
 
         if (source.getEventType() != null && !EventType.valueOf(source.getEventType().toUpperCase()).getDisplayName().equals(target.getEventType())) {
             target.setEventType(EventType.valueOf(source.getEventType().toUpperCase()).getDisplayName());
