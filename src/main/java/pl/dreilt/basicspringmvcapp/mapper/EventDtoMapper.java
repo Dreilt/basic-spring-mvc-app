@@ -12,6 +12,8 @@ public class EventDtoMapper {
         EventDto eventDto = new EventDto();
         eventDto.setId(event.getId());
         eventDto.setName(event.getName());
+        eventDto.setImageType(event.getEventImage().getFileType());
+        eventDto.setImageData(Base64.getEncoder().encodeToString(event.getEventImage().getFileData()));
         eventDto.setEventType(event.getEventType());
         eventDto.setDate(event.getDateAndTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         eventDto.setHour(event.getDateAndTime().format(DateTimeFormatter.ofPattern("HH:mm")));
@@ -22,13 +24,9 @@ public class EventDtoMapper {
         eventDto.setAddress(event.getAddress());
         eventDto.setOrganizerId(event.getOrganizer().getId());
         eventDto.setOrganizerImageType(event.getOrganizer().getProfileImage().getFileType());
-        String organizerImageData = Base64.getEncoder().encodeToString(event.getOrganizer().getProfileImage().getFileData());
-        eventDto.setOrganizerImageData(organizerImageData);
+        eventDto.setOrganizerImageData(Base64.getEncoder().encodeToString(event.getOrganizer().getProfileImage().getFileData()));
         eventDto.setOrganizerName(event.getOrganizer().getFirstName() + " " + event.getOrganizer().getLastName());
         eventDto.setDescription(event.getDescription());
-        eventDto.setImageType(event.getEventImage().getFileType());
-        String imageData = Base64.getEncoder().encodeToString(event.getEventImage().getFileData());
-        eventDto.setImageData(imageData);
         eventDto.setParticipants(event.getParticipants());
         return eventDto;
     }

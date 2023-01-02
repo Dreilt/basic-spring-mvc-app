@@ -33,8 +33,8 @@ public interface EventRepository extends CrudRepository<Event, Long> {
     List<Event> findPastEventsByUser(@Param("currentDateAndTime") LocalDateTime currentDateAndTime, @Param("user") AppUser user);
 
     @Query("SELECT e FROM Event e WHERE e.dateAndTime > :currentDateAndTime AND :user MEMBER OF e.participants AND e.city = :city ORDER BY e.dateAndTime ASC")
-    List<Event> findUpcomingEventsByUserAndCity(LocalDateTime currentDateAndTime, @Param("user") AppUser user, @Param("city") String city);
+    List<Event> findUpcomingEventsByUserAndCity(@Param("currentDateAndTime") LocalDateTime currentDateAndTime, @Param("user") AppUser user, @Param("city") String city);
 
     @Query("SELECT e FROM Event e WHERE e.dateAndTime < :currentDateAndTime AND :user MEMBER OF e.participants AND e.city = :city ORDER BY e.dateAndTime ASC")
-    List<Event> findPastEventsByUserAndCity(LocalDateTime currentDateAndTime, @Param("user") AppUser user, @Param("city") String city);
+    List<Event> findPastEventsByUserAndCity(@Param("currentDateAndTime") LocalDateTime currentDateAndTime, @Param("user") AppUser user, @Param("city") String city);
 }
