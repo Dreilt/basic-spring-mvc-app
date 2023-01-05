@@ -1,13 +1,13 @@
 package pl.dreilt.basicspringmvcapp.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import pl.dreilt.basicspringmvcapp.dto.CityDto;
-import pl.dreilt.basicspringmvcapp.dto.EditEventDto;
-import pl.dreilt.basicspringmvcapp.dto.EventDto;
-import pl.dreilt.basicspringmvcapp.dto.NewEventDto;
+import pl.dreilt.basicspringmvcapp.dto.*;
 import pl.dreilt.basicspringmvcapp.enumeration.AdmissionType;
 import pl.dreilt.basicspringmvcapp.enumeration.EventType;
 import pl.dreilt.basicspringmvcapp.service.EventService;
@@ -92,6 +92,18 @@ public class OrganizerController {
     public String deleteEvent(@PathVariable Long id) {
         organizerService.deleteEventById(id);
         return "redirect:/organizer_panel/events";
+    }
+
+    @GetMapping("/organizer_panel/events/{id}/participants")
+    public String getEventParticipantsList(@RequestParam(name = "page", required = false) Integer pageNumber,
+                                           @PathVariable Long id,
+                                           Model model) {
+        int page = pageNumber != null ? pageNumber : 1;
+        PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.fromString("asc"), "lastName"));
+        Page<ParticipantDto> participants = organizerService.findEventParticipantsList(id, pageRequest);
+        model.addAttribute("id", id);
+        model.addAttribute("participants", participants);
+        return "organizer/participants-list";
     }
 
     private String getCityName(List<CityDto> cities, String city) {

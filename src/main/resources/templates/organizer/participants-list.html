@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pl"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Liczba uczestników'">Liczba uczestników</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link href="../static/styles/main.css" th:href="@{/styles/main.css}" rel="stylesheet"/>
+</head>
+<body>
+<nav th:replace="fragments :: navbar"></nav>
+
+<div class="container">
+    <div class="table-heading">
+        <h2>Uczestnicy wydarzenia</h2>
+    </div>
+<!--    <div class="search-container">-->
+<!--        <form id="searchForm" name="searchForm" class="search-form" onsubmit="return validateSearchForm()" method="get" th:method="get" action="#" th:action="@{'/admin_panel/users/results'}">-->
+<!--            <div style="padding: 0.5rem 0.75rem;">-->
+<!--                <i class="fa-solid fa-search search-icon"></i>-->
+<!--            </div>-->
+<!--            <input type="search"-->
+<!--                   id="search_query" name="search_query"-->
+<!--                   class="search-form-input"-->
+<!--                   placeholder="Szukaj"-->
+<!--                   th:value="${#request.getParameter('search_query')}">-->
+<!--            <button class="btn form-button" type="submit">Szukaj</button>-->
+<!--        </form>-->
+<!--    </div>-->
+    <div class="row" style="margin: 0; padding: 5px; background-color: #ffffff; display: flex; justify-content: center; align-items: center;">
+        <div class="col-md-4"></div>
+        <div class="col-md-4" style="text-align: center;">
+            <span th:text="'Liczba uczestników: ' + ${participants.getTotalElements()}">Liczba uczestników: 0</span>
+        </div>
+<!--        <div class="col-md-4" style="text-align: right; padding: 5px 0;">-->
+<!--            <div class="dropdown show">-->
+<!--                <a class="sort-options-menu dropdown-toggle" href="#" role="button" id="sortOptionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--                    Nazwisko: Rosnąco (od A do Z)-->
+<!--                </a>-->
+<!--                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="sortOptionsMenu">-->
+<!--                    <a class="dropdown-item" id="lastNameAsc" href="#" th:href="${prefixSortUrl + 'sort_by=lastName&order_by=asc'}">Nazwisko: Rosnąco (od A do Z)</a>-->
+<!--                    <a class="dropdown-item" id="lastNameDesc" href="#" th:href="${prefixSortUrl + 'sort_by=lastName&order_by=desc'}">Nazwisko: Malejąco (od Z do A)</a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+        <div class="col-md-4"></div>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Imię</th>
+            <th scope="col">Nazwisko</th>
+<!--            <th scope="col">E-mail</th>-->
+<!--            <th scope="col">Włączony</th>-->
+<!--            <th scope="col">Zablokowany</th>-->
+<!--            <th scope="col">Rola</th>-->
+<!--            <th scope="col"></th>-->
+<!--            <th scope="col"></th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="participant, status: ${participants}">
+            <td th:text="${((participants.getNumber() + 1) * 10) - 10 + status.count}">1</td>
+            <td th:text="${participant.firstName}">Jan</td>
+            <td th:text="${participant.lastName}">Kowalski</td>
+<!--            <td th:text="${user.email}">jankowalski@example.com</td>-->
+<!--            <td th:text="${user.enabled == true ? 'Tak' : 'Nie'}">Tak</td>-->
+<!--            <td th:text="${user.accountNonLocked == true ? 'Nie' : 'Tak'}">Nie</td>-->
+<!--            <td>-->
+<!--                <p th:each="role: ${user.roles}" th:text="${role.displayName}">Użytkownik</p>-->
+<!--            </td>-->
+<!--            <td>-->
+<!--                <a href="#" th:href="@{'/admin_panel/users/' + ${user.id} + '/settings/account'}"><i class="fa-solid fa-pen icon-button"></i></a>-->
+<!--            </td>-->
+<!--            <td>-->
+<!--                <button type="button" class="table-button" data-toggle="modal" th:attr="data-target='#deleteUserModal' + ${user.id}">-->
+<!--                    <i class="fa-solid fa-trash-can icon-button"></i>-->
+<!--                </button>-->
+<!--                <div class="modal fade" th:id="*{'deleteUserModal' + {user.id}}" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true">-->
+<!--                    <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--                        <div class="modal-content">-->
+<!--                            <div class="modal-header">-->
+<!--                                <h5 class="modal-title" id="deleteUserModalLabel">Potwierdzenie usunięcia</h5>-->
+<!--                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                                    <span aria-hidden="true">&times;</span>-->
+<!--                                </button>-->
+<!--                            </div>-->
+<!--                            <div class="modal-body">-->
+<!--                                Czy jesteś pewien, że chcesz usunąć tego użytkownika?-->
+<!--                            </div>-->
+<!--                            <div class="modal-footer">-->
+<!--                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>-->
+<!--                                <form method="post" th:method="delete" action="#" th:action="@{'/admin_panel/users/' + ${user.id}}">-->
+<!--                                    <button type="submit" class="btn form-button">Usuń</button>-->
+<!--                                </form>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </td>-->
+        </tr>
+        <th:block th:if="${participants.getNumberOfElements() < 10}" th:each="i, status: ${#numbers.sequence((1 + (participants.getNumber() * 10) + participants.getNumberOfElements()), (participants.getNumber() + 1) * 10)}">
+            <tr style="height: 65px;">
+                <td th:text="${i}">1</td>
+                <td></td>
+                <td></td>
+<!--                <td></td>-->
+<!--                <td></td>-->
+<!--                <td></td>-->
+<!--                <td></td>-->
+<!--                <td></td>-->
+<!--                <td></td>-->
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled" th:class="${(participants.getNumber() + 1) > 1 ? 'page-item' : 'page-item disabled'}">
+                <a class="page-link" href="#" th:href="@{'/organizer_panel/events/' + ${id} + '/participants?page=1'}">Pierwsza</a>
+            </li>
+            <li class="page-item disabled" th:class="${(participants.getNumber() + 1) > 1 ? 'page-item' : 'page-item disabled'}">
+                <a class="page-link" href="#" th:href="@{'/organizer_panel/events/' + ${id} + '/participants?page=' + ${participants.getNumber()}}">Poprzednia</a>
+            </li>
+            <li class="page-item disabled" th:if="${participants.getTotalElements() == 0}">
+                <a class="page-link" href="#">1</a>
+            </li>
+            <th:block th:if="${participants.getTotalElements() > 0}" th:each="i: ${#numbers.sequence((participants.getNumber() + 1) - 3, (participants.getNumber() + 1) - 1)}">
+                <li class="page-item" th:if="${i > 0}">
+                    <a class="page-link" href="#" th:href="@{'/organizer_panel/events/' + ${id} + '/participants?page=' + ${i}}" th:text="${i}">1</a>
+                </li>
+            </th:block>
+            <th:block th:if="${participants.getTotalElements() > 0}" th:each="i: ${#numbers.sequence((participants.getNumber() + 1), (participants.getNumber() + 1) + 3)}">
+                <li class="page-item active" th:if="${i <= participants.getTotalPages()}" th:class="${(participants.getNumber() + 1) != i ? 'page-item' : 'page-item active'}">
+                    <a class="page-link" href="#" th:href="@{'/organizer_panel/events/' + ${id} + '/participants?page=' + ${i}}" th:text="${i}">1</a>
+                </li>
+            </th:block>
+            <li class="page-item disabled" th:class="${(participants.getNumber() + 1) < participants.getTotalPages() ? 'page-item' : 'page-item disabled'}">
+                <a class="page-link" href="#" th:href="@{'/organizer_panel/events/' + ${id} + '/participants?page=' + ${participants.getNumber() + 2}}">Następna</a>
+            </li>
+            <li class="page-item disabled" th:class="${(participants.getNumber() + 1) < participants.getTotalPages() ? 'page-item' : 'page-item disabled'}">
+                <a class="page-link" href="#" th:href="@{'/organizer_panel/events/' + ${id} + '/participants?page=' + ${participants.getTotalPages()}}">Ostatnia</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<th:block th:replace="fragments :: scripts"></th:block>
+</body>
+</html>

@@ -76,7 +76,13 @@ public class EventController {
 
     @PatchMapping("/events/{id}/join")
     public String joinToEvent(@PathVariable Long id, Model model) {
-        eventService.joinToEvent(id);
+        eventService.addUserToEventParticipantsList(id);
+        return "redirect:/events/" + id;
+    }
+
+    @PatchMapping("/events/{id}/disjoin")
+    public String disjoinFromEvent(@PathVariable Long id, Model model) {
+        eventService.removeUserFromEventParticipantsList(id);
         return "redirect:/events/" + id;
     }
 }

@@ -1,16 +1,15 @@
 package pl.dreilt.basicspringmvcapp.service;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import pl.dreilt.basicspringmvcapp.dto.EditEventDto;
-import pl.dreilt.basicspringmvcapp.dto.EventBoxDto;
-import pl.dreilt.basicspringmvcapp.dto.EventDto;
-import pl.dreilt.basicspringmvcapp.dto.NewEventDto;
+import pl.dreilt.basicspringmvcapp.dto.*;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.Event;
 import pl.dreilt.basicspringmvcapp.entity.EventImage;
@@ -22,6 +21,7 @@ import pl.dreilt.basicspringmvcapp.exception.EventNotFoundException;
 import pl.dreilt.basicspringmvcapp.mapper.EditEventDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.EventBoxDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.EventDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.ParticipantDtoMapper;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import pl.dreilt.basicspringmvcapp.repository.EventImageRepository;
 import pl.dreilt.basicspringmvcapp.repository.OrganizerRepository;
@@ -211,5 +211,18 @@ public class OrganizerService {
         }
 
         return true;
+    }
+
+    public Page<ParticipantDto> findEventParticipantsList(Long eventId, Pageable pageable) {
+        Optional<Event> eventOpt = organizerRepository.findById(eventId);
+        if (eventOpt.isEmpty()) {
+            throw new EventNotFoundException("Event with ID " + eventId + " not found");
+        }
+        Event event = eventOpt.get();
+        if (!getAuthenticatedUser().equals(event.getOrganizer())) {
+            throw new AccessDeniedException("Nie masz dostępu do tej zawartości");
+        }
+
+        return ParticipantDtoMapper.mapToParticipantDtos(event.getParticipants(), pageable);
     }
 }

@@ -89,6 +89,12 @@
         </form>
     </div>
 
+    <div sec:authorize="isAuthenticated() && hasRole('USER')" th:if="${isParticipant == true}">
+        <form method="post" th:method="patch" action="#" th:action="@{'/events/' + ${event.id} + '/disjoin'}">
+            <button class="btn form-button" type="submit" th:text="'Nie wezmę udziału'">Nie wezmę udziału</button>
+        </form>
+    </div>
+
 </div>
 
 <th:block th:replace="fragments :: scripts"></th:block>

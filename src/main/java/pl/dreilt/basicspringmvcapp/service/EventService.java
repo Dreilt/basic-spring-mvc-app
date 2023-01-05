@@ -156,18 +156,23 @@ public class EventService {
     }
 
     @Transactional
-    public void joinToEvent(Long eventId) {
-        addUserToEvent(eventId, getAuthenticatedUser());
-    }
-
-    private void addUserToEvent(Long eventId, AppUser user) {
+    public void addUserToEventParticipantsList(Long eventId) {
         Optional<Event> eventOpt = eventRepository.findById(eventId);
-        if (eventOpt.isPresent()) {
-            Event event = eventOpt.get();
-            event.getParticipants().add(user);
-        } else {
+        if (eventOpt.isEmpty()) {
             throw new EventNotFoundException("Event with ID " + eventId + " not found");
         }
+        Event event = eventOpt.get();
+        event.getParticipants().add(getAuthenticatedUser());
+    }
+
+    @Transactional
+    public void removeUserFromEventParticipantsList(Long eventId) {
+        Optional<Event> eventOpt = eventRepository.findById(eventId);
+        if (eventOpt.isEmpty()) {
+            throw new EventNotFoundException("Event with ID " + eventId + " not found");
+        }
+        Event event = eventOpt.get();
+        event.getParticipants().remove(getAuthenticatedUser());
     }
 
     private AppUser getAuthenticatedUser() {
