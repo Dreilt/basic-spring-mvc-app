@@ -124,7 +124,7 @@ public class OrganizerService {
                 .orElseThrow(() -> new EventNotFoundException("Event with ID " + id + " not found"));
     }
 
-    public void deleteEventById(Long eventId) {
+    public void deleteEvent(Long eventId) {
         if (checkIfUserIsOrganizer(getAuthenticatedUser(), eventId)) {
             organizerRepository.deleteById(eventId);
         }
@@ -186,6 +186,19 @@ public class OrganizerService {
         return target;
     }
 
+    public Page<ParticipantDto> findEventParticipantsList(Long eventId, Pageable pageable) {
+        Optional<Event> eventOpt = organizerRepository.findById(eventId);
+        if (eventOpt.isEmpty()) {
+            throw new EventNotFoundException("Event with ID " + eventId + " not found");
+        }
+        Event event = eventOpt.get();
+        if (!getAuthenticatedUser().equals(event.getOrganizer())) {
+            throw new AccessDeniedException("Nie masz dostępu do tej zawartości");
+        }
+
+        return ParticipantDtoMapper.mapToParticipantDtos(event.getParticipants(), pageable);
+    }
+
     private AppUser getAuthenticatedUser() {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
@@ -211,18 +224,5 @@ public class OrganizerService {
         }
 
         return true;
-    }
-
-    public Page<ParticipantDto> findEventParticipantsList(Long eventId, Pageable pageable) {
-        Optional<Event> eventOpt = organizerRepository.findById(eventId);
-        if (eventOpt.isEmpty()) {
-            throw new EventNotFoundException("Event with ID " + eventId + " not found");
-        }
-        Event event = eventOpt.get();
-        if (!getAuthenticatedUser().equals(event.getOrganizer())) {
-            throw new AccessDeniedException("Nie masz dostępu do tej zawartości");
-        }
-
-        return ParticipantDtoMapper.mapToParticipantDtos(event.getParticipants(), pageable);
     }
 }

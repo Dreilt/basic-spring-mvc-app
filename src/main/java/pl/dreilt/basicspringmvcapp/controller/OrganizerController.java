@@ -90,7 +90,7 @@ public class OrganizerController {
 
     @DeleteMapping("/organizer_panel/events/{id}")
     public String deleteEvent(@PathVariable Long id) {
-        organizerService.deleteEventById(id);
+        organizerService.deleteEvent(id);
         return "redirect:/organizer_panel/events";
     }
 
