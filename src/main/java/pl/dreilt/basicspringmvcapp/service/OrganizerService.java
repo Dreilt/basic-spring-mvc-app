@@ -4,9 +4,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +19,6 @@ import pl.dreilt.basicspringmvcapp.mapper.EditEventDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.EventBoxDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.EventDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.ParticipantDtoMapper;
-import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import pl.dreilt.basicspringmvcapp.repository.EventImageRepository;
 import pl.dreilt.basicspringmvcapp.repository.OrganizerRepository;
 
@@ -36,15 +32,13 @@ import java.util.*;
 public class OrganizerService {
     private final OrganizerRepository organizerRepository;
     private final EventImageRepository eventImageRepository;
-    private final AppUserRepository appUserRepository;
 
-    public OrganizerService(OrganizerRepository organizerRepository, EventImageRepository eventImageRepository, AppUserRepository appUserRepository) {
+    public OrganizerService(OrganizerRepository organizerRepository, EventImageRepository eventImageRepository) {
         this.organizerRepository = organizerRepository;
         this.eventImageRepository = eventImageRepository;
-        this.appUserRepository = appUserRepository;
     }
 
-    public EventDto createEvent(NewEventDto newEventDto) {
+    public EventDto createEvent(AppUser organizer, NewEventDto newEventDto) {
         Event newEvent = new Event();
         newEvent.setName(newEventDto.getName());
         if (newEventDto.getEventImage() == null || newEventDto.getEventImage().isEmpty()) {
@@ -59,7 +53,7 @@ public class OrganizerService {
         newEvent.setCity(newEventDto.getCity());
         newEvent.setLocation(newEventDto.getLocation());
         newEvent.setAddress(newEventDto.getAddress());
-        newEvent.setOrganizer(getAuthenticatedUser());
+        newEvent.setOrganizer(organizer);
         newEvent.setDescription(newEventDto.getDescription());
         return EventDtoMapper.mapToEventDto(organizerRepository.save(newEvent));
     }
@@ -93,13 +87,13 @@ public class OrganizerService {
         }
     }
 
-    public Map<String, List<EventBoxDto>> findEventsByOrganizer() {
-        List<Event> organizerEvents = organizerRepository.findEventsByOrganizer(getAuthenticatedUser());
+    public Map<String, List<EventBoxDto>> findEventsByOrganizer(AppUser organizer) {
+        List<Event> organizerEvents = organizerRepository.findEventsByOrganizer(organizer);
         return createOrganizerEventsMap(organizerEvents);
     }
 
-    public Map<String, List<EventBoxDto>> findEventsByOrganizerAndCity(String city) {
-        List<Event> organizerEvents = organizerRepository.findEventsByOrganizerAndCity(getAuthenticatedUser(), city);
+    public Map<String, List<EventBoxDto>> findEventsByOrganizerAndCity(AppUser organizer, String city) {
+        List<Event> organizerEvents = organizerRepository.findEventsByOrganizerAndCity(organizer, city);
         return createOrganizerEventsMap(organizerEvents);
     }
 
@@ -122,26 +116,26 @@ public class OrganizerService {
         return organizerEventsMap;
     }
 
-    public EventDto findEvent(Long id) {
+    public EventDto findEvent(AppUser organizer, Long id) {
         Optional<Event> eventOpt = organizerRepository.findById(id);
         if (eventOpt.isEmpty()) {
             throw new EventNotFoundException("Event with ID " + id + " not found");
         }
         Event event = eventOpt.get();
-        if (!getAuthenticatedUser().equals(event.getOrganizer())) {
+        if (!organizer.equals(event.getOrganizer())) {
             throw new AccessDeniedException("Nie masz dostępu do tej zawartości");
         }
 
         return EventDtoMapper.mapToEventDto(event);
     }
 
-    public EditEventDto findEventToEdit(Long id) {
+    public EditEventDto findEventToEdit(AppUser organizer, Long id) {
         Optional<Event> eventOpt = organizerRepository.findById(id);
         if (eventOpt.isEmpty()) {
             throw new EventNotFoundException("Event with ID " + id + " not found");
         }
         Event event = eventOpt.get();
-        if (!getAuthenticatedUser().equals(event.getOrganizer())) {
+        if (!organizer.equals(event.getOrganizer())) {
             throw new AccessDeniedException("Nie masz dostępu do tej zawartości");
         }
 
@@ -149,13 +143,13 @@ public class OrganizerService {
     }
 
     @Transactional
-    public void updateEvent(EditEventDto editEventDto) {
+    public void updateEvent(AppUser organizer, EditEventDto editEventDto) {
         Optional<Event> eventOpt = organizerRepository.findById(editEventDto.getId());
         if (eventOpt.isEmpty()) {
             throw new EventNotFoundException("Event with ID " + editEventDto.getId() + " not found");
         }
         Event event = eventOpt.get();
-        if (!getAuthenticatedUser().equals(event.getOrganizer())) {
+        if (!organizer.equals(event.getOrganizer())) {
             throw new AccessDeniedException("Nie masz dostępu do tej zawartości");
         }
 
@@ -195,43 +189,29 @@ public class OrganizerService {
         }
     }
 
-    public void deleteEvent(Long id) {
+    public void deleteEvent(AppUser organizer, Long id) {
         Optional<Event> eventOpt = organizerRepository.findById(id);
         if (eventOpt.isEmpty()) {
             throw new EventNotFoundException("Event with ID " + id + " not found");
         }
         Event event = eventOpt.get();
-        if (!getAuthenticatedUser().equals(event.getOrganizer())) {
+        if (!organizer.equals(event.getOrganizer())) {
             throw new AccessDeniedException("Nie masz dostępu do tej zawartości");
         }
 
         organizerRepository.deleteById(id);
     }
 
-    public Page<ParticipantDto> findEventParticipantsList(Long id, Pageable pageable) {
+    public Page<ParticipantDto> findEventParticipantsList(AppUser organizer, Long id, Pageable pageable) {
         Optional<Event> eventOpt = organizerRepository.findById(id);
         if (eventOpt.isEmpty()) {
             throw new EventNotFoundException("Event with ID " + id + " not found");
         }
         Event event = eventOpt.get();
-        if (!getAuthenticatedUser().equals(event.getOrganizer())) {
+        if (!organizer.equals(event.getOrganizer())) {
             throw new AccessDeniedException("Nie masz dostępu do tej zawartości");
         }
 
         return ParticipantDtoMapper.mapToParticipantDtos(event.getParticipants(), pageable);
-    }
-
-    private AppUser getAuthenticatedUser() {
-        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-        if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
-            throw new AccessDeniedException("Nie masz dostępu do tej zawartości");
-        }
-        String email = currentUser.getName();
-        Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
-        if (userOpt.isEmpty()) {
-            throw new UsernameNotFoundException(String.format("User with email %s not found", email));
-        }
-
-        return userOpt.get();
     }
 }

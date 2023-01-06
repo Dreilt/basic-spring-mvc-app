@@ -7,7 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pl.dreilt.basicspringmvcapp.config.AuthenticatedUserFacade;
 import pl.dreilt.basicspringmvcapp.dto.*;
+import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.enumeration.AdmissionType;
 import pl.dreilt.basicspringmvcapp.enumeration.EventType;
 import pl.dreilt.basicspringmvcapp.service.EventService;
@@ -22,10 +24,12 @@ import java.util.Map;
 public class OrganizerController {
     private final EventService eventService;
     private final OrganizerService organizerService;
+    private final AuthenticatedUserFacade authenticatedUserFacade;
 
-    public OrganizerController(EventService eventService, OrganizerService organizerService) {
+    public OrganizerController(EventService eventService, OrganizerService organizerService, AuthenticatedUserFacade authenticatedUserFacade) {
         this.eventService = eventService;
         this.organizerService = organizerService;
+        this.authenticatedUserFacade = authenticatedUserFacade;
     }
 
     @GetMapping("/events/create_event")
@@ -43,24 +47,25 @@ public class OrganizerController {
             model.addAttribute("admissionTypeList", Arrays.asList(AdmissionType.values()));
             return "organizer/forms/create-event-form";
         } else {
-            EventDto newEvent = organizerService.createEvent(newEventDto);
+            EventDto newEvent = organizerService.createEvent(authenticatedUserFacade.getAuthenticatedUser(), newEventDto);
             return "redirect:/events/" + newEvent.getId();
         }
     }
 
     @GetMapping("/organizer_panel/events")
     public String getEventsByOrganizer(@RequestParam(name = "city", required = false) String city, Model model) {
+        AppUser organizer = authenticatedUserFacade.getAuthenticatedUser();
         List<CityDto> cities = eventService.findAllCities();
         model.addAttribute("cities", cities);
         if (city != null) {
             String cityName = getCityName(cities, city);
             model.addAttribute("cityName", cityName);
-            Map<String, List<EventBoxDto>> organizerEvents = organizerService.findEventsByOrganizerAndCity(cityName);
+            Map<String, List<EventBoxDto>> organizerEvents = organizerService.findEventsByOrganizerAndCity(organizer, cityName);
             model.addAttribute("upcomingEvents", organizerEvents.get("upcomingEvents"));
             model.addAttribute("pastEvents", organizerEvents.get("pastEvents"));
             return "organizer/events";
         }
-        Map<String, List<EventBoxDto>> organizerEvents = organizerService.findEventsByOrganizer();
+        Map<String, List<EventBoxDto>> organizerEvents = organizerService.findEventsByOrganizer(organizer);
         model.addAttribute("upcomingEvents", organizerEvents.get("upcomingEvents"));
         model.addAttribute("pastEvents", organizerEvents.get("pastEvents"));
         return "organizer/events";
@@ -68,14 +73,14 @@ public class OrganizerController {
 
     @GetMapping("/organizer_panel/events/{id}")
     public String getEvent(@PathVariable Long id, Model model) {
-        EventDto organizerEvent = organizerService.findEvent(id);
+        EventDto organizerEvent = organizerService.findEvent(authenticatedUserFacade.getAuthenticatedUser(), id);
         model.addAttribute("event", organizerEvent);
         return "organizer/event";
     }
 
     @GetMapping("/organizer_panel/events/{id}/edit")
     public String showEditEventForm(@PathVariable Long id, Model model) {
-        model.addAttribute("editEventDto", organizerService.findEventToEdit(id));
+        model.addAttribute("editEventDto", organizerService.findEventToEdit(authenticatedUserFacade.getAuthenticatedUser(), id));
         model.addAttribute("eventTypeList", Arrays.asList(EventType.values()));
         model.addAttribute("admissionTypeList", Arrays.asList(AdmissionType.values()));
         return "organizer/forms/edit-event-form";
@@ -86,14 +91,14 @@ public class OrganizerController {
         if (bindingResult.hasErrors()) {
             return "organizer/forms/edit-event-form";
         } else {
-            organizerService.updateEvent(editEventDto);
+            organizerService.updateEvent(authenticatedUserFacade.getAuthenticatedUser(), editEventDto);
             return "redirect:/organizer_panel/events/" + editEventDto.getId();
         }
     }
 
     @DeleteMapping("/organizer_panel/events/{id}")
     public String deleteEvent(@PathVariable Long id) {
-        organizerService.deleteEvent(id);
+        organizerService.deleteEvent(authenticatedUserFacade.getAuthenticatedUser(), id);
         return "redirect:/organizer_panel/events";
     }
 
@@ -103,7 +108,7 @@ public class OrganizerController {
                                            Model model) {
         int page = pageNumber != null ? pageNumber : 1;
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.fromString("asc"), "lastName"));
-        Page<ParticipantDto> participants = organizerService.findEventParticipantsList(id, pageRequest);
+        Page<ParticipantDto> participants = organizerService.findEventParticipantsList(authenticatedUserFacade.getAuthenticatedUser(), id, pageRequest);
         model.addAttribute("id", id);
         model.addAttribute("participants", participants);
         return "organizer/participants-list";
