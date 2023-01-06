@@ -55,9 +55,9 @@ public class OrganizerController {
         if (city != null) {
             String cityName = getCityName(cities, city);
             model.addAttribute("cityName", cityName);
-            Map<String, List<EventBoxDto>> organizerEventsByCity = organizerService.findEventsByOrganizerAndCity(cityName);
-            model.addAttribute("upcomingEvents", organizerEventsByCity.get("upcomingEvents"));
-            model.addAttribute("pastEvents", organizerEventsByCity.get("pastEvents"));
+            Map<String, List<EventBoxDto>> organizerEvents = organizerService.findEventsByOrganizerAndCity(cityName);
+            model.addAttribute("upcomingEvents", organizerEvents.get("upcomingEvents"));
+            model.addAttribute("pastEvents", organizerEvents.get("pastEvents"));
             return "organizer/events";
         }
         Map<String, List<EventBoxDto>> organizerEvents = organizerService.findEventsByOrganizer();
