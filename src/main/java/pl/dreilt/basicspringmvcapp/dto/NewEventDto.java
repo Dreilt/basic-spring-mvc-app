@@ -15,6 +15,8 @@ public class NewEventDto {
     @NotNull(message = "{form.field.eventType.error.notNull.message}")
     @NotEmpty(message = "{form.field.eventType.error.notEmpty.message}")
     private String eventType;
+    @NotNull(message = "{form.field.dateAndTime.error.notNull.message}")
+    @NotEmpty(message = "{form.field.dateAndTime.error.notEmpty.message}")
     private String dateAndTime;
     @NotNull(message = "{form.field.language.error.notNull.message}")
     @NotEmpty(message = "{form.field.language.error.notEmpty.message}")

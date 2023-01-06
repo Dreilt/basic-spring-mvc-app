@@ -7,10 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
-import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
-import pl.dreilt.basicspringmvcapp.exception.DefaultProfileImageNotFoundException;
-import pl.dreilt.basicspringmvcapp.exception.EventNotFoundException;
-import pl.dreilt.basicspringmvcapp.exception.NoSuchRoleException;
+import pl.dreilt.basicspringmvcapp.exception.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +33,9 @@ public class CustomHandlerExceptionResolver extends AbstractHandlerExceptionReso
             }
             if (ex instanceof DefaultProfileImageNotFoundException) {
                 return handleDefaultProfileImageNotFound((DefaultProfileImageNotFoundException) ex, response, handler);
+            }
+            if (ex instanceof DefaultEventImageNotFoundException) {
+                return handleDefaultEventImageNotFound((DefaultEventImageNotFoundException) ex, response, handler);
             }
             if (ex instanceof EventNotFoundException) {
                 return handleEventNotFound((EventNotFoundException) ex, response, handler);
@@ -85,6 +85,17 @@ public class CustomHandlerExceptionResolver extends AbstractHandlerExceptionReso
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("httpStatus", response.getStatus());
         String errorMessage = messageSource.getMessage("exception.EventNotFoundException.message", null, Locale.getDefault());
+        modelAndView.addObject("errorMessage", errorMessage);
+        modelAndView.setViewName("error");
+        return modelAndView;
+    }
+
+    private ModelAndView handleDefaultEventImageNotFound(DefaultEventImageNotFoundException ex, HttpServletResponse response, Object handler) {
+        log.error(ex.getMessage());
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("httpStatus", response.getStatus());
+        String errorMessage = messageSource.getMessage("exception.DefaultEventImageNotFoundException.message", null, Locale.getDefault());
         modelAndView.addObject("errorMessage", errorMessage);
         modelAndView.setViewName("error");
         return modelAndView;

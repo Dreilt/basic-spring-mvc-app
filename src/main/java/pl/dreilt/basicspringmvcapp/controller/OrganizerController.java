@@ -16,6 +16,7 @@ import pl.dreilt.basicspringmvcapp.service.OrganizerService;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class OrganizerController {
@@ -25,13 +26,6 @@ public class OrganizerController {
     public OrganizerController(EventService eventService, OrganizerService organizerService) {
         this.eventService = eventService;
         this.organizerService = organizerService;
-    }
-
-    @GetMapping("/organizer_panel/events/{id}")
-    public String getEvent(@PathVariable Long id, Model model) {
-        EventDto organizerEvent = organizerService.findEventById(id);
-        model.addAttribute("event", organizerEvent);
-        return "organizer/event";
     }
 
     @GetMapping("/events/create_event")
@@ -54,6 +48,31 @@ public class OrganizerController {
         }
     }
 
+    @GetMapping("/organizer_panel/events")
+    public String getEventsByOrganizer(@RequestParam(name = "city", required = false) String city, Model model) {
+        List<CityDto> cities = eventService.findAllCities();
+        model.addAttribute("cities", cities);
+        if (city != null) {
+            String cityName = getCityName(cities, city);
+            model.addAttribute("cityName", cityName);
+            Map<String, List<EventBoxDto>> organizerEventsByCity = organizerService.findEventsByOrganizerAndCity(cityName);
+            model.addAttribute("upcomingEvents", organizerEventsByCity.get("upcomingEvents"));
+            model.addAttribute("pastEvents", organizerEventsByCity.get("pastEvents"));
+            return "organizer/events";
+        }
+        Map<String, List<EventBoxDto>> organizerEvents = organizerService.findEventsByOrganizer();
+        model.addAttribute("upcomingEvents", organizerEvents.get("upcomingEvents"));
+        model.addAttribute("pastEvents", organizerEvents.get("pastEvents"));
+        return "organizer/events";
+    }
+
+    @GetMapping("/organizer_panel/events/{id}")
+    public String getEvent(@PathVariable Long id, Model model) {
+        EventDto organizerEvent = organizerService.findEvent(id);
+        model.addAttribute("event", organizerEvent);
+        return "organizer/event";
+    }
+
     @GetMapping("/organizer_panel/events/{id}/edit")
     public String showEditEventForm(@PathVariable Long id, Model model) {
         model.addAttribute("editEventDto", organizerService.findEventToEdit(id));
@@ -70,22 +89,6 @@ public class OrganizerController {
             organizerService.updateEvent(editEventDto);
             return "redirect:/organizer_panel/events/" + editEventDto.getId();
         }
-    }
-
-    @GetMapping("/organizer_panel/events")
-    public String getEventsByOrganizer(@RequestParam(name = "city", required = false) String city, Model model) {
-        List<CityDto> cities = eventService.findAllCities();
-        model.addAttribute("cities", cities);
-        if (city != null) {
-            String cityName = getCityName(cities, city);
-            model.addAttribute("cityName", cityName);
-            model.addAttribute("upcomingEvents", organizerService.findUpcomingEventsByOrganizerAndCity(cityName));
-            model.addAttribute("pastEvents", organizerService.findPastEventsByOrganizerAndCity(cityName));
-            return "organizer/events";
-        }
-        model.addAttribute("upcomingEvents", organizerService.findUpcomingEventsByOrganizer());
-        model.addAttribute("pastEvents", organizerService.findPastEventsByOrganizer());
-        return "organizer/events";
     }
 
     @DeleteMapping("/organizer_panel/events/{id}")
