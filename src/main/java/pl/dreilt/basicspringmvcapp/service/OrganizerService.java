@@ -112,8 +112,9 @@ public class OrganizerService {
         for (Event event : organizerEvents) {
             if (event.getDateAndTime().isAfter(currentDateTime)) {
                 upcomingEvents.add(event);
+            } else {
+                pastEvents.add(event);
             }
-            pastEvents.add(event);
         }
 
         organizerEventsMap.put("upcomingEvents", EventBoxDtoMapper.mapToEventBoxDtos(upcomingEvents));
