@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.dreilt.basicspringmvcapp.dto.CityDto;
+import pl.dreilt.basicspringmvcapp.dto.EventBoxDto;
 import pl.dreilt.basicspringmvcapp.dto.EventDto;
 import pl.dreilt.basicspringmvcapp.service.EventService;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class EventController {
@@ -29,12 +30,14 @@ public class EventController {
         if (city != null) {
             String cityName = getCityName(cities, city);
             model.addAttribute("cityName", cityName);
-            model.addAttribute("upcomingEvents", eventService.findUpcomingEventsByCity(LocalDateTime.now(), cityName));
-            model.addAttribute("pastEvents", eventService.findPastEventsByCity(LocalDateTime.now(), cityName));
+            Map<String, List<EventBoxDto>> events = eventService.findEventsByCity(cityName);
+            model.addAttribute("upcomingEvents", events.get("upcomingEvents"));
+            model.addAttribute("pastEvents", events.get("pastEvents"));
             return "events";
         }
-        model.addAttribute("upcomingEvents", eventService.findAllUpcomingEvents(LocalDateTime.now()));
-        model.addAttribute("pastEvents", eventService.findAllPastEvents(LocalDateTime.now()));
+        Map<String, List<EventBoxDto>> events = eventService.findAllEvents();
+        model.addAttribute("upcomingEvents", events.get("upcomingEvents"));
+        model.addAttribute("pastEvents", events.get("pastEvents"));
         return "events";
     }
 
@@ -45,12 +48,14 @@ public class EventController {
         if (city != null) {
             String cityName = getCityName(cities, city);
             model.addAttribute("cityName", cityName);
-            model.addAttribute("upcomingEvents", eventService.findUpcomingEventsByUserAndCity(LocalDateTime.now(), cityName));
-            model.addAttribute("pastEvents", eventService.findPastEventsByUserAndCity(LocalDateTime.now(), cityName));
+            Map<String, List<EventBoxDto>> events = eventService.findEventsByUserAndCity(cityName);
+            model.addAttribute("upcomingEvents", events.get("upcomingEvents"));
+            model.addAttribute("pastEvents", events.get("pastEvents"));
             return "app-user-events";
         }
-        model.addAttribute("upcomingEvents", eventService.findUpcomingEventsByUser(LocalDateTime.now()));
-        model.addAttribute("pastEvents", eventService.findPastEventsByUser(LocalDateTime.now()));
+        Map<String, List<EventBoxDto>> events = eventService.findEventsByUser();
+        model.addAttribute("upcomingEvents", events.get("upcomingEvents"));
+        model.addAttribute("pastEvents", events.get("pastEvents"));
         return "app-user-events";
     }
 
@@ -66,7 +71,7 @@ public class EventController {
 
     @GetMapping("/events/{id}")
     public String getEvent(Authentication authentication, @PathVariable Long id, Model model) {
-        EventDto event = eventService.findEventById(id);
+        EventDto event = eventService.findEvent(id);
         model.addAttribute("event", event);
         if (authentication != null) {
             model.addAttribute("isParticipant", eventService.checkIfUserIsParticipant(event));

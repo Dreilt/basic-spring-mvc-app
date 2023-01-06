@@ -3,6 +3,7 @@ package pl.dreilt.basicspringmvcapp.service;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.dreilt.basicspringmvcapp.dto.CityDto;
@@ -10,7 +11,6 @@ import pl.dreilt.basicspringmvcapp.dto.EventBoxDto;
 import pl.dreilt.basicspringmvcapp.dto.EventDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.Event;
-import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.EventNotFoundException;
 import pl.dreilt.basicspringmvcapp.mapper.EventBoxDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.EventDtoMapper;
@@ -18,9 +18,7 @@ import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import pl.dreilt.basicspringmvcapp.repository.EventRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EventService {
@@ -30,12 +28,6 @@ public class EventService {
     public EventService(EventRepository eventRepository, AppUserRepository appUserRepository) {
         this.eventRepository = eventRepository;
         this.appUserRepository = appUserRepository;
-    }
-
-    public EventDto findEventById(Long id) {
-        return eventRepository.findById(id)
-                .map(EventDtoMapper::mapToEventDto)
-                .orElseThrow(() -> new EventNotFoundException("Event with ID " + id + " not found"));
     }
 
     public List<CityDto> findAllCities() {
@@ -53,97 +45,92 @@ public class EventService {
 
     private String getCityNameWithoutPlCharacters(String city) {
         city = city.toLowerCase();
-        if (city.contains(" ")) {
-            city = city.replace(" ", "-");
-        }
-        city = deleteAllPlCharacters(city);
+        city = city.replace("\\s", "-");
+        city = removeAllPlCharacters(city);
 
         return city;
     }
 
-    private String deleteAllPlCharacters(String word) {
-        if (word.contains("ę")) {
-            word = word.replace("ę", "e");
+    private String removeAllPlCharacters(String city) {
+        if (city.contains("ę")) {
+            city = city.replace("ę", "e");
         }
-        if (word.contains("ó")) {
-            word = word.replace("ó", "o");
+        if (city.contains("ó")) {
+            city = city.replace("ó", "o");
         }
-        if (word.contains("ą")) {
-            word = word.replace("ą", "a");
+        if (city.contains("ą")) {
+            city = city.replace("ą", "a");
         }
-        if (word.contains("ś")) {
-            word = word.replace("ś", "s");
+        if (city.contains("ś")) {
+            city = city.replace("ś", "s");
         }
-        if (word.contains("ł")) {
-            word = word.replace("ł", "l");
+        if (city.contains("ł")) {
+            city = city.replace("ł", "l");
         }
-        if (word.contains("ż")) {
-            word = word.replace("ż", "z");
+        if (city.contains("ż")) {
+            city = city.replace("ż", "z");
         }
-        if (word.contains("ź")) {
-            word = word.replace("ź", "z");
+        if (city.contains("ź")) {
+            city = city.replace("ź", "z");
         }
-        if (word.contains("ć")) {
-            word = word.replace("ć", "c");
+        if (city.contains("ć")) {
+            city = city.replace("ć", "c");
         }
-        if (word.contains("ń")) {
-            word = word.replace("ń", "n");
+        if (city.contains("ń")) {
+            city = city.replace("ń", "n");
         }
-        return word;
+        return city;
     }
 
-    public List<EventBoxDto> findAllUpcomingEvents(LocalDateTime currentDateAndTime) {
-        return EventBoxDtoMapper.mapToEventBoxDtos(
-                eventRepository.findAllUpcomingEvents(currentDateAndTime)
-        );
+    public Map<String, List<EventBoxDto>> findAllEvents() {
+        List<Event> events = eventRepository.findAllEvents();
+        return createEventsMap(events);
     }
 
-    public List<EventBoxDto> findAllPastEvents(LocalDateTime currentDateAndTime) {
-        return EventBoxDtoMapper.mapToEventBoxDtos(
-                eventRepository.findAllPastEvents(currentDateAndTime)
-        );
+    public Map<String, List<EventBoxDto>> findEventsByCity(String city) {
+        List<Event> events = eventRepository.findEventsByCity(city);
+        return createEventsMap(events);
     }
 
-    public List<EventBoxDto> findUpcomingEventsByCity(LocalDateTime currentDateAndTime, String city) {
-        return EventBoxDtoMapper.mapToEventBoxDtos(
-                eventRepository.findUpcomingEventsByCity(currentDateAndTime, city)
-        );
+    public Map<String, List<EventBoxDto>> findEventsByUser() {
+        List<Event> events = eventRepository.findEventsByUser(getAuthenticatedUser());
+        return createEventsMap(events);
     }
 
-    public List<EventBoxDto> findPastEventsByCity(LocalDateTime currentDateAndTime, String city) {
-        return EventBoxDtoMapper.mapToEventBoxDtos(
-                eventRepository.findPastEventsByCity(currentDateAndTime, city)
-        );
+    public Map<String, List<EventBoxDto>> findEventsByUserAndCity(String city) {
+        List<Event> events = eventRepository.findEventsByUserAndCity(getAuthenticatedUser(), city);
+        return createEventsMap(events);
     }
 
-    public List<EventBoxDto> findUpcomingEventsByUser(LocalDateTime currentDateAndTime) {
-        return EventBoxDtoMapper.mapToEventBoxDtos(
-                eventRepository.findUpcomingEventsByUser(currentDateAndTime, getAuthenticatedUser())
-        );
+    private Map<String, List<EventBoxDto>> createEventsMap(List<Event> events) {
+        Map<String, List<EventBoxDto>> eventsMap = new HashMap<>();
+        List<Event> upcomingEvents = new ArrayList<>();
+        List<Event> pastEvents = new ArrayList<>();
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        for (Event event : events) {
+            if (event.getDateAndTime().isAfter(currentDateTime)) {
+                upcomingEvents.add(event);
+            } else {
+                pastEvents.add(event);
+            }
+        }
+
+        eventsMap.put("upcomingEvents", EventBoxDtoMapper.mapToEventBoxDtos(upcomingEvents));
+        eventsMap.put("pastEvents", EventBoxDtoMapper.mapToEventBoxDtos(pastEvents));
+        return eventsMap;
     }
 
-    public List<EventBoxDto> findPastEventsByUser(LocalDateTime currentDateAndTime) {
-        return EventBoxDtoMapper.mapToEventBoxDtos(
-                eventRepository.findPastEventsByUser(currentDateAndTime, getAuthenticatedUser())
-        );
-    }
-
-    public List<EventBoxDto> findUpcomingEventsByUserAndCity(LocalDateTime currentDateAndTime, String city) {
-        return EventBoxDtoMapper.mapToEventBoxDtos(
-                eventRepository.findUpcomingEventsByUserAndCity(currentDateAndTime, getAuthenticatedUser(), city)
-        );
-    }
-
-    public List<EventBoxDto> findPastEventsByUserAndCity(LocalDateTime currentDateAndTime, String city) {
-        return EventBoxDtoMapper.mapToEventBoxDtos(
-                eventRepository.findPastEventsByUserAndCity(currentDateAndTime, getAuthenticatedUser(), city)
-        );
+    public EventDto findEvent(Long id) {
+        return eventRepository.findById(id)
+                .map(EventDtoMapper::mapToEventDto)
+                .orElseThrow(() -> new EventNotFoundException("Event with ID " + id + " not found"));
     }
 
     public boolean checkIfUserIsParticipant(EventDto event) {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
-            throw new AccessDeniedException("Odmowa dostępu");
+            throw new AccessDeniedException("Nie masz dostępu do tej zawartości");
         }
         String email = currentUser.getName();
         Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
@@ -151,25 +138,25 @@ public class EventService {
             AppUser user = userOpt.get();
             return event.getParticipants().contains(user);
         } else {
-            throw new AppUserNotFoundException("User with email " + email + " not found");
+            throw new UsernameNotFoundException(String.format("User with email %s not found", email));
         }
     }
 
     @Transactional
-    public void addUserToEventParticipantsList(Long eventId) {
-        Optional<Event> eventOpt = eventRepository.findById(eventId);
+    public void addUserToEventParticipantsList(Long id) {
+        Optional<Event> eventOpt = eventRepository.findById(id);
         if (eventOpt.isEmpty()) {
-            throw new EventNotFoundException("Event with ID " + eventId + " not found");
+            throw new EventNotFoundException("Event with ID " + id + " not found");
         }
         Event event = eventOpt.get();
         event.getParticipants().add(getAuthenticatedUser());
     }
 
     @Transactional
-    public void removeUserFromEventParticipantsList(Long eventId) {
-        Optional<Event> eventOpt = eventRepository.findById(eventId);
+    public void removeUserFromEventParticipantsList(Long id) {
+        Optional<Event> eventOpt = eventRepository.findById(id);
         if (eventOpt.isEmpty()) {
-            throw new EventNotFoundException("Event with ID " + eventId + " not found");
+            throw new EventNotFoundException("Event with ID " + id + " not found");
         }
         Event event = eventOpt.get();
         event.getParticipants().remove(getAuthenticatedUser());
@@ -183,7 +170,7 @@ public class EventService {
         String email = currentUser.getName();
         Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
         if (userOpt.isEmpty()) {
-            throw new AppUserNotFoundException("User with email " + email + " not found");
+            throw new UsernameNotFoundException(String.format("User with email %s not found", email));
         }
 
         return userOpt.get();
