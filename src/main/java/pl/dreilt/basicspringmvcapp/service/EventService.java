@@ -1,9 +1,5 @@
 package pl.dreilt.basicspringmvcapp.service;
 
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.dreilt.basicspringmvcapp.dto.CityDto;
@@ -14,7 +10,6 @@ import pl.dreilt.basicspringmvcapp.entity.Event;
 import pl.dreilt.basicspringmvcapp.exception.EventNotFoundException;
 import pl.dreilt.basicspringmvcapp.mapper.EventBoxDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.EventDtoMapper;
-import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 import pl.dreilt.basicspringmvcapp.repository.EventRepository;
 
 import java.time.LocalDateTime;
@@ -23,11 +18,9 @@ import java.util.*;
 @Service
 public class EventService {
     private final EventRepository eventRepository;
-    private final AppUserRepository appUserRepository;
 
-    public EventService(EventRepository eventRepository, AppUserRepository appUserRepository) {
+    public EventService(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
-        this.appUserRepository = appUserRepository;
     }
 
     public List<CityDto> findAllCities() {
@@ -92,13 +85,13 @@ public class EventService {
         return createEventsMap(events);
     }
 
-    public Map<String, List<EventBoxDto>> findEventsByUser() {
-        List<Event> events = eventRepository.findEventsByUser(getAuthenticatedUser());
+    public Map<String, List<EventBoxDto>> findEventsByUser(AppUser user) {
+        List<Event> events = eventRepository.findEventsByUser(user);
         return createEventsMap(events);
     }
 
-    public Map<String, List<EventBoxDto>> findEventsByUserAndCity(String city) {
-        List<Event> events = eventRepository.findEventsByUserAndCity(getAuthenticatedUser(), city);
+    public Map<String, List<EventBoxDto>> findEventsByUserAndCity(AppUser user, String city) {
+        List<Event> events = eventRepository.findEventsByUserAndCity(user, city);
         return createEventsMap(events);
     }
 
@@ -127,52 +120,27 @@ public class EventService {
                 .orElseThrow(() -> new EventNotFoundException("Event with ID " + id + " not found"));
     }
 
-    public boolean checkIfUserIsParticipant(EventDto event) {
-        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-        if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
-            throw new AccessDeniedException("Nie masz dostępu do tej zawartości");
-        }
-        String email = currentUser.getName();
-        Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
-        if (userOpt.isPresent()) {
-            AppUser user = userOpt.get();
-            return event.getParticipants().contains(user);
-        } else {
-            throw new UsernameNotFoundException(String.format("User with email %s not found", email));
-        }
+    public boolean checkIfUserIsParticipant(AppUser user, EventDto event) {
+        return event.getParticipants().contains(user);
     }
 
     @Transactional
-    public void addUserToEventParticipantsList(Long id) {
+    public void addUserToEventParticipantsList(AppUser user, Long id) {
         Optional<Event> eventOpt = eventRepository.findById(id);
         if (eventOpt.isEmpty()) {
             throw new EventNotFoundException("Event with ID " + id + " not found");
         }
         Event event = eventOpt.get();
-        event.getParticipants().add(getAuthenticatedUser());
+        event.getParticipants().add(user);
     }
 
     @Transactional
-    public void removeUserFromEventParticipantsList(Long id) {
+    public void removeUserFromEventParticipantsList(AppUser user, Long id) {
         Optional<Event> eventOpt = eventRepository.findById(id);
         if (eventOpt.isEmpty()) {
             throw new EventNotFoundException("Event with ID " + id + " not found");
         }
         Event event = eventOpt.get();
-        event.getParticipants().remove(getAuthenticatedUser());
-    }
-
-    private AppUser getAuthenticatedUser() {
-        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-        if (currentUser == null || currentUser.getPrincipal().equals("anonymousUser")) {
-            throw new AccessDeniedException("Nie masz dostępu do tej zawartości");
-        }
-        String email = currentUser.getName();
-        Optional<AppUser> userOpt = appUserRepository.findByEmail(email);
-        if (userOpt.isEmpty()) {
-            throw new UsernameNotFoundException(String.format("User with email %s not found", email));
-        }
-
-        return userOpt.get();
+        event.getParticipants().remove(user);
     }
 }

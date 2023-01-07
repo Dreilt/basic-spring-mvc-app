@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import pl.dreilt.basicspringmvcapp.config.AuthenticatedUserFacade;
 import pl.dreilt.basicspringmvcapp.dto.CityDto;
 import pl.dreilt.basicspringmvcapp.dto.EventBoxDto;
 import pl.dreilt.basicspringmvcapp.dto.EventDto;
+import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.service.EventService;
 
 import java.util.List;
@@ -18,9 +20,11 @@ import java.util.Map;
 @Controller
 public class EventController {
     private final EventService eventService;
+    private final AuthenticatedUserFacade authenticatedUserFacade;
 
-    public EventController(EventService eventService) {
+    public EventController(EventService eventService, AuthenticatedUserFacade authenticatedUserFacade) {
         this.eventService = eventService;
+        this.authenticatedUserFacade = authenticatedUserFacade;
     }
 
     @GetMapping("/events")
@@ -43,17 +47,18 @@ public class EventController {
 
     @GetMapping("/events/my_events")
     public String getEventsByUser(@RequestParam(name = "city", required = false) String city, Model model) {
+        AppUser user = authenticatedUserFacade.getAuthenticatedUser();
         List<CityDto> cities = eventService.findAllCities();
         model.addAttribute("cities", cities);
         if (city != null) {
             String cityName = getCityName(cities, city);
             model.addAttribute("cityName", cityName);
-            Map<String, List<EventBoxDto>> events = eventService.findEventsByUserAndCity(cityName);
+            Map<String, List<EventBoxDto>> events = eventService.findEventsByUserAndCity(user, cityName);
             model.addAttribute("upcomingEvents", events.get("upcomingEvents"));
             model.addAttribute("pastEvents", events.get("pastEvents"));
             return "app-user-events";
         }
-        Map<String, List<EventBoxDto>> events = eventService.findEventsByUser();
+        Map<String, List<EventBoxDto>> events = eventService.findEventsByUser(user);
         model.addAttribute("upcomingEvents", events.get("upcomingEvents"));
         model.addAttribute("pastEvents", events.get("pastEvents"));
         return "app-user-events";
@@ -74,20 +79,20 @@ public class EventController {
         EventDto event = eventService.findEvent(id);
         model.addAttribute("event", event);
         if (authentication != null) {
-            model.addAttribute("isParticipant", eventService.checkIfUserIsParticipant(event));
+            model.addAttribute("isParticipant", eventService.checkIfUserIsParticipant(authenticatedUserFacade.getAuthenticatedUser(), event));
         }
         return "event";
     }
 
     @PatchMapping("/events/{id}/join")
     public String joinToEvent(@PathVariable Long id, Model model) {
-        eventService.addUserToEventParticipantsList(id);
+        eventService.addUserToEventParticipantsList(authenticatedUserFacade.getAuthenticatedUser(), id);
         return "redirect:/events/" + id;
     }
 
     @PatchMapping("/events/{id}/disjoin")
     public String disjoinFromEvent(@PathVariable Long id, Model model) {
-        eventService.removeUserFromEventParticipantsList(id);
+        eventService.removeUserFromEventParticipantsList(authenticatedUserFacade.getAuthenticatedUser(), id);
         return "redirect:/events/" + id;
     }
 }
