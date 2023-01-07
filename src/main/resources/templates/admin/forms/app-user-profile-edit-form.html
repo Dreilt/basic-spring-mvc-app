@@ -16,7 +16,7 @@
             <ul class="nav nav-pills flex-column">
                 <li class="nav-item">
                     <a class="side-nav-link"
-                       href="#" th:href="@{'/admin_panel/users/' + ${userId} + '/settings/account'}">Konto</a>
+                       href="#" th:href="@{'/admin_panel/users/' + ${userId} + '/settings/edit_account'}">Konto</a>
                 </li>
                 <li class="nav-item">
                     <a class="side-nav-link active"
@@ -29,7 +29,7 @@
             </ul>
         </div>
         <div class="col-md-9">
-            <form id="userProfileEditFormAdminPanel" name="userProfileEditFormAdminPanel" class="custom-form" onsubmit="return validateUserProfileEditFormAdminPanel();" method="post" th:method="patch" action="#" th:action="@{'/admin_panel/users/' + ${userId} + '/settings/edit_profile'}" th:object="${userProfileDataEditAPDto}">
+            <form id="userProfileEditFormAdminPanel" name="userProfileEditFormAdminPanel" class="custom-form" onsubmit="return validateUserProfileEditFormAdminPanel();" method="post" th:method="patch" action="#" th:action="@{'/admin_panel/users/' + ${userId} + '/settings/edit_profile'}" th:object="${userProfileEditAPDto}">
                 <div class="form-heading">
                     <h2>Edycja profilu użytkownika</h2>
                     <span>Zaktualizuj profil użytkownika poniżej</span>

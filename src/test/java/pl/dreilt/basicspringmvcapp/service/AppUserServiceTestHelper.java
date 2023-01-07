@@ -3,15 +3,12 @@ package pl.dreilt.basicspringmvcapp.service;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dreilt.basicspringmvcapp.config.AppUserDetails;
-import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDataEditDto;
-
-import java.util.Arrays;
-import java.util.Set;
+import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditDto;
 
 public class AppUserServiceTestHelper {
 
-    static AppUserProfileDataEditDto createAppUserProfileDataEditDto() {
-        return new AppUserProfileDataEditDto.AppUserProfileDataEditDtoBuilder()
+    static AppUserProfileEditDto createAppUserProfileDataEditDto() {
+        return new AppUserProfileEditDto.AppUserProfileEditDtoBuilder()
                 .withFirstName("Jan")
                 .withLastName("Kowalski")
                 .withProfileImage(createNewProfileImage())

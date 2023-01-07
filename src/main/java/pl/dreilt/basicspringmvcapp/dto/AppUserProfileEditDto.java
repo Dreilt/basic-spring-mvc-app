@@ -6,7 +6,7 @@ import pl.dreilt.basicspringmvcapp.annotation.Image;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class AppUserProfileDataEditDto {
+public class AppUserProfileEditDto {
     @NotNull(message = "{form.field.firstName.error.notNull.message}")
     @Size(min = 2, max = 50, message = "{form.field.firstName.error.size.message}")
     private String firstName;
@@ -20,7 +20,7 @@ public class AppUserProfileDataEditDto {
     @Size(max = 50, message = "{form.field.city.error.size.message}")
     private String city;
 
-    private AppUserProfileDataEditDto() {
+    private AppUserProfileEditDto() {
     }
 
     public String getFirstName() {
@@ -63,49 +63,49 @@ public class AppUserProfileDataEditDto {
         this.city = city;
     }
 
-    public static class AppUserProfileDataEditDtoBuilder {
+    public static class AppUserProfileEditDtoBuilder {
         private String firstName;
         private String lastName;
         private MultipartFile profileImage;
         private String bio;
         private String city;
 
-        public AppUserProfileDataEditDtoBuilder() {
+        public AppUserProfileEditDtoBuilder() {
         }
 
-        public AppUserProfileDataEditDtoBuilder withFirstName(String firstName) {
+        public AppUserProfileEditDtoBuilder withFirstName(String firstName) {
             this.firstName = firstName;
             return this;
         }
 
-        public AppUserProfileDataEditDtoBuilder withLastName(String lastName) {
+        public AppUserProfileEditDtoBuilder withLastName(String lastName) {
             this.lastName = lastName;
             return this;
         }
 
-        public AppUserProfileDataEditDtoBuilder withProfileImage(MultipartFile profileImage) {
+        public AppUserProfileEditDtoBuilder withProfileImage(MultipartFile profileImage) {
             this.profileImage = profileImage;
             return this;
         }
 
-        public AppUserProfileDataEditDtoBuilder withBio(String bio) {
+        public AppUserProfileEditDtoBuilder withBio(String bio) {
             this.bio = bio;
             return this;
         }
 
-        public AppUserProfileDataEditDtoBuilder withCity(String city) {
+        public AppUserProfileEditDtoBuilder withCity(String city) {
             this.city = city;
             return this;
         }
 
-        public AppUserProfileDataEditDto build() {
-            AppUserProfileDataEditDto userProfileDataEditDto = new AppUserProfileDataEditDto();
-            userProfileDataEditDto.firstName = firstName;
-            userProfileDataEditDto.lastName = lastName;
-            userProfileDataEditDto.profileImage = profileImage;
-            userProfileDataEditDto.bio = bio;
-            userProfileDataEditDto.city = city;
-            return userProfileDataEditDto;
+        public AppUserProfileEditDto build() {
+            AppUserProfileEditDto userProfileEditDto = new AppUserProfileEditDto();
+            userProfileEditDto.firstName = firstName;
+            userProfileEditDto.lastName = lastName;
+            userProfileEditDto.profileImage = profileImage;
+            userProfileEditDto.bio = bio;
+            userProfileEditDto.city = city;
+            return userProfileEditDto;
         }
     }
 }

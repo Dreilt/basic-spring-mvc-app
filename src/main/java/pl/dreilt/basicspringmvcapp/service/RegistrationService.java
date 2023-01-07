@@ -39,26 +39,26 @@ public class RegistrationService {
     }
 
     @Transactional
-    public void register(AppUserRegistrationDto appUserRegistration) {
-        AppUser appUser = new AppUser();
-        appUser.setFirstName(appUserRegistration.getFirstName());
-        appUser.setLastName(appUserRegistration.getLastName());
-        appUser.setEmail(appUserRegistration.getEmail());
-        appUser.setPassword(passwordEncoder.encode(appUserRegistration.getPassword()));
-        setDefaultProfileImage(appUser);
-        appUser.setEnabled(true);
-        appUser.setAccountNonLocked(true);
+    public void register(AppUserRegistrationDto userRegistration) {
+        AppUser user = new AppUser();
+        user.setFirstName(userRegistration.getFirstName());
+        user.setLastName(userRegistration.getLastName());
+        user.setEmail(userRegistration.getEmail());
+        user.setPassword(passwordEncoder.encode(userRegistration.getPassword()));
+        setDefaultProfileImage(user);
+        user.setEnabled(true);
+        user.setAccountNonLocked(true);
         Optional<AppUserRole> userRole = appUserRoleRepository.findRoleByName(USER_ROLE);
         userRole.ifPresentOrElse(
-                role -> appUser.getRoles().add(role),
+                role -> user.getRoles().add(role),
                 () -> {
                     throw new NoSuchRoleException("Invalid role: " + USER_ROLE, USER_ROLE);
                 }
         );
-        registrationRepository.save(appUser);
+        registrationRepository.save(user);
     }
 
-    private void setDefaultProfileImage(AppUser appUser) {
+    private void setDefaultProfileImage(AppUser user) {
         ClassPathResource resource = new ClassPathResource("static/images/default_profile_image.png");
         try (InputStream defaultProfileImage = resource.getInputStream()) {
             ProfileImage profileImage = new ProfileImage();
@@ -66,7 +66,7 @@ public class RegistrationService {
             profileImage.setFileType("image/png");
             profileImage.setFileData(defaultProfileImage.readAllBytes());
             profileImageRepository.save(profileImage);
-            appUser.setProfileImage(profileImage);
+            user.setProfileImage(profileImage);
         } catch (IOException e) {
             throw new DefaultProfileImageNotFoundException("File " + resource.getPath() + " not found");
         }

@@ -11,8 +11,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import pl.dreilt.basicspringmvcapp.dto.AppUserAccountDataEditAPDto;
-import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDataEditAPDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserAccountEditAPDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditAPDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserTableAPDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
@@ -96,7 +96,7 @@ class AdminServiceTest {
         AppUser user = createAppUser(1L, "Jan", "Kowalski", "jankowalski@example.com", createOrganizerRole());
         when(adminRepository.findById(user.getId())).thenReturn(Optional.of(user));
         // when
-        AppUserAccountDataEditAPDto userAccountData = adminService.findUserAccountDataToEdit(user.getId());
+        AppUserAccountEditAPDto userAccountData = adminService.findUserAccountDataToEdit(user.getId());
         // then
         assertThat(userAccountData).isNotNull();
         assertThat(userAccountData.isEnabled()).isTrue();
@@ -120,7 +120,7 @@ class AdminServiceTest {
         AppUser user = createAppUser(1L, "Jan", "Kowalski", "jankowalski@example.com", createOrganizerRole());
         when(adminRepository.findById(user.getId())).thenReturn(Optional.of(user));
         // when
-        AppUserAccountDataEditAPDto userAccountUpdated = adminService.updateUserAccountData(user.getId(), createAppUserAccountDataEditAPDto());
+        AppUserAccountEditAPDto userAccountUpdated = adminService.updateUserAccountData(user.getId(), createAppUserAccountDataEditAPDto());
         // then
         assertThat(userAccountUpdated).isNotNull();
         assertThat(userAccountUpdated.isEnabled()).isFalse();
@@ -145,7 +145,7 @@ class AdminServiceTest {
         AppUser user = createAppUser(1L, "emptyFirstName", "emptyLastName", "jankowalski@example.com", createOrganizerRole());
         when(adminRepository.findById(user.getId())).thenReturn(Optional.of(user));
         // when
-        AppUserProfileDataEditAPDto userProfile = adminService.findUserProfileDataToEdit(user.getId());
+        AppUserProfileEditAPDto userProfile = adminService.findUserProfileDataToEdit(user.getId());
         // then
         assertThat(userProfile).isNotNull();
         assertThat(userProfile.getFirstName()).isEqualTo("emptyFirstName");
@@ -170,7 +170,7 @@ class AdminServiceTest {
         AppUser user = createAppUser(1L, "emptyFirstName", "emptyLastName", "jankowalski@example.com", createOrganizerRole());
         when(adminRepository.findById(user.getId())).thenReturn(Optional.of(user));
         // when
-        AppUserProfileDataEditAPDto userProfileUpdated = adminService.updateUserProfile(user.getId(), createAppUserProfileDataEditAPDto());
+        AppUserProfileEditAPDto userProfileUpdated = adminService.updateUserProfile(user.getId(), createAppUserProfileDataEditAPDto());
         // then
         assertThat(userProfileUpdated).isNotNull();
         assertThat(userProfileUpdated.getFirstName()).isEqualTo("Jan");

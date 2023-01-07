@@ -4,13 +4,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.dreilt.basicspringmvcapp.dto.AppUserAccountDataEditAPDto;
-import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDataEditAPDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserAccountEditAPDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditAPDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserTableAPDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
-import pl.dreilt.basicspringmvcapp.mapper.AppUserAccountDataEditAPDtoMapper;
-import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileDataEditAPDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.AppUserAccountEditAPDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileEditAPDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.AppUserTableAPDtoMapper;
 import pl.dreilt.basicspringmvcapp.repository.AdminRepository;
 import pl.dreilt.basicspringmvcapp.specification.AppUserSpecification;
@@ -48,21 +48,21 @@ public class AdminService {
         return Page.empty();
     }
 
-    public AppUserAccountDataEditAPDto findUserAccountDataToEdit(Long id) {
+    public AppUserAccountEditAPDto findUserAccountToEdit(Long id) {
         return adminRepository.findById(id)
-                .map(AppUserAccountDataEditAPDtoMapper::mapToAppUserAccountDataEditAPDto)
+                .map(AppUserAccountEditAPDtoMapper::mapToAppUserAccountEditAPDto)
                 .orElseThrow(() -> new AppUserNotFoundException("User with ID " + id + " not found"));
     }
 
     @Transactional
-    public AppUserAccountDataEditAPDto updateUserAccountData(Long id, AppUserAccountDataEditAPDto userAccountDataEditAPDto) {
+    public AppUserAccountEditAPDto updateUserAccount(Long id, AppUserAccountEditAPDto userAccountEditAP) {
         return adminRepository.findById(id)
-                .map(target -> setUserAccountDataFields(userAccountDataEditAPDto, target))
-                .map(AppUserAccountDataEditAPDtoMapper::mapToAppUserAccountDataEditAPDto)
+                .map(target -> setUserAccountFields(userAccountEditAP, target))
+                .map(AppUserAccountEditAPDtoMapper::mapToAppUserAccountEditAPDto)
                 .orElseThrow(() -> new AppUserNotFoundException("User with ID " + id + " not found"));
     }
 
-    private AppUser setUserAccountDataFields(AppUserAccountDataEditAPDto source, AppUser target) {
+    private AppUser setUserAccountFields(AppUserAccountEditAPDto source, AppUser target) {
         if (source.isEnabled() != target.isEnabled()) {
             target.setEnabled(source.isEnabled());
         }
@@ -73,21 +73,21 @@ public class AdminService {
         return target;
     }
 
-    public AppUserProfileDataEditAPDto findUserProfileDataToEdit(Long id) {
+    public AppUserProfileEditAPDto findUserProfileToEdit(Long id) {
         return adminRepository.findById(id)
-                .map(AppUserProfileDataEditAPDtoMapper::mapToAppUserProfileDataEditAPDto)
+                .map(AppUserProfileEditAPDtoMapper::mapToAppUserProfileEditAPDto)
                 .orElseThrow(() -> new AppUserNotFoundException("User with ID " + id + " not found"));
     }
 
     @Transactional
-    public AppUserProfileDataEditAPDto updateUserProfile(Long id, AppUserProfileDataEditAPDto userProfileDataEditAPDto) {
+    public AppUserProfileEditAPDto updateUserProfile(Long id, AppUserProfileEditAPDto userProfileEditAP) {
         return adminRepository.findById(id)
-                .map(target -> setUserProfileDataFields(userProfileDataEditAPDto, target))
-                .map(AppUserProfileDataEditAPDtoMapper::mapToAppUserProfileDataEditAPDto)
+                .map(target -> setUserProfileFields(userProfileEditAP, target))
+                .map(AppUserProfileEditAPDtoMapper::mapToAppUserProfileEditAPDto)
                 .orElseThrow(() -> new AppUserNotFoundException("User with ID " + id + " not found"));
     }
 
-    private AppUser setUserProfileDataFields(AppUserProfileDataEditAPDto source, AppUser target) {
+    private AppUser setUserProfileFields(AppUserProfileEditAPDto source, AppUser target) {
         if (source.getFirstName() != null && !source.getFirstName().equals(target.getFirstName())) {
             target.setFirstName(source.getFirstName());
         }

@@ -11,10 +11,8 @@ public class EditEventDtoMapper {
         EditEventDto editEventDto = new EditEventDto();
         editEventDto.setId(event.getId());
         editEventDto.setName(event.getName());
-
         editEventDto.setEventImageType(event.getEventImage().getFileType());
         editEventDto.setEventImageData(Base64.getEncoder().encodeToString(event.getEventImage().getFileData()));
-
         editEventDto.setEventType(event.getEventType());
         editEventDto.setDateAndTime(event.getDateAndTime().toString());
         editEventDto.setLanguage(event.getLanguage());

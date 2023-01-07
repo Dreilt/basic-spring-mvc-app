@@ -9,19 +9,19 @@ public class AppUserTableAPDtoMapper {
     private AppUserTableAPDtoMapper() {
     }
 
-    public static Page<AppUserTableAPDto> mapToAppUserTableAPDtos(Page<AppUser> appUsers) {
-        return appUsers.map(appUser -> mapToAppUserTableAPDto(appUser));
+    public static Page<AppUserTableAPDto> mapToAppUserTableAPDtos(Page<AppUser> users) {
+        return users.map(AppUserTableAPDtoMapper::mapToAppUserTableAPDto);
     }
 
-    private static AppUserTableAPDto mapToAppUserTableAPDto(AppUser appUser) {
+    private static AppUserTableAPDto mapToAppUserTableAPDto(AppUser user) {
         return new AppUserTableAPDto.AppUserTableAPDtoBuilder()
-                .withId(appUser.getId())
-                .withFirstName(appUser.getFirstName())
-                .withLastName(appUser.getLastName())
-                .withEmail(appUser.getEmail())
-                .withEnabled(appUser.isEnabled())
-                .withAccountNonLocked(appUser.isAccountNonLocked())
-                .withRoles(appUser.getRoles())
+                .withId(user.getId())
+                .withFirstName(user.getFirstName())
+                .withLastName(user.getLastName())
+                .withEmail(user.getEmail())
+                .withEnabled(user.isEnabled())
+                .withAccountNonLocked(user.isAccountNonLocked())
+                .withRoles(user.getRoles())
                 .build();
 
     }

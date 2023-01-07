@@ -7,9 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import pl.dreilt.basicspringmvcapp.dto.AppUserAccountDataEditAPDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserAccountEditAPDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserPasswordEditAPDto;
-import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDataEditAPDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditAPDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserTableAPDto;
 import pl.dreilt.basicspringmvcapp.service.AdminService;
 import pl.dreilt.basicspringmvcapp.service.AppUserLoginDataService;
@@ -118,56 +118,56 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/admin_panel/users/{id}/settings/account")
-    public String showUserAccountDataEditForm(@PathVariable Long id, Model model) {
+    @GetMapping("/admin_panel/users/{id}/settings/edit_account")
+    public String showUserAccountEditForm(@PathVariable Long id, Model model) {
         model.addAttribute("accountUpdated", false);
         model.addAttribute("userId", id);
-        model.addAttribute("userAccountDataEditAPDto", adminService.findUserAccountDataToEdit(id));
+        model.addAttribute("userAccountEditAPDto", adminService.findUserAccountToEdit(id));
         model.addAttribute("userRoles", appUserRoleService.findAllUserRoles());
-        return "admin/forms/app-user-account-data-edit-form";
+        return "admin/forms/app-user-account-edit-form";
     }
 
-    @PatchMapping("/admin_panel/users/{id}/settings/account")
-    public String updateUserAccountData(@PathVariable Long id,
-                                        @Valid @ModelAttribute(name = "userAccountDataEditAPDto") AppUserAccountDataEditAPDto userAccountDataEditAPDto,
+    @PatchMapping("/admin_panel/users/{id}/settings/edit_account")
+    public String updateUserAccount(@PathVariable Long id,
+                                        @Valid @ModelAttribute(name = "userAccountEditAPDto") AppUserAccountEditAPDto userAccountEditAPDto,
                                         BindingResult bindingResult,
                                         Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("accountUpdated", false);
             model.addAttribute("userId", id);
             model.addAttribute("userRoles", appUserRoleService.findAllUserRoles());
-            return "admin/forms/app-user-account-data-edit-form";
+            return "admin/forms/app-user-account-edit-form";
         } else {
             model.addAttribute("accountUpdated", true);
             model.addAttribute("userId", id);
-            model.addAttribute("userAccountDataEditAPDto", adminService.updateUserAccountData(id, userAccountDataEditAPDto));
+            model.addAttribute("userAccountEditAPDto", adminService.updateUserAccount(id, userAccountEditAPDto));
             model.addAttribute("userRoles", appUserRoleService.findAllUserRoles());
-            return "admin/forms/app-user-account-data-edit-form";
+            return "admin/forms/app-user-account-edit-form";
         }
     }
 
     @GetMapping("/admin_panel/users/{id}/settings/edit_profile")
-    public String showUserProfileDataEditForm(@PathVariable Long id, Model model) {
+    public String showUserProfileEditForm(@PathVariable Long id, Model model) {
         model.addAttribute("profileUpdated", false);
         model.addAttribute("userId", id);
-        model.addAttribute("userProfileDataEditAPDto", adminService.findUserProfileDataToEdit(id));
-        return "admin/forms/app-user-profile-data-edit-form";
+        model.addAttribute("userProfileEditAPDto", adminService.findUserProfileToEdit(id));
+        return "admin/forms/app-user-profile-edit-form";
     }
 
     @PatchMapping("/admin_panel/users/{id}/settings/edit_profile")
-    public String updateUserProfileData(@PathVariable Long id,
-                                        @Valid @ModelAttribute(name = "userProfileDataEditAPDto") AppUserProfileDataEditAPDto userProfileDataEditAPDto,
+    public String updateUserProfile(@PathVariable Long id,
+                                        @Valid @ModelAttribute(name = "userProfileEditAPDto") AppUserProfileEditAPDto userProfileEditAPDto,
                                         BindingResult bindingResult,
                                         Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("profileUpdated", false);
             model.addAttribute("userId", id);
-            return "admin/forms/app-user-profile-data-edit-form";
+            return "admin/forms/app-user-profile-edit-form";
         } else {
             model.addAttribute("profileUpdated", true);
             model.addAttribute("userId", id);
-            model.addAttribute("userProfileDataEditAPDto", adminService.updateUserProfile(id, userProfileDataEditAPDto));
-            return "admin/forms/app-user-profile-data-edit-form";
+            model.addAttribute("userProfileEditAPDto", adminService.updateUserProfile(id, userProfileEditAPDto));
+            return "admin/forms/app-user-profile-edit-form";
         }
     }
 

@@ -4,13 +4,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dreilt.basicspringmvcapp.config.AppUserDetailsService;
-import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDataEditDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditDto;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.ProfileImage;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.exception.DefaultProfileImageNotFoundException;
-import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileDataEditDtoMapper;
+import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileEditDtoMapper;
 import pl.dreilt.basicspringmvcapp.mapper.AppUserProfileDtoMapper;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
 
@@ -31,16 +31,16 @@ public class AppUserService {
         return AppUserProfileDtoMapper.mapToAppUserProfileDto(user);
     }
 
-    public AppUserProfileDataEditDto findUserProfileToEdit(AppUser user) {
-        return AppUserProfileDataEditDtoMapper.mapToAppUserProfileEditDto(user);
+    public AppUserProfileEditDto findUserProfileToEdit(AppUser user) {
+        return AppUserProfileEditDtoMapper.mapToAppUserProfileEditDto(user);
     }
 
     @Transactional
-    public AppUserProfileDataEditDto updateUserProfile(AppUser user, AppUserProfileDataEditDto newUserProfileData) {
-        return AppUserProfileDataEditDtoMapper.mapToAppUserProfileEditDto(setUserProfileFields(user, newUserProfileData));
+    public AppUserProfileEditDto updateUserProfile(AppUser user, AppUserProfileEditDto userProfileEdit) {
+        return AppUserProfileEditDtoMapper.mapToAppUserProfileEditDto(setUserProfileFields(userProfileEdit, user));
     }
 
-    private AppUser setUserProfileFields(AppUser target, AppUserProfileDataEditDto source) {
+    private AppUser setUserProfileFields(AppUserProfileEditDto source, AppUser target) {
         boolean isAppUserDetailsEdited = false;
 
         if (source.getFirstName() != null && !source.getFirstName().equals(target.getFirstName())) {
@@ -52,7 +52,7 @@ public class AppUserService {
             isAppUserDetailsEdited = true;
         }
         if (!source.getProfileImage().isEmpty()) {
-            setNewProfileImage(source.getProfileImage(), target);
+            setNewProfileImage(target, source.getProfileImage());
         }
         if (source.getBio() != null && !source.getBio().equals(target.getBio())) {
             target.setBio(source.getBio());
@@ -68,13 +68,13 @@ public class AppUserService {
         return target;
     }
 
-    private void setNewProfileImage(MultipartFile profileImage, AppUser user) {
+    private void setNewProfileImage(AppUser user, MultipartFile newProfileImage) {
         ProfileImage currentProfileImage = user.getProfileImage();
-        try (InputStream is = profileImage.getInputStream()) {
+        try (InputStream is = newProfileImage.getInputStream()) {
             if (currentProfileImage.getFileData() != is.readAllBytes()) {
-                currentProfileImage.setFileName(profileImage.getOriginalFilename());
-                currentProfileImage.setFileType(profileImage.getContentType());
-                currentProfileImage.setFileData(profileImage.getBytes());
+                currentProfileImage.setFileName(newProfileImage.getOriginalFilename());
+                currentProfileImage.setFileType(newProfileImage.getContentType());
+                currentProfileImage.setFileData(newProfileImage.getBytes());
                 user.setProfileImage(currentProfileImage);
             }
         } catch (IOException e) {

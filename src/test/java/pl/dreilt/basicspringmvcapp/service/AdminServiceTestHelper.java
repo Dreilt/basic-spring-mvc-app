@@ -1,7 +1,7 @@
 package pl.dreilt.basicspringmvcapp.service;
 
-import pl.dreilt.basicspringmvcapp.dto.AppUserAccountDataEditAPDto;
-import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDataEditAPDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserAccountEditAPDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditAPDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 
 import java.util.ArrayList;
@@ -53,16 +53,16 @@ public class AdminServiceTestHelper {
         return newUserList;
     }
 
-    static AppUserAccountDataEditAPDto createAppUserAccountDataEditAPDto() {
-        return new AppUserAccountDataEditAPDto.AppUserAccountDataEditAPDtoBuilder()
+    static AppUserAccountEditAPDto createAppUserAccountDataEditAPDto() {
+        return new AppUserAccountEditAPDto.AppUserAccountEditAPDtoBuilder()
                 .withEnabled(false)
                 .withAccountNonLocked(false)
                 .withRoles(Set.of(createOrganizerRole()))
                 .build();
     }
 
-    static AppUserProfileDataEditAPDto createAppUserProfileDataEditAPDto() {
-        return new AppUserProfileDataEditAPDto.AppUserProfileDataEditAPDtoBuilder()
+    static AppUserProfileEditAPDto createAppUserProfileDataEditAPDto() {
+        return new AppUserProfileEditAPDto.AppUserProfileEditAPDtoBuilder()
                 .withFirstName("Jan")
                 .withLastName("Kowalski")
                 .withBio("Cześć! Nazywam się Jan Kowalski i niedawno przeprowadziłem się do Krakowa.")

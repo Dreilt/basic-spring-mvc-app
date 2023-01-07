@@ -9,7 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDto;
-import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDataEditDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
 import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
@@ -63,7 +63,7 @@ class AppUserServiceTest {
         AppUser user = createAppUser(1L, "emptyFirstName", "emptyLastName", "jankowalski@example.com", createOrganizerRole());
         when(appUserRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         // when
-        AppUserProfileDataEditDto userProfileToEdit = appUserService.findUserProfileToEdit(user.getEmail());
+        AppUserProfileEditDto userProfileToEdit = appUserService.findUserProfileToEdit(user.getEmail());
         // then
         assertThat(userProfileToEdit).isNotNull();
         assertThat(userProfileToEdit.getFirstName()).isEqualTo("emptyFirstName");
@@ -92,7 +92,7 @@ class AppUserServiceTest {
         AppUser user = createAppUser(1L, "emptyFirstName", "emptyLastName", "jankowalski@example.com", createOrganizerRole());
         when(appUserRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         // when
-        AppUserProfileDataEditDto userProfileUpdated = appUserService.updateUserProfile(createAppUserProfileDataEditDto());
+        AppUserProfileEditDto userProfileUpdated = appUserService.updateUserProfile(createAppUserProfileDataEditDto());
         // then
         assertThat(userProfileUpdated.getFirstName()).isEqualTo("Jan");
         assertThat(userProfileUpdated.getLastName()).isEqualTo("Kowalski");

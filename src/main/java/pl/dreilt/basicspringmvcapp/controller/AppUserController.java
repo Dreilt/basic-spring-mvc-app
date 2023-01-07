@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import pl.dreilt.basicspringmvcapp.config.AuthenticatedUserFacade;
 import pl.dreilt.basicspringmvcapp.dto.AppUserPasswordEditDto;
-import pl.dreilt.basicspringmvcapp.dto.AppUserProfileDataEditDto;
+import pl.dreilt.basicspringmvcapp.dto.AppUserProfileEditDto;
 import pl.dreilt.basicspringmvcapp.service.AppUserLoginDataService;
 import pl.dreilt.basicspringmvcapp.service.AppUserService;
 
@@ -35,19 +35,19 @@ public class AppUserController {
 
     @GetMapping("/settings/profile")
     public String showUserProfileEditForm(Model model) {
-        AppUserProfileDataEditDto userProfileEditDto = appUserService.findUserProfileToEdit(authenticatedUserFacade.getAuthenticatedUser());
+        AppUserProfileEditDto userProfileEditDto = appUserService.findUserProfileToEdit(authenticatedUserFacade.getAuthenticatedUser());
         model.addAttribute("userProfileEditDto", userProfileEditDto);
         return "forms/app-user-profile-edit-form";
     }
 
     @PatchMapping("/settings/profile")
-    public String updateUserProfile(@Valid @ModelAttribute(name = "userProfileEditDto") AppUserProfileDataEditDto userProfileEditDto,
+    public String updateUserProfile(@Valid @ModelAttribute(name = "userProfileEditDto") AppUserProfileEditDto userProfileEditDto,
                                     BindingResult bindingResult,
                                     Model model) {
         if (bindingResult.hasErrors()) {
             return "forms/app-user-profile-edit-form";
         } else {
-            AppUserProfileDataEditDto userProfileUpdated = appUserService.updateUserProfile(authenticatedUserFacade.getAuthenticatedUser(), userProfileEditDto);
+            AppUserProfileEditDto userProfileUpdated = appUserService.updateUserProfile(authenticatedUserFacade.getAuthenticatedUser(), userProfileEditDto);
             model.addAttribute("userProfileEditDto", userProfileUpdated);
             return "forms/app-user-profile-edit-form";
         }

@@ -10,15 +10,15 @@ public class AppUserProfileDtoMapper {
     private AppUserProfileDtoMapper() {
     }
 
-    public static AppUserProfileDto mapToAppUserProfileDto(AppUser appUser) {
+    public static AppUserProfileDto mapToAppUserProfileDto(AppUser user) {
         return new AppUserProfileDto.AppUserProfileDtoBuilder()
-                .withFirstName(appUser.getFirstName())
-                .withLastName(appUser.getLastName())
-                .withAvatarType(appUser.getProfileImage().getFileType())
-                .withAvatarData(Base64.getEncoder().encodeToString(appUser.getProfileImage().getFileData()))
-                .withEmail(appUser.getEmail())
-                .withBio(appUser.getBio())
-                .withCity(appUser.getCity())
+                .withFirstName(user.getFirstName())
+                .withLastName(user.getLastName())
+                .withAvatarType(user.getProfileImage().getFileType())
+                .withAvatarData(Base64.getEncoder().encodeToString(user.getProfileImage().getFileData()))
+                .withEmail(user.getEmail())
+                .withBio(user.getBio())
+                .withCity(user.getCity())
                 .build();
     }
 }

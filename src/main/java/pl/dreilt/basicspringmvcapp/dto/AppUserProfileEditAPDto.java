@@ -4,7 +4,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class AppUserProfileDataEditAPDto {
+public class AppUserProfileEditAPDto {
     @NotNull(message = "{form.field.firstName.error.notNull.message}")
     @NotEmpty(message = "{form.field.firstName.error.notEmpty.message}")
     @Size(min = 2, max = 50, message = "{form.field.firstName.error.size.message}")
@@ -18,7 +18,7 @@ public class AppUserProfileDataEditAPDto {
     @Size(max = 50, message = "{form.field.city.error.size.message}")
     private String city;
 
-    private AppUserProfileDataEditAPDto() {
+    private AppUserProfileEditAPDto() {
     }
 
     public String getFirstName() {
@@ -37,42 +37,42 @@ public class AppUserProfileDataEditAPDto {
         return city;
     }
 
-    public static class AppUserProfileDataEditAPDtoBuilder {
+    public static class AppUserProfileEditAPDtoBuilder {
         private String firstName;
         private String lastName;
         private String bio;
         private String city;
 
-        public AppUserProfileDataEditAPDtoBuilder() {
+        public AppUserProfileEditAPDtoBuilder() {
         }
 
-        public AppUserProfileDataEditAPDtoBuilder withFirstName(String firstName) {
+        public AppUserProfileEditAPDtoBuilder withFirstName(String firstName) {
             this.firstName = firstName;
             return this;
         }
 
-        public AppUserProfileDataEditAPDtoBuilder withLastName(String lastName) {
+        public AppUserProfileEditAPDtoBuilder withLastName(String lastName) {
             this.lastName = lastName;
             return this;
         }
 
-        public AppUserProfileDataEditAPDtoBuilder withBio(String bio) {
+        public AppUserProfileEditAPDtoBuilder withBio(String bio) {
             this.bio = bio;
             return this;
         }
 
-        public AppUserProfileDataEditAPDtoBuilder withCity(String city) {
+        public AppUserProfileEditAPDtoBuilder withCity(String city) {
             this.city = city;
             return this;
         }
 
-        public AppUserProfileDataEditAPDto build() {
-            AppUserProfileDataEditAPDto userProfileDataEditAPDto = new AppUserProfileDataEditAPDto();
-            userProfileDataEditAPDto.firstName = firstName;
-            userProfileDataEditAPDto.lastName = lastName;
-            userProfileDataEditAPDto.bio = bio;
-            userProfileDataEditAPDto.city = city;
-            return userProfileDataEditAPDto;
+        public AppUserProfileEditAPDto build() {
+            AppUserProfileEditAPDto userProfileEditAPDto = new AppUserProfileEditAPDto();
+            userProfileEditAPDto.firstName = firstName;
+            userProfileEditAPDto.lastName = lastName;
+            userProfileEditAPDto.bio = bio;
+            userProfileEditAPDto.city = city;
+            return userProfileEditAPDto;
         }
     }
 }

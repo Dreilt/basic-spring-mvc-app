@@ -38,24 +38,24 @@ public class OrganizerService {
         this.eventImageRepository = eventImageRepository;
     }
 
-    public EventDto createEvent(AppUser organizer, NewEventDto newEventDto) {
-        Event newEvent = new Event();
-        newEvent.setName(newEventDto.getName());
-        if (newEventDto.getEventImage() == null || newEventDto.getEventImage().isEmpty()) {
-            setDefaultEventImage(newEvent);
+    public EventDto createEvent(AppUser organizer, NewEventDto newEvent) {
+        Event event = new Event();
+        event.setName(newEvent.getName());
+        if (newEvent.getEventImage() == null || newEvent.getEventImage().isEmpty()) {
+            setDefaultEventImage(event);
         } else {
-            setEventImage(newEventDto.getEventImage(), newEvent);
+            setEventImage(newEvent.getEventImage(), event);
         }
-        newEvent.setEventType(EventType.valueOf(newEventDto.getEventType().toUpperCase()).getDisplayName());
-        newEvent.setDateAndTime(LocalDateTime.parse(newEventDto.getDateAndTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-        newEvent.setLanguage(newEventDto.getLanguage());
-        newEvent.setAdmission(AdmissionType.valueOf(newEventDto.getAdmission().toUpperCase()).getDisplayName());
-        newEvent.setCity(newEventDto.getCity());
-        newEvent.setLocation(newEventDto.getLocation());
-        newEvent.setAddress(newEventDto.getAddress());
-        newEvent.setOrganizer(organizer);
-        newEvent.setDescription(newEventDto.getDescription());
-        return EventDtoMapper.mapToEventDto(organizerRepository.save(newEvent));
+        event.setEventType(EventType.valueOf(newEvent.getEventType().toUpperCase()).getDisplayName());
+        event.setDateAndTime(LocalDateTime.parse(newEvent.getDateAndTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        event.setLanguage(newEvent.getLanguage());
+        event.setAdmission(AdmissionType.valueOf(newEvent.getAdmission().toUpperCase()).getDisplayName());
+        event.setCity(newEvent.getCity());
+        event.setLocation(newEvent.getLocation());
+        event.setAddress(newEvent.getAddress());
+        event.setOrganizer(organizer);
+        event.setDescription(newEvent.getDescription());
+        return EventDtoMapper.mapToEventDto(organizerRepository.save(event));
     }
 
     private void setDefaultEventImage(Event event) {
@@ -153,10 +153,10 @@ public class OrganizerService {
             throw new AccessDeniedException("Nie masz dostępu do tej zawartości");
         }
 
-        setEventData(editEventDto, event);
+        setEventFields(editEventDto, event);
     }
 
-    private void setEventData(EditEventDto source, Event target) {
+    private void setEventFields(EditEventDto source, Event target) {
         if (source.getName() != null && !source.getName().equals(target.getName())) {
             target.setName(source.getName());
         }
