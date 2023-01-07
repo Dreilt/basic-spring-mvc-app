@@ -1,5 +1,8 @@
 package pl.dreilt.basicspringmvcapp.config;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,17 +30,17 @@ public class AppUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("User with email %s not found", username)));
     }
 
-    private UserDetails createAppUserDetails(AppUser appUser) {
+    private UserDetails createAppUserDetails(AppUser user) {
         return new AppUserDetails.AppUserBuilder()
-                .firstName(appUser.getFirstName())
-                .lastName(appUser.getLastName())
-                .username(appUser.getEmail())
-                .password(appUser.getPassword())
-                .avatarType(appUser.getProfileImage().getFileType())
-                .avatarData(Base64.getEncoder().encodeToString(appUser.getProfileImage().getFileData()))
-                .enabled(appUser.isEnabled())
-                .accountNonLocked(appUser.isAccountNonLocked())
-                .roles(getUserRolesArray(appUser.getRoles()))
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .avatarType(user.getProfileImage().getFileType())
+                .avatarData(Base64.getEncoder().encodeToString(user.getProfileImage().getFileData()))
+                .enabled(user.isEnabled())
+                .accountNonLocked(user.isAccountNonLocked())
+                .roles(getUserRolesArray(user.getRoles()))
                 .build();
     }
 
@@ -47,5 +50,11 @@ public class AppUserDetailsService implements UserDetailsService {
                 .map(AppUserRole::getName)
                 .collect(Collectors.toSet());
         return userRolesSet.toArray(String[]::new);
+    }
+
+    public void updateAppUserDetails(AppUser user) {
+        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+        Authentication newAuthenticationToken = new UsernamePasswordAuthenticationToken(createAppUserDetails(user), currentUser.getCredentials(), currentUser.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(newAuthenticationToken);
     }
 }
