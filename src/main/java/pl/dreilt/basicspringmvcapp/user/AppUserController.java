@@ -10,7 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import pl.dreilt.basicspringmvcapp.core.AuthenticatedUserFacade;
-import pl.dreilt.basicspringmvcapp.dto.*;
 import pl.dreilt.basicspringmvcapp.role.AppUserRoleService;
 import pl.dreilt.basicspringmvcapp.service.AppUserLoginDataService;
 import pl.dreilt.basicspringmvcapp.user.dto.*;
@@ -153,6 +152,12 @@ public class AppUserController {
         }
     }
 
+    @GetMapping("/users/{id}/profile")
+    public String getUserProfile(@PathVariable Long id, Model model) {
+        model.addAttribute("userProfile", appUserService.findUserProfileByUserId(id));
+        return "app-user-profile";
+    }
+
     @GetMapping("/profile")
     public String getUserProfile(Model model) {
         model.addAttribute("userProfile", appUserService.findUserProfile(authenticatedUserFacade.getAuthenticatedUser()));
@@ -281,47 +286,5 @@ public class AppUserController {
     public String deleteUser(@PathVariable Long id) {
         appUserService.deleteUser(id);
         return "redirect:/admin_panel/users";
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @GetMapping("/users/{id}/profile")
-    public String getUserProfile(@PathVariable Long id, Model model) {
-        model.addAttribute("userProfile", appUserService.findUserProfileByUserId(id));
-        return "app-user-profile";
     }
 }

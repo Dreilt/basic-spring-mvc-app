@@ -1,6 +1,6 @@
 package pl.dreilt.basicspringmvcapp.user.dto;
 
-import pl.dreilt.basicspringmvcapp.annotation.PasswordValueMatch;
+import pl.dreilt.basicspringmvcapp.user.PasswordValueMatch;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

@@ -104,6 +104,12 @@ public class AppUserService {
         return Page.empty();
     }
 
+    public AppUserProfileDto findUserProfileByUserId(Long id) {
+        return appUserRepository.findById(id)
+                .map(AppUserProfileDtoMapper::mapToAppUserProfileDto)
+                .orElseThrow(() -> new AppUserNotFoundException("User with id " + id + " not found"));
+    }
+
     public AppUserProfileDto findUserProfile(AppUser user) {
         return AppUserProfileDtoMapper.mapToAppUserProfileDto(user);
     }
@@ -157,12 +163,6 @@ public class AppUserService {
         } catch (IOException e) {
             throw new DefaultProfileImageNotFoundException("File not found");
         }
-    }
-
-    public AppUserProfileDto findUserProfileByUserId(Long id) {
-        return appUserRepository.findById(id)
-                .map(AppUserProfileDtoMapper::mapToAppUserProfileDto)
-                .orElseThrow(() -> new AppUserNotFoundException("User with id " + id + " not found"));
     }
 
     public AppUserAccountEditAPDto findUserAccountToEdit(Long id) {
