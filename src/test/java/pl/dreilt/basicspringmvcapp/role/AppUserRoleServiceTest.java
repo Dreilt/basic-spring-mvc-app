@@ -1,18 +1,16 @@
-package pl.dreilt.basicspringmvcapp.service;
+package pl.dreilt.basicspringmvcapp.role;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
-import pl.dreilt.basicspringmvcapp.repository.AppUserRoleRepository;
 
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static pl.dreilt.basicspringmvcapp.core.AppUserHelper.*;
+import static org.mockito.Mockito.when;
+import static pl.dreilt.basicspringmvcapp.role.AppUserRoleServiceTestHelper.*;
 
 @ExtendWith(MockitoExtension.class)
 class AppUserRoleServiceTest {
@@ -25,7 +23,7 @@ class AppUserRoleServiceTest {
     void shouldGetAllUserRoles() {
         // given
         Set<AppUserRole> userRolesSet = Set.of(createAdminRole(), createOrganizerRole(), createUserRole());
-        Mockito.when(appUserRoleRepository.findAll()).thenReturn(userRolesSet);
+        when(appUserRoleRepository.findAll()).thenReturn(userRolesSet);
         // when
         Set<AppUserRole> userRoles = appUserRoleService.findAllUserRoles();
         // then
