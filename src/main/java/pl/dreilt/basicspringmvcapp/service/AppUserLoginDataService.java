@@ -12,9 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.exception.AppUserNotFoundException;
-import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
+import pl.dreilt.basicspringmvcapp.user.AppUser;
+import pl.dreilt.basicspringmvcapp.user.AppUserRepository;
 
 import java.util.Optional;
 

@@ -7,9 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import pl.dreilt.basicspringmvcapp.entity.AppUser;
-import pl.dreilt.basicspringmvcapp.entity.AppUserRole;
-import pl.dreilt.basicspringmvcapp.repository.AppUserRepository;
+import pl.dreilt.basicspringmvcapp.role.AppUserRole;
+import pl.dreilt.basicspringmvcapp.user.AppUser;
+import pl.dreilt.basicspringmvcapp.user.AppUserRepository;
 
 import java.util.Base64;
 import java.util.Set;

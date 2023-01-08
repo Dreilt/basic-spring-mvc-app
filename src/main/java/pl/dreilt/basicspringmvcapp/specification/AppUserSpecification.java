@@ -1,7 +1,7 @@
 package pl.dreilt.basicspringmvcapp.specification;
 
 import org.springframework.data.jpa.domain.Specification;
-import pl.dreilt.basicspringmvcapp.entity.AppUser;
+import pl.dreilt.basicspringmvcapp.user.AppUser;
 
 import javax.persistence.criteria.Predicate;
 

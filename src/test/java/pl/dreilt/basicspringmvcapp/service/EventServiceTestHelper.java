@@ -4,8 +4,8 @@ import pl.dreilt.basicspringmvcapp.dto.NewEventDto;
 import pl.dreilt.basicspringmvcapp.entity.AppUser;
 import pl.dreilt.basicspringmvcapp.entity.Event;
 import pl.dreilt.basicspringmvcapp.entity.EventImage;
-import pl.dreilt.basicspringmvcapp.enumeration.AdmissionType;
-import pl.dreilt.basicspringmvcapp.enumeration.EventType;
+import pl.dreilt.basicspringmvcapp.event.enumeration.AdmissionType;
+import pl.dreilt.basicspringmvcapp.event.enumeration.EventType;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
